@@ -1,0 +1,91 @@
+name: windows-threat-hunter-ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'windows-threat-hunter/**'
+      - '.github/workflows/windows-threat-hunter-*.yml'
+  pull_request:
+    paths:
+      - 'windows-threat-hunter/**'
+      - '.github/workflows/windows-threat-hunter-*.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-threat-hunter-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: windows-threat-hunter
+
+jobs:
+  lint:
+    name: PSScriptAnalyzer
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install PSScriptAnalyzer (pinned)
+        shell: pwsh
+        run: Install-Module PSScriptAnalyzer -RequiredVersion 1.23.0 -Scope CurrentUser -Force
+      - name: Run static analysis
+        shell: pwsh
+        run: ./scripts/Invoke-Lint.ps1
+
+  unit-portable:
+    name: Unit tests (${{ matrix.os }}, PowerShell 7)
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install Pester (pinned)
+        shell: pwsh
+        run: Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force -SkipPublisherCheck
+      - name: Run tests
+        shell: pwsh
+        run: ./scripts/Invoke-Tests.ps1 -Suite All -ResultPath test-results.xml
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: test-results-${{ matrix.os }}
+          path: windows-threat-hunter/test-results.xml
+          if-no-files-found: ignore
+
+  windows-powershell-5-1:
+    name: Unit tests (Windows PowerShell 5.1)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install Pester (pinned)
+        shell: powershell
+        run: Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force -SkipPublisherCheck
+      - name: Run tests under Windows PowerShell 5.1
+        shell: powershell
+        run: ./scripts/Invoke-Tests.ps1 -Suite All
+
+  docs-and-catalog:
+    name: Rule catalog is current
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check generated rule catalog
+        shell: pwsh
+        run: ./scripts/Export-RuleCatalog.ps1 -Check
