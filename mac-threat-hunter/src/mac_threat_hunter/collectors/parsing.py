@@ -30,12 +30,16 @@ def parse_boottime(text: str) -> str | None:
 
 
 def parse_csrutil(text: str) -> str:
-    low = text.lower()
-    if "enabled" in low and "disabled" not in low:
-        return "enabled"
-    if "disabled" in low:
-        return "disabled"
-    return "unknown"
+    """Read the overall ``status:`` line only.
+
+    A custom configuration prints per-feature ``enabled``/``disabled`` lines below an
+    ``unknown (Custom Configuration)`` status, which must not be read as SIP being off.
+    """
+    m = re.search(r"status:\s*(\w+)", text, re.I)
+    if not m:
+        return "unknown"
+    word = m.group(1).lower()
+    return word if word in ("enabled", "disabled") else "unknown"
 
 
 def parse_spctl(text: str) -> str:
@@ -169,6 +173,12 @@ def parse_lsof_fields(text: str) -> list[dict[str, Any]]:
         elif tag == "f":
             flush()
             current = dict(proc)
+        elif tag in ("P", "n") and (current is None or current.get("name")):
+            # lsof only prints the fd field ("f") when asked; without it a new file set starts
+            # at its protocol or name field.
+            flush()
+            current = dict(proc)
+            current["proto" if tag == "P" else "name"] = val.lower() if tag == "P" else val
         elif current is not None and tag == "P":
             current["proto"] = val.lower()
         elif current is not None and tag == "n":
@@ -183,9 +193,9 @@ def parse_lsof_fields(text: str) -> list[dict[str, Any]]:
         local, _, remote = name.partition("->")
         laddr, lport = _split_endpoint(local)
         raddr, rport = _split_endpoint(remote) if remote else (None, None)
-        state = rec.get("state") or ("LISTEN" if not remote else "")
-        if rec.get("proto") == "udp" and not remote:
-            state = state or "UNCONN"
+        state = rec.get("state") or ""
+        if not state and not remote:
+            state = "UNCONN" if rec.get("proto") == "udp" else "LISTEN"
         out.append(
             {
                 **rec,

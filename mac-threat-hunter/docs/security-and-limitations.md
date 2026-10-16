@@ -15,6 +15,9 @@ examine. It collects a bounded set of metadata, applies declarative rules, and r
 - **Live collectors are lightly tested.** They were developed
   against recorded command output and mocks; the macOS CI job exercises them on GitHub's runners.
   Output formats of `lsof`, `log`, `codesign` and `spctl` vary between macOS versions.
+  Parsers were checked against documented output formats and edge cases (for example SIP
+  "Custom Configuration" status and `lsof -F` records without an fd field), not against a
+  live Mac. If you run `collect` on a Mac, please report parser problems (redact first).
 
 ## Safety guarantees (and how they are enforced)
 

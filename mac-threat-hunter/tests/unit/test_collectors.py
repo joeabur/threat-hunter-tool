@@ -449,3 +449,31 @@ class TestLogs:
             ctx_for(cfg, runner, platform="linux", log=LogOptions(import_file=f))
         )
         assert res.status == "ok" and runner.calls == [] and "imported" in res.notes[0]
+
+
+class TestRealWorldFormats:
+    """Formats taken from documented macOS tool behaviour (no live Mac was available)."""
+
+    def test_csrutil_custom_configuration_is_not_disabled(self) -> None:
+        text = (
+            "System Integrity Protection status: unknown (Custom Configuration).\n\n"
+            "Configuration:\n\tApple Internal: disabled\n\tKext Signing: enabled\n"
+        )
+        assert parsing.parse_csrutil(text) == "unknown"
+        assert parsing.parse_csrutil("System Integrity Protection status: enabled.") == "enabled"
+        assert parsing.parse_csrutil("System Integrity Protection status: disabled.") == "disabled"
+
+    def test_lsof_without_fd_field(self) -> None:
+        text = (
+            "p123\ncControlCe\nLalice\nPTCP\nn*:7000\nTST=LISTEN\nTQR=0\n"
+            "PTCP\nn[::1]:7000\nTST=LISTEN\nPUDP\nn*:5353\n"
+            "p456\ncSafari\nLalice\nPTCP\nn10.0.0.5:50000->93.184.216.34:443\nTST=ESTABLISHED\n"
+        )
+        recs = parsing.parse_lsof_fields(text)
+        assert [(r["pid"], r["proto"], r["local_port"], r["state"]) for r in recs] == [
+            (123, "tcp", 7000, "LISTEN"),
+            (123, "tcp", 7000, "LISTEN"),
+            (123, "udp", 5353, "UNCONN"),
+            (456, "tcp", 50000, "ESTABLISHED"),
+        ]
+        assert recs[1]["local_address"] == "::1" and recs[3]["remote_port"] == 443

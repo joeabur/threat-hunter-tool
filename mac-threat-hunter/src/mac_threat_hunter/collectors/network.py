@@ -4,7 +4,7 @@ from ..models import CollectorResult
 from . import parsing
 from .base import CollectContext, Collector
 
-_LSOF = ["/usr/sbin/lsof", "-nP", "-i", "-F", "pcLPnT"]
+_LSOF = ["/usr/sbin/lsof", "-nP", "-i", "-F", "pcLfPnT"]
 
 
 class NetworkCollector(Collector):
