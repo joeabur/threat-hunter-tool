@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "WTH-ACCT-001",
+      "name": "Unexpected member of a monitored privileged local group",
+      "version": "1.0.0",
+      "category": "Accounts",
+      "dataSource": "LocalGroupMember",
+      "severity": "Medium",
+      "confidence": "Low",
+      "findingType": "Heuristic",
+      "description": "A member of a monitored local group (default: Administrators) is not on the expectedPrivilegedMembers allowlist.",
+      "rationale": "Unexpected administrators can come from account creation or group changes by an intruder, but also from normal provisioning. The rule compares current state to an allowlist; it cannot show who made the change or when.",
+      "evidenceRequirements": [
+        "Local group membership (Get-LocalGroupMember)",
+        "Maintained expectedPrivilegedMembers allowlist"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "Group",
+            "op": "inList",
+            "list": "monitoredPrivilegedGroups"
+          },
+          {
+            "field": "MemberName",
+            "op": "notInList",
+            "list": "expectedPrivilegedMembers"
+          },
+          {
+            "field": "ShortName",
+            "op": "notInList",
+            "list": "expectedPrivilegedMembers"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Group",
+        "MemberName",
+        "ObjectClass",
+        "PrincipalSource",
+        "SID"
+      ],
+      "titleTemplate": "{MemberName} is a member of {Group} but is not on the allowlist",
+      "attack": [],
+      "falsePositives": [
+        "Domain or helpdesk groups added by policy that are missing from the allowlist",
+        "Administrator accounts created during provisioning"
+      ],
+      "recommendedNextStep": "Check Security events 4720 (account created) and 4732 (member added) for the account, confirm with the owner, and review its logon history.",
+      "remediation": "If the membership is not approved, an authorized administrator could remove it after the account has been investigated. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Group",
+        "SID"
+      ],
+      "limitations": [
+        "This is a state check without a change event, so it has no ATT&CK mapping; WTH-EVT-005 maps the observed change event."
+      ]
+    },
+    {
+      "id": "WTH-ACCT-002",
+      "name": "Built-in Guest account is enabled",
+      "version": "1.0.0",
+      "category": "Accounts",
+      "dataSource": "LocalAccount",
+      "severity": "Medium",
+      "confidence": "High",
+      "findingType": "Observation",
+      "description": "The built-in Guest account (RID 501) is enabled.",
+      "rationale": "The Guest account is disabled by default. Enabling it allows anonymous-style local access and is rarely intentional.",
+      "evidenceRequirements": [
+        "Local account list (Get-LocalUser)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "SID",
+            "op": "endsWith",
+            "value": "-501"
+          },
+          {
+            "field": "Enabled",
+            "op": "isTrue"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "AccountName",
+        "SID",
+        "Enabled",
+        "PasswordRequired",
+        "LastLogon"
+      ],
+      "titleTemplate": "The built-in Guest account is enabled",
+      "attack": [],
+      "falsePositives": [
+        "Kiosk or lab machines configured to allow guest access"
+      ],
+      "recommendedNextStep": "Find out who enabled the account and when (Security 4722), and check for logons by the account.",
+      "remediation": "An authorized administrator could disable the account if guest access is not required. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "SID"
+      ],
+      "limitations": [
+        "An enabled Guest account is a weak configuration, not a technique, so this rule has no ATT&CK mapping."
+      ]
+    },
+    {
+      "id": "WTH-ACCT-003",
+      "name": "Enabled local account does not require a password",
+      "version": "1.0.0",
+      "category": "Accounts",
+      "dataSource": "LocalAccount",
+      "severity": "Low",
+      "confidence": "High",
+      "findingType": "Observation",
+      "description": "An enabled local account other than Guest has the PasswordRequired flag cleared.",
+      "rationale": "Accounts that do not need a password are easier to abuse, particularly for remote or scheduled use.",
+      "evidenceRequirements": [
+        "Local account list (Get-LocalUser)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "Enabled",
+            "op": "isTrue"
+          },
+          {
+            "field": "PasswordRequired",
+            "op": "isFalse"
+          },
+          {
+            "not": {
+              "field": "SID",
+              "op": "endsWith",
+              "value": "-501"
+            }
+          }
+        ]
+      },
+      "evidenceFields": [
+        "AccountName",
+        "SID",
+        "Enabled",
+        "PasswordRequired",
+        "PasswordLastSet",
+        "LastLogon"
+      ],
+      "titleTemplate": "Enabled account {AccountName} does not require a password",
+      "attack": [],
+      "falsePositives": [
+        "Auto-logon kiosk accounts",
+        "Service or lab accounts created without a password policy"
+      ],
+      "recommendedNextStep": "Review how and when the account was created and whether it has logged on interactively or over the network.",
+      "remediation": "An authorized administrator could require a password or disable the account after confirming it is not needed. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "SID"
+      ],
+      "limitations": [
+        "A weak account setting is not a technique, so this rule has no ATT&CK mapping."
+      ]
+    }
+  ]
+}

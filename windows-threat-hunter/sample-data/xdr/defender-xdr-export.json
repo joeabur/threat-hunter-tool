@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "source": "SIMULATED Defender XDR export (synthetic, not exported from a real tenant)",
+  "events": [
+    {
+      "Timestamp": "2026-10-16T09:15:00.000Z",
+      "DeviceName": "WS-LAB-03",
+      "ActionType": "ProcessCreated",
+      "FileName": "powershell.exe",
+      "FolderPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0",
+      "ProcessCommandLine": "powershell.exe -NoP -W Hidden -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+      "InitiatingProcessFileName": "cmd.exe",
+      "AccountName": "labuser"
+    },
+    {
+      "Timestamp": "2026-10-16T09:16:00.000Z",
+      "DeviceName": "WS-LAB-03",
+      "ActionType": "ProcessCreated",
+      "FileName": "notepad.exe",
+      "FolderPath": "C:\\Windows\\System32\\",
+      "ProcessCommandLine": "notepad.exe notes.txt",
+      "InitiatingProcessFileName": "explorer.exe",
+      "AccountName": "labuser"
+    },
+    {
+      "Timestamp": "2026-10-16T09:17:00.000Z",
+      "DeviceName": "WS-LAB-03",
+      "ActionType": "Alert",
+      "AlertId": "da637000000000000001_1",
+      "Title": "Suspicious PowerShell command line",
+      "Severity": "High",
+      "Category": "Execution"
+    },
+    {
+      "Timestamp": "2026-10-16T09:18:00.000Z",
+      "DeviceName": "WS-LAB-03",
+      "ActionType": "Alert",
+      "AlertId": "da637000000000000001_2",
+      "Title": "Anomalous Office child process",
+      "Severity": "Medium",
+      "Category": "Execution",
+      "Foo": "ignored column"
+    },
+    {
+      "Timestamp": "2026-10-16T09:19:00.000Z",
+      "ActionType": "ProcessCreated",
+      "FileName": "missing-devicename.exe"
+    }
+  ]
+}

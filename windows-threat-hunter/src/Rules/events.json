@@ -1,0 +1,552 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "WTH-EVT-001",
+      "name": "Many failed logons for one account from one source",
+      "version": "1.0.0",
+      "category": "Authentication",
+      "dataSource": "Event.Security",
+      "severity": "Medium",
+      "confidence": "Low",
+      "findingType": "Heuristic",
+      "description": "The number of failed logons (Security 4625) for the same account name and source address within the window reaches the threshold (default 10 in 10 minutes).",
+      "rationale": "Password guessing and spraying produce bursts of failed logons. Mistyped passwords, stale service credentials and vulnerability scanners produce the same pattern, so the threshold, grouping and source matter.",
+      "evidenceRequirements": [
+        "Security log event 4625 (requires an elevated session or Event Log Readers membership)",
+        "Audit Logon policy (failure) enabled"
+      ],
+      "condition": {
+        "field": "EventId",
+        "op": "equals",
+        "value": 4625
+      },
+      "evidenceFields": [
+        "Data.TargetUserName",
+        "Data.IpAddress",
+        "Data.LogonType",
+        "Data.Status",
+        "Data.WorkstationName"
+      ],
+      "titleTemplate": "{Count} failed logons for {Data.TargetUserName} from {Data.IpAddress} within {WindowMinutes} minutes",
+      "attack": [
+        "T1110"
+      ],
+      "falsePositives": [
+        "Users who mistyped a password or have stale saved credentials",
+        "Service accounts with an expired password",
+        "Authorized vulnerability or password audits"
+      ],
+      "recommendedNextStep": "Check whether any 4624 success follows from the same source, the logon type and source address, and whether the account is local or domain. Review the account lockout state.",
+      "remediation": "If the activity is not approved, an authorized responder could block the source address and review the account after validating impact. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "aggregate": {
+        "groupBy": [
+          "Data.TargetUserName",
+          "Data.IpAddress"
+        ],
+        "threshold": 10,
+        "windowMinutes": 10,
+        "timeField": "TimeCreated"
+      },
+      "references": [
+        "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625"
+      ],
+      "limitations": [
+        "A burst of failures does not prove compromise. If the Security log was cleared or has rotated, earlier failures are not visible."
+      ]
+    },
+    {
+      "id": "WTH-EVT-002",
+      "name": "Security event log was cleared",
+      "version": "1.0.0",
+      "category": "DefenseEvasion",
+      "dataSource": "Event.Security",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Observation",
+      "description": "Security event 1102 records that the Security audit log was cleared.",
+      "rationale": "Clearing the Security log removes evidence and is used by attackers, but administrators also clear logs for maintenance.",
+      "evidenceRequirements": [
+        "Security log event 1102 (requires an elevated session or Event Log Readers membership)"
+      ],
+      "condition": {
+        "field": "EventId",
+        "op": "equals",
+        "value": 1102
+      },
+      "evidenceFields": [
+        "EventId",
+        "TimeCreated",
+        "Data.SubjectUserName",
+        "Data.SubjectDomainName"
+      ],
+      "titleTemplate": "Security log cleared at {TimeCreated}",
+      "attack": [
+        "T1070.001"
+      ],
+      "falsePositives": [
+        "Planned log maintenance or imaging",
+        "Lab machines that are reset regularly"
+      ],
+      "recommendedNextStep": "Identify the account (SubjectUserName), the logon session and what happened just before the event. Check for forwarded copies of the log in a SIEM.",
+      "remediation": "Preserve remaining logs and forward them centrally. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "TimeCreated"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-1102"
+      ]
+    },
+    {
+      "id": "WTH-EVT-003",
+      "name": "Service installed with a suspicious path or command",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "Event.Security",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "Security event 4697 records a service whose file name is in a user-writable path or matches a script, download or shell-wrapper pattern.",
+      "rationale": "Creating a service is a common persistence step, and the service file name shows what it launches.",
+      "evidenceRequirements": [
+        "Security log event 4697 (requires elevation and the Security System Extension audit policy)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "EventId",
+            "op": "equals",
+            "value": 4697
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "field": "Data.ServiceFileName",
+                    "op": "pathContainsAny",
+                    "list": "userWritablePathFragments"
+                  },
+                  {
+                    "not": {
+                      "field": "Data.ServiceFileName",
+                      "op": "pathStartsWithAny",
+                      "list": "trustedExecutablePrefixes"
+                    }
+                  }
+                ]
+              },
+              {
+                "field": "Data.ServiceFileName",
+                "op": "matchesList",
+                "list": "encodedPowerShell"
+              },
+              {
+                "field": "Data.ServiceFileName",
+                "op": "matchesList",
+                "list": "downloadCradle"
+              },
+              {
+                "field": "Data.ServiceFileName",
+                "op": "matchesList",
+                "list": "scriptHostArguments"
+              },
+              {
+                "field": "Data.ServiceFileName",
+                "op": "matchesList",
+                "list": "lolbinAbuse"
+              },
+              {
+                "field": "Data.ServiceFileName",
+                "op": "matchesList",
+                "list": "serviceShellWrapper"
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "TimeCreated",
+        "Data.ServiceName",
+        "Data.ServiceFileName",
+        "Data.ServiceAccount",
+        "Data.ServiceStartType",
+        "Data.SubjectUserName"
+      ],
+      "titleTemplate": "Service {Data.ServiceName} installed from a suspicious path or command",
+      "attack": [
+        "T1543.003"
+      ],
+      "falsePositives": [
+        "Software installers that register services from ProgramData or a temp folder during setup"
+      ],
+      "recommendedNextStep": "Check the installing account and process, whether the service still exists (WTH-SVC findings) and what the binary does.",
+      "remediation": "If the service is not approved, an authorized responder could stop and disable it after preserving the binary. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Data.ServiceName",
+        "TimeCreated"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4697"
+      ]
+    },
+    {
+      "id": "WTH-EVT-004",
+      "name": "Scheduled task created with a suspicious command",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "Event.Security",
+      "severity": "Medium",
+      "confidence": "Low",
+      "findingType": "Heuristic",
+      "description": "Security event 4698 records a new scheduled task whose definition contains a script or download pattern or a command in a user-writable path.",
+      "rationale": "The task definition in the event shows what the task will run, which helps catch persistence at creation time.",
+      "evidenceRequirements": [
+        "Security log event 4698 (requires elevation and the Other Object Access Events audit policy)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "EventId",
+            "op": "equals",
+            "value": 4698
+          },
+          {
+            "any": [
+              {
+                "field": "Data.TaskContent",
+                "op": "matchesList",
+                "list": "encodedPowerShell"
+              },
+              {
+                "field": "Data.TaskContent",
+                "op": "matchesList",
+                "list": "downloadCradle"
+              },
+              {
+                "field": "Data.TaskContent",
+                "op": "matchesList",
+                "list": "scriptHostArguments"
+              },
+              {
+                "field": "Data.TaskContent",
+                "op": "matchesList",
+                "list": "lolbinAbuse"
+              },
+              {
+                "field": "Data.TaskContent",
+                "op": "matches",
+                "value": "(?i)<Command>[^<]{0,300}\\\\(?:AppData|Temp|Users\\\\Public|ProgramData)\\\\"
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "TimeCreated",
+        "Data.TaskName",
+        "Data.SubjectUserName",
+        "Data.TaskContent"
+      ],
+      "titleTemplate": "Scheduled task {Data.TaskName} created with a suspicious command",
+      "attack": [
+        "T1053.005"
+      ],
+      "falsePositives": [
+        "Software installers and updaters that register tasks",
+        "Administrative scripts"
+      ],
+      "recommendedNextStep": "Read the full task XML in the event, identify the creating account and session, and check whether the task still exists (WTH-TASK findings).",
+      "remediation": "If the task is not approved, an authorized responder could disable it after preserving the definition. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Data.TaskName",
+        "TimeCreated"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4698"
+      ]
+    },
+    {
+      "id": "WTH-EVT-005",
+      "name": "Member added to the local Administrators group",
+      "version": "1.0.0",
+      "category": "Accounts",
+      "dataSource": "Event.Security",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Observation",
+      "description": "Security event 4732 records that a member was added to the built-in Administrators group (SID S-1-5-32-544).",
+      "rationale": "Adding an account to the Administrators group is a way to gain or keep privileged access. It is also a normal provisioning step, so authorization is what matters.",
+      "evidenceRequirements": [
+        "Security log event 4732 (requires elevation and the Security Group Management audit policy)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "EventId",
+            "op": "equals",
+            "value": 4732
+          },
+          {
+            "field": "Data.TargetSid",
+            "op": "equals",
+            "value": "S-1-5-32-544"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "TimeCreated",
+        "Data.MemberName",
+        "Data.MemberSid",
+        "Data.TargetUserName",
+        "Data.SubjectUserName"
+      ],
+      "titleTemplate": "Member added to Administrators at {TimeCreated}",
+      "attack": [
+        "T1098"
+      ],
+      "falsePositives": [
+        "IT provisioning and help desk changes",
+        "Domain join workflows"
+      ],
+      "recommendedNextStep": "Confirm the change with the requester or ticket, identify the acting account and session, and review the new member's activity.",
+      "remediation": "If the change is not approved, an authorized administrator could remove the member after investigation. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "TimeCreated",
+        "Data.MemberSid"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4732"
+      ]
+    },
+    {
+      "id": "WTH-EVT-006",
+      "name": "Suspicious content in PowerShell script block log",
+      "version": "1.0.0",
+      "category": "Execution",
+      "dataSource": "Event.PowerShell",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A PowerShell script block (event 4104) contains a download cradle, AMSI tampering strings, reflective assembly loading, VirtualAlloc, or a Defender exclusion command.",
+      "rationale": "Script block logging records deobfuscated script text, so these strings are meaningful. Security tools and administrators can also contain them.",
+      "evidenceRequirements": [
+        "PowerShell Operational event 4104 (script block logging must be enabled)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "EventId",
+            "op": "equals",
+            "value": 4104
+          },
+          {
+            "field": "Data.ScriptBlockText",
+            "op": "matchesList",
+            "list": "powershellScriptBlockSuspicious"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "TimeCreated",
+        "Data.ScriptBlockId",
+        "Data.Path",
+        "Data.ScriptBlockText"
+      ],
+      "titleTemplate": "PowerShell script block {Data.ScriptBlockId} contains suspicious content",
+      "attack": [
+        "T1059.001"
+      ],
+      "falsePositives": [
+        "Security assessment and red-team tooling run with authorization",
+        "Administrator scripts that download installers"
+      ],
+      "recommendedNextStep": "Read the full script block (and the other parts if it was split), and identify the user, host process and parent. Review related network and file activity.",
+      "remediation": "If the script is not approved, an authorized responder could contain the host after preserving logs. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Data.ScriptBlockId"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows"
+      ],
+      "limitations": [
+        "Long script blocks are split across events; only the part that matched is evaluated per event."
+      ]
+    },
+    {
+      "id": "WTH-EVT-007",
+      "name": "Sysmon process creation with an encoded PowerShell command",
+      "version": "1.0.0",
+      "category": "Execution",
+      "dataSource": "Event.Sysmon",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "Sysmon event 1 records a process whose command line contains an encoded PowerShell argument.",
+      "rationale": "Sysmon records every process start with its full command line, so short-lived processes are captured. Encoded commands need to be decoded and reviewed.",
+      "evidenceRequirements": [
+        "Sysmon Operational event 1 (Sysmon must be installed with a process-create configuration)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "EventId",
+            "op": "equals",
+            "value": 1
+          },
+          {
+            "field": "Data.CommandLine",
+            "op": "matchesList",
+            "list": "encodedPowerShell"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "TimeCreated",
+        "Data.Image",
+        "Data.CommandLine",
+        "Data.ParentImage",
+        "Data.User",
+        "Data.ProcessGuid"
+      ],
+      "titleTemplate": "Sysmon: {Data.Image} started with an encoded command",
+      "attack": [
+        "T1059.001",
+        "T1027.010"
+      ],
+      "falsePositives": [
+        "Configuration management tools",
+        "Monitoring agents"
+      ],
+      "recommendedNextStep": "Decode the payload offline, check the parent image and user, and look for script block events (4104) for the same process.",
+      "remediation": "If the activity is not approved, an authorized responder could contain the host after preserving evidence. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Data.ProcessGuid"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon"
+      ]
+    },
+    {
+      "id": "WTH-EVT-008",
+      "name": "Sysmon: Office application started a script interpreter",
+      "version": "1.0.0",
+      "category": "Execution",
+      "dataSource": "Event.Sysmon",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "Sysmon event 1 shows an Office application as the parent of cmd.exe, PowerShell, a script host, mshta, rundll32, regsvr32 or wmic.",
+      "rationale": "This relationship is a classic result of a malicious document. Sysmon captures short-lived children that a process snapshot would miss.",
+      "evidenceRequirements": [
+        "Sysmon Operational event 1 with ParentImage"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "EventId",
+            "op": "equals",
+            "value": 1
+          },
+          {
+            "field": "Data.ParentImageName",
+            "op": "inList",
+            "list": "officeApplications"
+          },
+          {
+            "field": "Data.ImageName",
+            "op": "inList",
+            "list": "scriptInterpreters"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "TimeCreated",
+        "Data.ParentImage",
+        "Data.Image",
+        "Data.CommandLine",
+        "Data.User",
+        "Data.ProcessGuid"
+      ],
+      "titleTemplate": "Sysmon: {Data.ParentImage} started {Data.Image}",
+      "attack": [
+        "T1204.002"
+      ],
+      "falsePositives": [
+        "Office add-ins and automation that call cmd.exe or PowerShell"
+      ],
+      "recommendedNextStep": "Identify the document, its source, the child command line and the user. Check for follow-on network and persistence activity.",
+      "remediation": "If the activity is not approved, an authorized responder could contain the host and preserve the document. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Data.ProcessGuid"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon"
+      ]
+    },
+    {
+      "id": "WTH-EVT-009",
+      "name": "Sysmon: Run key value set to a user-writable path",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "Event.Sysmon",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "Sysmon event 13 shows a Run or RunOnce registry value being set to data that points into a user-writable path.",
+      "rationale": "This catches the creation of Run-key persistence at the moment it happens, including the process that wrote it.",
+      "evidenceRequirements": [
+        "Sysmon Operational event 13 (registry value set) with Run-key monitoring in the configuration"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "EventId",
+            "op": "equals",
+            "value": 13
+          },
+          {
+            "field": "Data.TargetObject",
+            "op": "matches",
+            "value": "(?i)\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run(?:Once)?\\\\[^\\\\]+$"
+          },
+          {
+            "field": "Data.Details",
+            "op": "pathContainsAny",
+            "list": "userWritablePathFragments"
+          },
+          {
+            "not": {
+              "field": "Data.Details",
+              "op": "pathStartsWithAny",
+              "list": "trustedExecutablePrefixes"
+            }
+          }
+        ]
+      },
+      "evidenceFields": [
+        "TimeCreated",
+        "Data.Image",
+        "Data.TargetObject",
+        "Data.Details",
+        "Data.User"
+      ],
+      "titleTemplate": "Sysmon: {Data.Image} set a Run value to a user-writable path",
+      "attack": [
+        "T1547.001"
+      ],
+      "falsePositives": [
+        "Per-user application installers registering autostart entries"
+      ],
+      "recommendedNextStep": "Identify the writing process and user, verify the program the value points to, and check whether the entry still exists (WTH-REG findings).",
+      "remediation": "If the entry is not approved, an authorized responder could remove it after exporting the key. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Data.TargetObject",
+        "TimeCreated"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon"
+      ]
+    }
+  ]
+}

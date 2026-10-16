@@ -1,0 +1,507 @@
+{
+  "schemaVersion": 1,
+  "kind": "WthSnapshot",
+  "synthetic": true,
+  "description": "SIMULATED lab host with several persistence mechanisms and one benign look-alike (OneDrive). Synthetic data, not collected from a real endpoint.",
+  "host": "WS-LAB-02",
+  "collectedAt": "2026-10-16T09:30:00.000Z",
+  "redacted": false,
+  "tool": {
+    "Name": "WindowsThreatHunter",
+    "Version": "synthetic-sample"
+  },
+  "platform": {
+    "OperatingSystem": "SYNTHETIC (not a real system)",
+    "PowerShellVersion": "5.1 (simulated)",
+    "PowerShellEdition": "Desktop",
+    "Elevated": true
+  },
+  "environment": {
+    "SystemRoot": "C:\\Windows",
+    "windir": "C:\\Windows",
+    "SystemDrive": "C:",
+    "ProgramFiles": "C:\\Program Files",
+    "ProgramFiles(x86)": "C:\\Program Files (x86)",
+    "ProgramData": "C:\\ProgramData",
+    "ALLUSERSPROFILE": "C:\\ProgramData"
+  },
+  "coverage": [
+    {
+      "DataSource": "ScheduledTask",
+      "Collector": "ScheduledTasks",
+      "Status": "Collected",
+      "ItemCount": 5,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "Service",
+      "Collector": "Services",
+      "Status": "Collected",
+      "ItemCount": 4,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "RegistryRun",
+      "Collector": "RegistryRun",
+      "Status": "Collected",
+      "ItemCount": 3,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "StartupItem",
+      "Collector": "StartupFolders",
+      "Status": "Collected",
+      "ItemCount": 3,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "WmiSubscription",
+      "Collector": "WmiSubscriptions",
+      "Status": "Collected",
+      "ItemCount": 1,
+      "RequiresElevation": "Yes",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "LocalAccount",
+      "Collector": "LocalAccounts",
+      "Status": "Collected",
+      "ItemCount": 4,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "LocalGroupMember",
+      "Collector": "LocalAccounts",
+      "Status": "Collected",
+      "ItemCount": 3,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "Process",
+      "Collector": "Processes",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "No",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "NetworkConnection",
+      "Collector": "Network",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "No",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "DefenderStatus",
+      "Collector": "Defender",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "No",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "DefenderExclusion",
+      "Collector": "Defender",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "Yes",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "DefenderEvent",
+      "Collector": "Defender",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "Maybe",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "Event.Security",
+      "Collector": "SecurityEvents",
+      "Status": "Collected",
+      "ItemCount": 3,
+      "RequiresElevation": "Yes",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "Event.PowerShell",
+      "Collector": "PowerShellEvents",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "Maybe",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    },
+    {
+      "DataSource": "Event.Sysmon",
+      "Collector": "SysmonEvents",
+      "Status": "NotRequested",
+      "ItemCount": 0,
+      "RequiresElevation": "Maybe",
+      "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+    }
+  ],
+  "items": {
+    "ScheduledTask": [
+      {
+        "TaskName": "OneDrive Standalone Update Task-S-1-5-21-1111111111-2222222222-3333333333-1001",
+        "TaskPath": "\\",
+        "FullName": "\\OneDrive Standalone Update Task-S-1-5-21-1111111111-2222222222-3333333333-1001",
+        "State": "Ready",
+        "Author": "Microsoft Corporation",
+        "UserId": "WS-LAB-02\\labuser",
+        "RunLevel": "Limited",
+        "Hidden": false,
+        "TriggerTypes": [
+          "MSFT_TaskDailyTrigger"
+        ],
+        "ActionIndex": 0,
+        "ActionType": "Exec",
+        "ActionExecute": "C:\\Users\\labuser\\AppData\\Local\\Microsoft\\OneDrive\\OneDriveStandaloneUpdater.exe",
+        "ActionArguments": "",
+        "ActionCommandLine": "C:\\Users\\labuser\\AppData\\Local\\Microsoft\\OneDrive\\OneDriveStandaloneUpdater.exe",
+        "ComClassId": null,
+        "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\Microsoft\\OneDrive\\OneDriveStandaloneUpdater.exe",
+        "ExecutableExists": true
+      },
+      {
+        "TaskName": "Schedule Scan",
+        "TaskPath": "\\Microsoft\\Windows\\UpdateOrchestrator\\",
+        "FullName": "\\Microsoft\\Windows\\UpdateOrchestrator\\Schedule Scan",
+        "State": "Ready",
+        "Author": "Microsoft Corporation",
+        "UserId": "NT AUTHORITY\\SYSTEM",
+        "RunLevel": "Limited",
+        "Hidden": false,
+        "TriggerTypes": [
+          "MSFT_TaskDailyTrigger"
+        ],
+        "ActionIndex": 0,
+        "ActionType": "Exec",
+        "ActionExecute": "C:\\Windows\\system32\\UsoClient.exe",
+        "ActionArguments": "StartScan",
+        "ActionCommandLine": "C:\\Windows\\system32\\UsoClient.exe StartScan",
+        "ComClassId": null,
+        "ExecutablePath": "C:\\Windows\\system32\\UsoClient.exe",
+        "ExecutableExists": true
+      },
+      {
+        "TaskName": "Sync",
+        "TaskPath": "\\Microsoft\\Windows\\Maintenance\\",
+        "FullName": "\\Microsoft\\Windows\\Maintenance\\Sync",
+        "State": "Ready",
+        "Author": "WS-LAB-02\\labuser",
+        "UserId": "NT AUTHORITY\\SYSTEM",
+        "RunLevel": "Limited",
+        "Hidden": true,
+        "TriggerTypes": [
+          "MSFT_TaskDailyTrigger"
+        ],
+        "ActionIndex": 0,
+        "ActionType": "Exec",
+        "ActionExecute": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "ActionArguments": "-NoP -W Hidden -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+        "ActionCommandLine": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoP -W Hidden -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+        "ComClassId": null,
+        "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "ExecutableExists": true
+      },
+      {
+        "TaskName": "SysCache",
+        "TaskPath": "\\",
+        "FullName": "\\SysCache",
+        "State": "Ready",
+        "Author": "WS-LAB-02\\labuser",
+        "UserId": "NT AUTHORITY\\SYSTEM",
+        "RunLevel": "Limited",
+        "Hidden": false,
+        "TriggerTypes": [
+          "MSFT_TaskDailyTrigger"
+        ],
+        "ActionIndex": 0,
+        "ActionType": "Exec",
+        "ActionExecute": "C:\\ProgramData\\SysCache\\syscache.exe",
+        "ActionArguments": "/quiet",
+        "ActionCommandLine": "C:\\ProgramData\\SysCache\\syscache.exe /quiet",
+        "ComClassId": null,
+        "ExecutablePath": "C:\\ProgramData\\SysCache\\syscache.exe",
+        "ExecutableExists": true
+      },
+      {
+        "TaskName": "LegacyTool",
+        "TaskPath": "\\",
+        "FullName": "\\LegacyTool",
+        "State": "Ready",
+        "Author": "CORP\\ITOps",
+        "UserId": "NT AUTHORITY\\SYSTEM",
+        "RunLevel": "Limited",
+        "Hidden": false,
+        "TriggerTypes": [
+          "MSFT_TaskDailyTrigger"
+        ],
+        "ActionIndex": 0,
+        "ActionType": "Exec",
+        "ActionExecute": "C:\\Tools\\legacytool.exe",
+        "ActionArguments": "",
+        "ActionCommandLine": "C:\\Tools\\legacytool.exe",
+        "ComClassId": null,
+        "ExecutablePath": "C:\\Tools\\legacytool.exe",
+        "ExecutableExists": false
+      }
+    ],
+    "Service": [
+      {
+        "Name": "Spooler",
+        "DisplayName": "Print Spooler",
+        "PathName": "C:\\Windows\\System32\\spoolsv.exe",
+        "ExecutablePath": "C:\\Windows\\System32\\spoolsv.exe",
+        "Arguments": "",
+        "StartMode": "Auto",
+        "State": "Running",
+        "StartName": "LocalSystem",
+        "UnquotedPathWithSpaces": false,
+        "ExecutableExists": true
+      },
+      {
+        "Name": "WinUpdateHelper",
+        "DisplayName": "Windows Update Helper",
+        "PathName": "C:\\ProgramData\\WinUpd\\helper.exe",
+        "ExecutablePath": "C:\\ProgramData\\WinUpd\\helper.exe",
+        "Arguments": "",
+        "StartMode": "Auto",
+        "State": "Running",
+        "StartName": "LocalSystem",
+        "UnquotedPathWithSpaces": false,
+        "ExecutableExists": true
+      },
+      {
+        "Name": "VendorSync",
+        "DisplayName": "Vendor Sync",
+        "PathName": "C:\\Program Files\\Vendor Sync\\syncsvc.exe -run",
+        "ExecutablePath": "C:\\Program Files\\Vendor Sync\\syncsvc.exe",
+        "Arguments": "-run",
+        "StartMode": "Auto",
+        "State": "Running",
+        "StartName": "LocalSystem",
+        "UnquotedPathWithSpaces": true,
+        "ExecutableExists": true
+      },
+      {
+        "Name": "RemoteHelper",
+        "DisplayName": "Remote Helper",
+        "PathName": "C:\\Windows\\System32\\cmd.exe /c C:\\Windows\\Temp\\h.bat",
+        "ExecutablePath": "C:\\Windows\\System32\\cmd.exe",
+        "Arguments": "/c C:\\Windows\\Temp\\h.bat",
+        "StartMode": "Auto",
+        "State": "Running",
+        "StartName": "LocalSystem",
+        "UnquotedPathWithSpaces": false,
+        "ExecutableExists": true
+      }
+    ],
+    "RegistryRun": [
+      {
+        "Hive": "HKLM",
+        "KeyPath": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+        "RunType": "Run",
+        "ValueName": "SecurityHealth",
+        "ValueKind": "String",
+        "Data": "%windir%\\system32\\SecurityHealthSystray.exe",
+        "ExecutablePath": "C:\\Windows\\system32\\SecurityHealthSystray.exe",
+        "Arguments": "",
+        "ExecutableExists": true
+      },
+      {
+        "Hive": "HKCU",
+        "KeyPath": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+        "RunType": "Run",
+        "ValueName": "OneDrive",
+        "ValueKind": "String",
+        "Data": "\"C:\\Users\\labuser\\AppData\\Local\\Microsoft\\OneDrive\\OneDrive.exe\" /background",
+        "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\Microsoft\\OneDrive\\OneDrive.exe",
+        "Arguments": "/background",
+        "ExecutableExists": true
+      },
+      {
+        "Hive": "HKLM",
+        "KeyPath": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+        "RunType": "Run",
+        "ValueName": "Updater",
+        "ValueKind": "String",
+        "Data": "powershell.exe -nop -w hidden -ep bypass -File C:\\Windows\\Temp\\u.ps1",
+        "ExecutablePath": "powershell.exe",
+        "Arguments": "-nop -w hidden -ep bypass -File C:\\Windows\\Temp\\u.ps1",
+        "ExecutableExists": true
+      }
+    ],
+    "StartupItem": [
+      {
+        "Scope": "AllUsers",
+        "Path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\run-me.bat",
+        "FileName": "run-me.bat",
+        "Extension": ".bat",
+        "IsShortcut": false,
+        "TargetPath": null,
+        "TargetArguments": null,
+        "TargetCommandLine": "",
+        "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+        "SizeBytes": 1024,
+        "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\run-me.bat",
+        "ExecutableExists": true
+      },
+      {
+        "Scope": "CurrentUser",
+        "Path": "C:\\Users\\labuser\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Helper.lnk",
+        "FileName": "Helper.lnk",
+        "Extension": ".lnk",
+        "IsShortcut": true,
+        "TargetPath": "C:\\Users\\labuser\\AppData\\Local\\Temp\\helper.exe",
+        "TargetArguments": "",
+        "TargetCommandLine": "C:\\Users\\labuser\\AppData\\Local\\Temp\\helper.exe",
+        "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+        "SizeBytes": 1024,
+        "ExecutablePath": "C:\\Users\\labuser\\AppData\\Local\\Temp\\helper.exe",
+        "ExecutableExists": true
+      },
+      {
+        "Scope": "AllUsers",
+        "Path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\desktop.ini",
+        "FileName": "desktop.ini",
+        "Extension": ".ini",
+        "IsShortcut": false,
+        "TargetPath": null,
+        "TargetArguments": null,
+        "TargetCommandLine": "",
+        "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+        "SizeBytes": 1024,
+        "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\desktop.ini",
+        "ExecutableExists": true
+      }
+    ],
+    "WmiSubscription": [
+      {
+        "Kind": "CommandLineEventConsumer",
+        "Name": "SysHealthConsumer",
+        "CommandLineTemplate": "powershell.exe -NoP -W Hidden -File C:\\ProgramData\\SysCache\\hb.ps1",
+        "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "ScriptingEngine": null,
+        "ScriptTextPreview": null,
+        "ScriptTextLength": 0,
+        "FilterName": "SysHealthFilter",
+        "FilterQuery": "SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System'",
+        "Bound": true
+      }
+    ],
+    "LocalAccount": [
+      {
+        "AccountName": "Administrator",
+        "Enabled": false,
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-500",
+        "PasswordRequired": true,
+        "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+        "LastLogon": "2026-10-16T04:00:00.000Z"
+      },
+      {
+        "AccountName": "Guest",
+        "Enabled": true,
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-501",
+        "PasswordRequired": false,
+        "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+        "LastLogon": "2026-10-16T04:00:00.000Z"
+      },
+      {
+        "AccountName": "labuser",
+        "Enabled": true,
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-1001",
+        "PasswordRequired": true,
+        "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+        "LastLogon": "2026-10-16T04:00:00.000Z"
+      },
+      {
+        "AccountName": "svc_backup",
+        "Enabled": true,
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-1002",
+        "PasswordRequired": false,
+        "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+        "LastLogon": "2026-10-16T04:00:00.000Z"
+      }
+    ],
+    "LocalGroupMember": [
+      {
+        "Group": "Administrators",
+        "MemberName": "WS-LAB-02\\Administrator",
+        "ShortName": "Administrator",
+        "ObjectClass": "User",
+        "PrincipalSource": "Local",
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-500"
+      },
+      {
+        "Group": "Administrators",
+        "MemberName": "WS-LAB-02\\labtemp",
+        "ShortName": "labtemp",
+        "ObjectClass": "User",
+        "PrincipalSource": "Local",
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-1005"
+      },
+      {
+        "Group": "Administrators",
+        "MemberName": "CORP\\Domain Admins",
+        "ShortName": "Domain Admins",
+        "ObjectClass": "Group",
+        "PrincipalSource": "ActiveDirectory",
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-512"
+      }
+    ],
+    "Event.Security": [
+      {
+        "Channel": "Security",
+        "EventId": 4697,
+        "TimeCreated": "2026-10-16T09:20:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-02",
+        "RecordId": 3001,
+        "Data": {
+          "ServiceName": "WinUpdateHelper",
+          "ServiceFileName": "C:\\ProgramData\\WinUpd\\helper.exe",
+          "ServiceAccount": "LocalSystem",
+          "ServiceStartType": "2",
+          "SubjectUserName": "labuser"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4698,
+        "TimeCreated": "2026-10-16T09:22:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-02",
+        "RecordId": 3002,
+        "Data": {
+          "TaskName": "\\Microsoft\\Windows\\Maintenance\\Sync",
+          "SubjectUserName": "labuser",
+          "TaskContent": "<Task><Actions><Exec><Command>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</Command><Arguments>-NoP -W Hidden -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==</Arguments></Exec></Actions></Task>"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4732,
+        "TimeCreated": "2026-10-16T09:25:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-LAB-02",
+        "RecordId": 3003,
+        "Data": {
+          "MemberName": "-",
+          "MemberSid": "S-1-5-21-1111111111-2222222222-3333333333-1005",
+          "TargetUserName": "Administrators",
+          "TargetSid": "S-1-5-32-544",
+          "SubjectUserName": "labuser"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "WTH-XDR-001",
+      "name": "Imported event: encoded or download command line",
+      "version": "1.0.0",
+      "category": "Imported",
+      "dataSource": "DefenderXdr",
+      "severity": "Medium",
+      "confidence": "Low",
+      "findingType": "Heuristic",
+      "description": "An imported Defender XDR process event has a command line with an encoded PowerShell argument or a download-and-execute pattern.",
+      "rationale": "Advanced hunting exports include process command lines. The same patterns used for live data are applied to the imported rows.",
+      "evidenceRequirements": [
+        "Imported DeviceProcessEvents-style rows with ProcessCommandLine"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "RecordType",
+            "op": "equals",
+            "value": "Event"
+          },
+          {
+            "any": [
+              {
+                "field": "ProcessCommandLine",
+                "op": "matchesList",
+                "list": "encodedPowerShell"
+              },
+              {
+                "field": "ProcessCommandLine",
+                "op": "matchesList",
+                "list": "downloadCradle"
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "TimeCreated",
+        "DeviceName",
+        "AccountName",
+        "FileName",
+        "FolderPath",
+        "ProcessCommandLine",
+        "InitiatingProcessFileName"
+      ],
+      "titleTemplate": "Imported event: {FileName} on {DeviceName} has an encoded or download command line",
+      "attack": [
+        "T1059.001"
+      ],
+      "falsePositives": [
+        "Management tooling that uses encoded PowerShell"
+      ],
+      "recommendedNextStep": "Review the full row in Defender XDR, the device timeline and the initiating process.",
+      "remediation": "Follow your incident response process in Defender XDR. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "DeviceName",
+        "TimeCreated",
+        "ProcessCommandLine"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-overview"
+      ],
+      "limitations": [
+        "Exported data, not a live query; completeness depends on what was exported."
+      ]
+    },
+    {
+      "id": "WTH-XDR-002",
+      "name": "Imported alert: High severity",
+      "version": "1.0.0",
+      "category": "Imported",
+      "dataSource": "DefenderXdr",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Observation",
+      "description": "An imported Defender XDR alert row has severity High.",
+      "rationale": "The alert was produced by Defender XDR analytics. This toolkit surfaces it with the rest of the findings; it does not re-evaluate the alert logic.",
+      "evidenceRequirements": [
+        "Imported alert rows with Title and Severity"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "RecordType",
+            "op": "equals",
+            "value": "Alert"
+          },
+          {
+            "field": "Severity",
+            "op": "equals",
+            "value": "High"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "TimeCreated",
+        "DeviceName",
+        "AlertId",
+        "Title",
+        "Severity",
+        "Category"
+      ],
+      "titleTemplate": "Imported alert: {Title}",
+      "attack": [],
+      "falsePositives": [
+        "Alerts triggered by authorized testing"
+      ],
+      "recommendedNextStep": "Open the alert in Defender XDR and review the evidence and the incident it belongs to.",
+      "remediation": "Follow your incident response process in Defender XDR. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "AlertId"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-overview"
+      ],
+      "limitations": [
+        "An alert is not an ATT&CK technique mapping; use the alert's own technique tags in Defender XDR."
+      ]
+    },
+    {
+      "id": "WTH-XDR-003",
+      "name": "Imported alert: Medium severity",
+      "version": "1.0.0",
+      "category": "Imported",
+      "dataSource": "DefenderXdr",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Observation",
+      "description": "An imported Defender XDR alert row has severity Medium.",
+      "rationale": "See WTH-XDR-002. Medium alerts are surfaced separately so they can be filtered.",
+      "evidenceRequirements": [
+        "Imported alert rows with Title and Severity"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "RecordType",
+            "op": "equals",
+            "value": "Alert"
+          },
+          {
+            "field": "Severity",
+            "op": "equals",
+            "value": "Medium"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "TimeCreated",
+        "DeviceName",
+        "AlertId",
+        "Title",
+        "Severity",
+        "Category"
+      ],
+      "titleTemplate": "Imported alert: {Title}",
+      "attack": [],
+      "falsePositives": [
+        "Alerts triggered by authorized testing"
+      ],
+      "recommendedNextStep": "Open the alert in Defender XDR and review the evidence.",
+      "remediation": "Follow your incident response process in Defender XDR. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "AlertId"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-overview"
+      ],
+      "limitations": [
+        "An alert is not an ATT&CK technique mapping."
+      ]
+    }
+  ]
+}

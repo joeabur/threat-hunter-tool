@@ -1,0 +1,134 @@
+{
+  "comment": "Technique IDs, official titles and tactics used by the shipped rules. Only techniques referenced by a rule are listed; this is not a coverage matrix. Titles follow MITRE ATT&CK Enterprise naming; re-verify against https://attack.mitre.org/ before publishing a new release.",
+  "source": "MITRE ATT&CK Enterprise (https://attack.mitre.org/)",
+  "techniques": [
+    {
+      "id": "T1027.010",
+      "name": "Obfuscated Files or Information: Command Obfuscation",
+      "tactics": [
+        "Defense Evasion"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1027/010/"
+    },
+    {
+      "id": "T1036.005",
+      "name": "Masquerading: Match Legitimate Name or Location",
+      "tactics": [
+        "Defense Evasion"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1036/005/"
+    },
+    {
+      "id": "T1053.005",
+      "name": "Scheduled Task/Job: Scheduled Task",
+      "tactics": [
+        "Execution",
+        "Persistence",
+        "Privilege Escalation"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1053/005/"
+    },
+    {
+      "id": "T1059.001",
+      "name": "Command and Scripting Interpreter: PowerShell",
+      "tactics": [
+        "Execution"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1059/001/"
+    },
+    {
+      "id": "T1070.001",
+      "name": "Indicator Removal: Clear Windows Event Logs",
+      "tactics": [
+        "Defense Evasion"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1070/001/"
+    },
+    {
+      "id": "T1098",
+      "name": "Account Manipulation",
+      "tactics": [
+        "Persistence",
+        "Privilege Escalation"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1098/"
+    },
+    {
+      "id": "T1105",
+      "name": "Ingress Tool Transfer",
+      "tactics": [
+        "Command and Control"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1105/"
+    },
+    {
+      "id": "T1110",
+      "name": "Brute Force",
+      "tactics": [
+        "Credential Access"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1110/"
+    },
+    {
+      "id": "T1204.002",
+      "name": "User Execution: Malicious File",
+      "tactics": [
+        "Execution"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1204/002/"
+    },
+    {
+      "id": "T1218",
+      "name": "System Binary Proxy Execution",
+      "tactics": [
+        "Defense Evasion"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1218/"
+    },
+    {
+      "id": "T1543.003",
+      "name": "Create or Modify System Process: Windows Service",
+      "tactics": [
+        "Persistence",
+        "Privilege Escalation"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1543/003/"
+    },
+    {
+      "id": "T1546.003",
+      "name": "Event Triggered Execution: Windows Management Instrumentation Event Subscription",
+      "tactics": [
+        "Privilege Escalation",
+        "Persistence"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1546/003/"
+    },
+    {
+      "id": "T1547.001",
+      "name": "Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder",
+      "tactics": [
+        "Persistence",
+        "Privilege Escalation"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1547/001/"
+    },
+    {
+      "id": "T1562.001",
+      "name": "Impair Defenses: Disable or Modify Tools",
+      "tactics": [
+        "Defense Evasion"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1562/001/"
+    },
+    {
+      "id": "T1574.009",
+      "name": "Hijack Execution Flow: Path Interception by Unquoted Path",
+      "tactics": [
+        "Persistence",
+        "Privilege Escalation",
+        "Defense Evasion"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1574/009/"
+    }
+  ]
+}
