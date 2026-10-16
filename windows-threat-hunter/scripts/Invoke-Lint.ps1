@@ -32,7 +32,9 @@ $results = foreach ($dir in 'src', 'scripts') {
 $results += Invoke-ScriptAnalyzer -Path (Join-Path $root 'tests') -Recurse -Settings $settings -ExcludeRule PSUseDeclaredVarsMoreThanAssignments
 $results = @($results)
 foreach ($r in $results) {
-    Write-Output ('{0}:{1} [{2}] {3}: {4}' -f $r.ScriptName, $r.Line, $r.Severity, $r.RuleName, $r.Message)
+    $where = if ($r.ScriptPath) { $r.ScriptPath } elseif ($r.Extent -and $r.Extent.File) { $r.Extent.File } else { '(no file)' }
+    Write-Output ('{0}:{1} [{2}] {3}: {4}' -f $where, $r.Line, $r.Severity, $r.RuleName, $r.Message)
+    if (-not $r.RuleName) { Write-Output ($r | Format-List * | Out-String) }
 }
 Write-Output ("PSScriptAnalyzer {0}: {1} finding(s)." -f $mod.Version, $results.Count)
 if ($results.Count -gt 0) { exit 1 }
