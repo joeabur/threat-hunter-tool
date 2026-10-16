@@ -1,0 +1,13 @@
+# Used by CI (see .github/workflows/windows-threat-hunter-security.yml).
+# The default rules stay on. The one allowance below is for a unit-test file whose job is to prove that fake,
+# made-up secrets in command lines get redacted, so it must contain secret-shaped strings.
+title = "windows-threat-hunter gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Synthetic secret-shaped test inputs for the redaction unit tests"
+paths = [
+  '''windows-threat-hunter/tests/Unit/Redaction\.Tests\.ps1''',
+]

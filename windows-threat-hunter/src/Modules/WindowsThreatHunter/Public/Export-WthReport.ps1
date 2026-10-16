@@ -46,7 +46,7 @@ function Export-WthReport {
     )
 
     process {
-        if ($Result.PSObject.Properties['Kind'] -eq $null -or $Result.Kind -ne 'WthHuntResult') {
+        if ($null -eq $Result.PSObject.Properties['Kind'] -or $Result.Kind -ne 'WthHuntResult') {
             throw [System.ArgumentException]::new('Result must be an object returned by Invoke-WthHunt.')
         }
         $dir = Resolve-WthOutputDirectory -Path $OutputDirectory

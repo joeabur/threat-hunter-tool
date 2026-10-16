@@ -18,12 +18,15 @@ function Get-WthTestPath {
 }
 
 function New-WthTestDirectory {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Test helper that only creates a temporary directory.')]
+    param()
     $dir = Join-Path ([System.IO.Path]::GetTempPath()) ('wth-test-' + [guid]::NewGuid().ToString('N').Substring(0, 12))
     [void][System.IO.Directory]::CreateDirectory($dir)
     return $dir
 }
 
 function Remove-WthTestDirectory {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '', Justification = 'Test helper that only removes its own temporary directory.')]
     param([string]$Path)
     if ($Path -and (Test-Path -LiteralPath $Path) -and $Path.StartsWith([System.IO.Path]::GetTempPath())) {
         Remove-Item -LiteralPath $Path -Recurse -Force -ErrorAction SilentlyContinue

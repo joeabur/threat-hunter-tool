@@ -143,13 +143,13 @@ function Get-WthFileExistence {
     $key = $Path.ToLowerInvariant()
     if ($script:WthFileExistenceCache.ContainsKey($key)) { return $script:WthFileExistenceCache[$key] }
     $result = $null
-    try { $result = [bool](Get-WthRawFileExists -Path $Path) }
+    try { $result = [bool](Test-WthRawFile -Path $Path) }
     catch { Write-Verbose "Could not determine whether '$Path' exists: $($_.Exception.Message)" }
     $script:WthFileExistenceCache[$key] = $result
     return $result
 }
 
-function Add-WthFileMetadata {
+function Add-WthFileInfo {
     <#
     .SYNOPSIS
         Adds optional file hash and Authenticode signature fields to items. Reads files; never executes them.
@@ -292,7 +292,7 @@ function Get-WthScheduledTaskCollection {
             $index++
         }
     }
-    $note = Add-WthFileMetadata -Item $items.ToArray() -Mode $Config.collection.fileMetadata -MaxFiles $Config.collection.maxFilesToHash
+    $note = Add-WthFileInfo -Item $items.ToArray() -Mode $Config.collection.fileMetadata -MaxFiles $Config.collection.maxFilesToHash
     $cov = Build-WthCoverage -DataSource 'ScheduledTask' -Collector 'ScheduledTasks' -Status Collected -ItemCount $items.Count -Message ("One item per task action. Tasks whose definition the current account cannot read may be missing. " + $note).Trim()
     return @{ Coverage = @($cov); Items = @{ ScheduledTask = $items.ToArray() } }
 }
@@ -321,7 +321,7 @@ function Get-WthServiceCollection {
                 ExecutableExists       = (Get-WthFileExistence -Path $exe)
             })
     }
-    $note = Add-WthFileMetadata -Item $items.ToArray() -Mode $Config.collection.fileMetadata -MaxFiles $Config.collection.maxFilesToHash
+    $note = Add-WthFileInfo -Item $items.ToArray() -Mode $Config.collection.fileMetadata -MaxFiles $Config.collection.maxFilesToHash
     $cov = Build-WthCoverage -DataSource 'Service' -Collector 'Services' -Status Collected -ItemCount $items.Count -Message ("Service image path from Win32_Service. For shared-host services (svchost.exe) the actual DLL (ServiceDll) is not resolved. " + $note).Trim()
     return @{ Coverage = @($cov); Items = @{ Service = $items.ToArray() } }
 }
@@ -364,7 +364,7 @@ function Get-WthRegistryRunCollection {
         }
         catch { $failed.Add("$($loc.Hive)\$($loc.Sub)") }
     }
-    $note = Add-WthFileMetadata -Item $items.ToArray() -Mode $Config.collection.fileMetadata -MaxFiles $Config.collection.maxFilesToHash
+    $note = Add-WthFileInfo -Item $items.ToArray() -Mode $Config.collection.fileMetadata -MaxFiles $Config.collection.maxFilesToHash
     $status = 'Collected'
     $msg = 'HKLM (64-bit and WOW6432Node) and the current user''s HKCU Run/RunOnce keys. Other users'' hives (HKU) are not read. ' + $note
     if ($failed.Count -gt 0) { $status = 'Partial'; $msg = "Could not read: $($failed -join '; '). " + $msg }
@@ -427,7 +427,7 @@ function Get-WthStartupFolderCollection {
                 })
         }
     }
-    $note = Add-WthFileMetadata -Item $items.ToArray() -Mode $Config.collection.fileMetadata -MaxFiles $Config.collection.maxFilesToHash
+    $note = Add-WthFileInfo -Item $items.ToArray() -Mode $Config.collection.fileMetadata -MaxFiles $Config.collection.maxFilesToHash
     $scope = if ($otherProfiles -gt 0) { "All-users, current-user and $otherProfiles other user profile startup folders." } else { 'All-users and current-user startup folders only; other profiles require an elevated session and collection.includeOtherUserProfiles.' }
     $cov = Build-WthCoverage -DataSource 'StartupItem' -Collector 'StartupFolders' -Status Collected -ItemCount $items.Count -Message ($scope + ' ' + $note).Trim()
     return @{ Coverage = @($cov); Items = @{ StartupItem = $items.ToArray() } }

@@ -16,16 +16,20 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
-$mod = Get-Module -ListAvailable -Name PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
+$mods = @(Get-Module -ListAvailable -Name PSScriptAnalyzer | Sort-Object Version -Descending)
+$mod = @($mods | Where-Object { $_.Version -eq [version]'1.23.0' })[0]
+if (-not $mod) { $mod = $mods[0] }
 if (-not $mod) {
     Write-Output 'PSScriptAnalyzer is not installed: static analysis did NOT run.'
     exit 2
 }
 Import-Module $mod -Force
 $settings = Join-Path $root 'PSScriptAnalyzerSettings.psd1'
-$results = foreach ($dir in 'src', 'scripts', 'tests') {
+$results = foreach ($dir in 'src', 'scripts') {
     Invoke-ScriptAnalyzer -Path (Join-Path $root $dir) -Recurse -Settings $settings
 }
+# Pester discovery variables look unused to the analyzer, so that one rule is skipped for tests only.
+$results += Invoke-ScriptAnalyzer -Path (Join-Path $root 'tests') -Recurse -Settings $settings -ExcludeRule PSUseDeclaredVarsMoreThanAssignments
 $results = @($results)
 foreach ($r in $results) {
     Write-Output ('{0}:{1} [{2}] {3}: {4}' -f $r.ScriptName, $r.Line, $r.Severity, $r.RuleName, $r.Message)

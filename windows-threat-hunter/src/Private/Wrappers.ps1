@@ -163,7 +163,7 @@ function Get-WthRawEvent {
     }
 }
 
-function Get-WthRawFileExists {
+function Test-WthRawFile {
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$Path)
     Test-Path -LiteralPath $Path -PathType Leaf -ErrorAction Stop

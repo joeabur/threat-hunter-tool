@@ -48,7 +48,7 @@ Describe 'Shipped rule catalog' {
 
 Describe 'Rule validation' {
     BeforeAll {
-        function New-RuleFile([string]$Name, $Rule) {
+        function Write-RuleFile([string]$Name, $Rule) {
             $dir = Join-Path $script:Tmp $Name
             [void][System.IO.Directory]::CreateDirectory($dir)
             ConvertTo-WthTestJsonFile -Path (Join-Path $dir 'r.json') -Object @{ schemaVersion = 1; rules = @($Rule) }
@@ -58,7 +58,7 @@ Describe 'Rule validation' {
         function Copy-Template { return ($script:Template | ConvertTo-Json -Depth 20 | ConvertFrom-Json) }
     }
     It 'accepts an unmodified rule' {
-        $dir = New-RuleFile 'ok' (Copy-Template)
+        $dir = Write-RuleFile 'ok' (Copy-Template)
         @(Test-WthRule -Path $dir | Where-Object { -not $_.IsValid }).Count | Should -Be 0
     }
     It 'rejects <Name>' -ForEach @(
@@ -72,7 +72,7 @@ Describe 'Rule validation' {
     ) {
         $rule = Copy-Template
         & $Mutate $rule
-        $dir = New-RuleFile ('bad-' + [guid]::NewGuid().ToString('N').Substring(0, 6)) $rule
+        $dir = Write-RuleFile ('bad-' + [guid]::NewGuid().ToString('N').Substring(0, 6)) $rule
         @(Test-WthRule -Path $dir | Where-Object { -not $_.IsValid }).Count | Should -BeGreaterThan 0
     }
     It 'rejects duplicate rule IDs across files' {
