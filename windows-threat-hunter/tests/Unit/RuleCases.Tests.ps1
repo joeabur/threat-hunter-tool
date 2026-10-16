@@ -41,8 +41,8 @@ Describe 'Rule scenarios' {
 Describe 'Rule case coverage' {
     It 'has scenarios for <RuleId>, with at least one positive and one negative' -ForEach $ruleIds {
         $list = @($script:Cases.cases.$RuleId)
-        ($list | Where-Object { $_.expect -gt 0 }).Count | Should -BeGreaterThan 0
-        ($list | Where-Object { $_.expect -eq 0 }).Count | Should -BeGreaterThan 0
+        @($list | Where-Object { $_.expect -gt 0 }).Count | Should -BeGreaterThan 0
+        @($list | Where-Object { $_.expect -eq 0 }).Count | Should -BeGreaterThan 0
     }
     It 'covers every shipped rule' {
         InModuleScope WindowsThreatHunter -Parameters @{ Ids = @($script:Cases.cases.PSObject.Properties.Name) } {
