@@ -30,7 +30,7 @@ $results = foreach ($dir in 'src', 'scripts') {
 }
 # Pester discovery variables look unused to the analyzer, so that one rule is skipped for tests only.
 $results += Invoke-ScriptAnalyzer -Path (Join-Path $root 'tests') -Recurse -Settings $settings -ExcludeRule PSUseDeclaredVarsMoreThanAssignments
-$results = @($results)
+$results = @($results | Where-Object { $null -ne $_ })
 foreach ($r in $results) {
     $where = if ($r.ScriptPath) { $r.ScriptPath } elseif ($r.Extent -and $r.Extent.File) { $r.Extent.File } else { '(no file)' }
     Write-Output ('{0}:{1} [{2}] {3}: {4}' -f $where, $r.Line, $r.Severity, $r.RuleName, $r.Message)
