@@ -84,14 +84,14 @@ DEFAULT_CONFIG: dict[str, Any] = {
             "/etc/pam.d/sudo",
             "/etc/pam.d/common-auth",
         ],
-        "executable_scan_dirs": ["/tmp", "/var/tmp", "/dev/shm"],
+        "executable_scan_dirs": ["/tmp", "/var/tmp", "/dev/shm"],  # nosec B108 - paths to inspect
         "executable_scan_max_entries": 500,
         "max_users": 200,
         "max_unit_bytes": 65536,
         "content_excerpt_bytes": 16384,
     },
     "variables": {
-        "writable_dirs": ["/tmp", "/var/tmp", "/dev/shm", "/home/*/.cache"],
+        "writable_dirs": ["/tmp", "/var/tmp", "/dev/shm", "/home/*/.cache"],  # nosec B108 - paths to inspect
         "suspicious_command_patterns": SUSPICIOUS_COMMAND_PATTERNS,
         "sudo_suspicious_patterns": SUDO_SUSPICIOUS_PATTERNS,
         "shell_names": ["sh", "bash", "dash", "zsh", "ksh", "ash"],

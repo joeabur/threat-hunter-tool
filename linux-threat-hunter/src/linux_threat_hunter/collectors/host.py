@@ -71,7 +71,7 @@ def collect_host(ctx: CollectContext) -> CollectorResult:
             res.notes.append(f"{key} unavailable: {out.error}")
     # Disk
     disks = []
-    for mount in ("/", "/var", "/tmp", "/home"):
+    for mount in ("/", "/var", "/tmp", "/home"):  # nosec B108 - mount names to report on, never written to
         try:
             u = shutil.disk_usage(ctx.host_path(mount))
             disks.append({"mount": mount, "total": u.total, "free": u.free})

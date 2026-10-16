@@ -33,9 +33,9 @@ def parse_ss(text: str) -> list[dict[str, Any]]:
             "state": state,
             "local_addr": laddr,
             "local_port": lport,
-            "remote_addr": None if raddr in {"*", "0.0.0.0", "::", ""} else raddr,
+            "remote_addr": None if raddr in {"*", "0.0.0.0", "::", ""} else raddr,  # nosec B104 - wildcard peer in ss output, not a bind
             "remote_port": rport or None,
-            "listening": state in {"LISTEN", "UNCONN"} and raddr in {"*", "0.0.0.0", "::", ""},
+            "listening": state in {"LISTEN", "UNCONN"} and raddr in {"*", "0.0.0.0", "::", ""},  # nosec B104
             "pid": None,
             "process": None,
         }
