@@ -1,4 +1,5 @@
-# Evidence, baselines and expected results are hash-verified byte for byte: never rewrite line endings.
-examples/** -text
-# Everything else is normalised to LF so checkouts are identical on every platform.
+# Everything is normalised to LF so checkouts are identical on every platform.
 * text=auto eol=lf
+# Evidence, baselines and expected results are hash-verified byte for byte: never rewrite them.
+# (Later rules win, so this must stay below the catch-all above.)
+examples/** -text
