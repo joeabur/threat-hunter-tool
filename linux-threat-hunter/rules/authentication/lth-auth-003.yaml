@@ -1,0 +1,31 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-AUTH-003
+name: New privileged account activity compared with baseline
+version: 1.0.0
+type: baseline
+data_source: baseline
+severity: medium
+confidence: low
+classification: observation
+description: An account used sudo in the analyzed logs but did not appear among sudo users in the baseline.
+rationale: New sudo usage can mean a newly authorized admin or a compromised or newly created account.
+  A baseline of known sudo users highlights the change.
+baseline:
+  categories:
+  - privileged_users
+  changes:
+  - added
+finding:
+  title: Account {key} used sudo but is not in the baseline
+  explanation: '{key} ran sudo commands in the analyzed log but was not among the privileged users recorded
+    in the baseline.'
+  artifact: sudo user {key}
+false_positives:
+- Newly onboarded administrators.
+- Service accounts with sudo rules that run infrequently (and so were absent when the baseline was built).
+investigation_steps:
+- Confirm with the team that the account should have sudo rights.
+- Review its sudo commands and the sudoers configuration (read-only).
+- Check when the account was created.
+limitations:
+- Reflects only the logs collected; a short log window makes baselines of users incomplete.

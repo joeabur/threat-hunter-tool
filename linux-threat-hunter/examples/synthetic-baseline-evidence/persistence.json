@@ -1,0 +1,100 @@
+[
+  {
+    "content": "[Unit]\nDescription=A high performance web server\nAfter=network.target\n\n[Service]\nType=forking\nExecStart=/usr/sbin/nginx -g 'daemon on; master_process on;'\nExecReload=/usr/sbin/nginx -s reload\n\n[Install]\nWantedBy=multi-user.target\n",
+    "kind": "systemd_service",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/systemd/system/nginx.service",
+    "referenced_paths_exist": {
+      "/usr/sbin/nginx": true
+    },
+    "scope": "system",
+    "sha256": "7d11e8b6b50d87fb5e7a7fbe687cc63824c79aa9dc2fad49d706280e6638e044",
+    "size": 230
+  },
+  {
+    "content": "[Unit]\nDescription=Legacy sync job (software removed, unit left behind)\n\n[Service]\nExecStart=/opt/legacy/sync.sh --all\n\n[Install]\nWantedBy=multi-user.target\n",
+    "kind": "systemd_service",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/systemd/system/legacy-sync.service",
+    "referenced_paths_exist": {
+      "/opt/legacy/sync.sh": false
+    },
+    "scope": "system",
+    "sha256": "ec9f36f433ee1bc537741dae96030b0ab4a8a683708b3d4f8457c502c7bfa74f",
+    "size": 157
+  },
+  {
+    "content": "[Unit]\nDescription=Daily apt download activities\n\n[Timer]\nOnCalendar=*-*-* 6,18:00\nRandomizedDelaySec=12h\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n",
+    "kind": "systemd_timer",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/systemd/system/apt-daily.timer",
+    "referenced_paths_exist": {},
+    "scope": "system",
+    "sha256": "0075e974af4e3a94757e219ba50ccb8348d4d1a8834d938f6cc9b1f4fd1db4e5",
+    "size": 156
+  },
+  {
+    "content": "# /etc/crontab: system-wide crontab\nSHELL=/bin/sh\n17 * * * * root cd / && run-parts --report /etc/cron.hourly\n",
+    "has_user_field": true,
+    "kind": "cron_file",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/crontab",
+    "referenced_paths_exist": {},
+    "sha256": "8e53acb0a8df27099cfd7e420b6de3fc497b706cc140253dd57e8ba2ef3abedc",
+    "size": 110
+  },
+  {
+    "content": "0 3 * * * root /usr/sbin/logrotate /etc/logrotate.conf\n",
+    "has_user_field": true,
+    "kind": "cron_file",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/cron.d/logrotate",
+    "referenced_paths_exist": {
+      "/usr/sbin/logrotate": true
+    },
+    "sha256": "40917454d3bdbbbd9ec32970b9cd8a54af3a21e7eeb6204ca481df18423b5ad2",
+    "size": 55
+  },
+  {
+    "content": "# ~/.bashrc\nalias ll='ls -la'\n",
+    "kind": "shell_startup",
+    "mode": "0644",
+    "mtime": "2025-06-01T10:00:00Z",
+    "owner": "alice",
+    "path": "/home/alice/.bashrc",
+    "referenced_paths_exist": {},
+    "sha256": "740cce7cd2a9871f795d8c377a3e0bcd1d857d51b977c6f89b6047be8732f15b",
+    "size": 30
+  },
+  {
+    "content": "PermitRootLogin no\nPasswordAuthentication yes\n",
+    "kind": "ssh_config",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/ssh/sshd_config",
+    "referenced_paths_exist": {},
+    "sha256": "54af76d6eb22ce2d95b0cdf8ec5598ed3ad93d34ae4ab48619c36877ccafe79f",
+    "size": 46
+  },
+  {
+    "key_count": 1,
+    "kind": "ssh_authorized_keys",
+    "mode": "0600",
+    "mtime": "2025-06-01T10:00:00Z",
+    "owner": "alice",
+    "path": "/home/alice/.ssh/authorized_keys",
+    "sha256": "d6ff3973945946bb997ca9d1bc5f9a7b71c617ada6084a0d1db6c8f07c65ca33",
+    "size": 45
+  }
+]

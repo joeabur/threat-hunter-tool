@@ -1,0 +1,8 @@
+# Pinned development toolchain (versions used to validate this repository).
+# Runtime dependency: PyYAML only (see pyproject.toml).
+PyYAML==6.0.1
+pytest==9.1.1
+ruff==0.17.1
+mypy==2.4.0
+types-PyYAML==6.0.12.20260906
+build>=1.2

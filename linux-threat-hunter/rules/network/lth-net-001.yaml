@@ -1,0 +1,36 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-NET-001
+name: Connection to an analyst-supplied suspicious endpoint
+version: 1.0.0
+type: ioc
+data_source: network
+severity: high
+confidence: medium
+classification: ioc_match
+description: A socket's remote address (or remote host, process name, path or hash) equals an indicator
+  from the IOC file.
+rationale: Connections to known-suspicious infrastructure are a classic lead. An IOC match shows an artifact
+  equals a listed indicator; it does not by itself confirm compromise.
+ioc:
+  indicator_types:
+  - ip
+  - domain
+  - process_name
+  - file_path
+  - sha256
+finding:
+  title: '{process} (pid {pid}) connected to IOC {indicator}'
+  explanation: A {proto} socket {local_addr}:{local_port} to {remote_addr}:{remote_port} (process {process},
+    pid {pid}) matched the {indicator_type} indicator {indicator}.
+  artifact: '{proto} {local_addr}:{local_port} -> {remote_addr}:{remote_port} (pid {pid})'
+false_positives:
+- The indicator list may be stale, over-broad or contain shared infrastructure (CDNs, scanners).
+- Security tooling or an analyst may legitimately handle the indicator (sandboxes, threat-intel lookups).
+- Domain indicators can only match if the evidence recorded a hostname (ss reports addresses).
+investigation_steps:
+- Confirm the indicator's source, age and confidence in your own threat-intelligence records.
+- Review the cited evidence record and surrounding activity (parent process, timestamps, owner).
+- Escalate through your incident-response process before taking any containment action.
+- Identify the owning process, its executable and parent (LTH-COR-003 links these).
+limitations:
+- Network telemetry is a snapshot of socket state; connections that closed are not visible.

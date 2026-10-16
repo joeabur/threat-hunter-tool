@@ -1,0 +1,20 @@
+# Optional local hooks: `pip install pre-commit && pre-commit install`
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: ruff check
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: ruff format --check
+        entry: ruff format --check
+        language: system
+        types: [python]
+      - id: rules-validate
+        name: validate detection rules
+        entry: env PYTHONPATH=src python -m linux_threat_hunter rules validate
+        language: system
+        pass_filenames: false
+        files: ^rules/

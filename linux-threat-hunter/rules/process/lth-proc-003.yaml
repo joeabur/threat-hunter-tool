@@ -1,0 +1,40 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PROC-003
+name: Shell spawned by a network-facing service
+version: 1.0.0
+type: match
+data_source: process
+severity: medium
+confidence: medium
+classification: heuristic
+description: A shell process whose parent is a web server, database or similar network-facing service.
+rationale: Network-facing services rarely spawn interactive shells. Web-shell and exploitation activity
+  often shows up as a service process starting sh/bash.
+conditions:
+  all:
+  - field: name
+    op: in
+    value: $shell_names
+  - field: parent_name
+    op: in
+    value: $server_process_names
+finding:
+  title: Shell {name} (pid {pid}) has parent service {parent_name}
+  explanation: 'Process {name} (pid {pid}, user {user}) was started by {parent_name} (ppid {ppid}). Command
+    line: {cmdline}.'
+  artifact: pid {pid} (parent {parent_name}, pid {ppid})
+attack:
+- tactic: execution
+  technique: T1059.004
+false_positives:
+- Applications that shell out by design (PHP system(), cron-like helpers, database admin scripts, backup
+  hooks).
+- Legitimate maintenance run through a service's exec features.
+investigation_steps:
+- Read the shell's command line and working directory for the action it performed.
+- Review the parent service's logs around the process start time.
+- Check the service's content directories for recently modified scripts.
+limitations:
+- Requires parent process telemetry. If the parent exited before collection the relationship is invisible.
+references:
+- https://attack.mitre.org/techniques/T1059/004/

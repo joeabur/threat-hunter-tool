@@ -1,0 +1,56 @@
+{
+  "collected_at": "2025-10-14T09:00:00Z",
+  "collection_is_root": false,
+  "collectors": [
+    {
+      "counts": {},
+      "errors": [],
+      "name": "host",
+      "notes": [],
+      "status": "ok"
+    },
+    {
+      "counts": {},
+      "errors": [],
+      "name": "process",
+      "notes": [],
+      "status": "ok"
+    },
+    {
+      "counts": {},
+      "errors": [],
+      "name": "persistence",
+      "notes": [],
+      "status": "ok"
+    },
+    {
+      "counts": {},
+      "errors": [],
+      "name": "auth",
+      "notes": [],
+      "status": "ok"
+    },
+    {
+      "counts": {},
+      "errors": [],
+      "name": "files",
+      "notes": [],
+      "status": "ok"
+    },
+    {
+      "counts": {},
+      "errors": [],
+      "name": "network",
+      "notes": [
+        "synthetic example of limited visibility: process names missing for some sockets"
+      ],
+      "status": "partial"
+    }
+  ],
+  "hostname": "lab-host-01",
+  "note": "SYNTHETIC training data. Not collected from a real host.",
+  "profile": "basic",
+  "schema_version": 1,
+  "synthetic": true,
+  "timezone": "UTC"
+}

@@ -1,0 +1,32 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-COR-002
+name: New persistence artifact whose content matches an IOC
+version: 1.0.0
+type: correlation
+data_source: findings
+severity: critical
+confidence: medium
+classification: correlation
+description: Links a new or modified systemd service (LTH-PERS-001) with an IOC match on the same artifact
+  (LTH-PERS-006).
+rationale: Persistence that is both new relative to the baseline and tied to a known indicator is more
+  concerning than either signal alone. Still validate before acting.
+correlate:
+  a:
+  - LTH-PERS-001
+  - LTH-PERS-004
+  b:
+  - LTH-PERS-006
+  join_on: path
+finding:
+  title: New persistence artifact {join_value} also matches an IOC
+  explanation: '{rule_a} and {rule_b} both reference {join_value}: the artifact is new or changed relative
+    to the baseline and matches an indicator.'
+false_positives:
+- A stale or over-broad IOC list combined with a legitimate new service.
+investigation_steps:
+- Read the unit/cron file and referenced executable without running them.
+- Preserve evidence per your incident-response process before changes.
+- Escalate for containment decisions.
+limitations:
+- Both signals must refer to the same artifact path; related artifacts under other paths are not linked.

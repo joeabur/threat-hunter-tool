@@ -1,0 +1,34 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-NET-003
+name: Network endpoint owned by a process in a writable location
+version: 1.0.0
+type: match
+data_source: network
+severity: medium
+confidence: medium
+classification: heuristic
+description: A socket belongs to a process whose executable is under a writable directory such as /tmp.
+rationale: Network activity from a binary staged in a writable location combines two weak signals into
+  a stronger lead. Neither unusual ports nor unfamiliar endpoints are treated as malicious on their own.
+conditions:
+  all:
+  - field: process_exe
+    op: path_under
+    value: $writable_dirs
+  - not:
+      field: state
+      op: equals
+      value: TIME-WAIT
+finding:
+  title: '{process} (pid {pid}) has a {state} socket and runs from {process_exe}'
+  explanation: Process {process} (pid {pid}) runs from {process_exe} and owns {proto} {local_addr}:{local_port}
+    -> {remote_addr}:{remote_port} ({state}).
+  artifact: '{proto} {local_addr}:{local_port} -> {remote_addr}:{remote_port} (pid {pid})'
+false_positives:
+- Developer servers started from scratch directories.
+- Installers/updaters downloading from a temp location.
+investigation_steps:
+- Inspect the process (LTH-PROC-001) and the remote endpoint.
+- Check the executable's hash and whether it persists across reboot.
+limitations:
+- Requires process-to-socket association, which needs sufficient privileges.

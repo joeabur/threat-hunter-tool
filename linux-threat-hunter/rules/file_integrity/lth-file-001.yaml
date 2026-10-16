@@ -1,0 +1,31 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-FILE-001
+name: Security-relevant file changed compared with baseline
+version: 1.0.0
+type: baseline
+data_source: baseline
+severity: medium
+confidence: medium
+classification: observation
+description: A selected security-relevant file (for example /etc/sudoers, sshd_config, ld.so.preload)
+  has a different hash, owner or mode than in the baseline.
+rationale: Changes to authentication, authorization and name-resolution files can weaken defenses or redirect
+  traffic.
+baseline:
+  categories:
+  - files
+  changes:
+  - modified
+finding:
+  title: 'Security-relevant file modified since baseline: {key}'
+  explanation: '{key} differs from the baseline (changed fields: {changed_fields}).'
+  artifact: '{key}'
+false_positives:
+- Package updates, configuration management runs and administrator edits.
+- /etc/resolv.conf and /etc/hosts are rewritten by network managers and containers.
+investigation_steps:
+- Obtain the previous version from backups or configuration management and diff it.
+- Correlate the mtime with change records and logins.
+- For hash-only changes, check package verification (dpkg --verify / rpm -V).
+limitations:
+- Which files are watched is configured in collection.file_integrity_paths.

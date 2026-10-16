@@ -1,0 +1,37 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-AUTH-004
+name: Suspicious sudo command pattern
+version: 1.0.0
+type: match
+data_source: auth
+severity: low
+confidence: low
+classification: heuristic
+description: A logged sudo command matches configurable patterns such as launching a root shell or touching
+  /etc/sudoers, /etc/shadow or /etc/passwd.
+rationale: Root shells and edits to account databases are common after privilege escalation, but also
+  routine administration. Low severity and low confidence reflect that.
+conditions:
+  all:
+  - field: event
+    op: equals
+    value: sudo_command
+  - field: command
+    op: regex_any
+    value: $sudo_suspicious_patterns
+finding:
+  title: '{user} ran a sensitive sudo command as {target_user}'
+  explanation: 'sudo log line {line_no}: {user} ran {command} as {target_user} from {pwd}.'
+  artifact: auth.log line {line_no}
+attack:
+- tactic: privilege-escalation
+  technique: T1548.003
+false_positives:
+- Routine administration (sudo -i, sudo su -, visudo).
+- Configuration-management tools editing account files.
+investigation_steps:
+- Check whether the user is an expected administrator and whether a change record exists.
+- Review other events by the same user and session around that time.
+- Inspect the touched file's history in your configuration management.
+limitations:
+- sudo logs record the command requested, not its outcome or what happened in an interactive shell.

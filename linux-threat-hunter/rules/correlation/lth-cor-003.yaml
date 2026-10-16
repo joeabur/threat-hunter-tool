@@ -1,0 +1,33 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-COR-003
+name: Suspicious process linked to unusual network endpoint
+version: 1.0.0
+type: correlation
+data_source: findings
+severity: high
+confidence: medium
+classification: correlation
+description: Links a process finding (LTH-PROC-001/002/003/005) with a network finding (LTH-NET-001/003)
+  for the same pid.
+rationale: A process that looks suspicious and also owns a flagged socket is a stronger lead. Matching
+  uses pid, which is valid within the same collection snapshot.
+correlate:
+  a:
+  - LTH-PROC-001
+  - LTH-PROC-002
+  - LTH-PROC-003
+  - LTH-PROC-005
+  b:
+  - LTH-NET-001
+  - LTH-NET-003
+  join_on: pid
+finding:
+  title: Process pid {join_value} has both a process finding and a network finding
+  explanation: '{rule_a} and {rule_b} both refer to pid {join_value} in this snapshot.'
+false_positives:
+- Development tools running from scratch directories that also open sockets.
+investigation_steps:
+- Inspect the process, its parent, executable hash and the remote endpoint together.
+- Look for persistence referencing the executable.
+limitations:
+- PIDs are only comparable within a single collection snapshot; PID reuse across time is not handled.

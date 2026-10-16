@@ -1,0 +1,41 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PROC-001
+name: Process executing from a writable location
+version: 1.0.0
+type: match
+data_source: process
+severity: medium
+confidence: medium
+classification: heuristic
+description: A running process whose executable path is under a world-writable or user-writable directory
+  such as /tmp, /var/tmp or /dev/shm.
+rationale: Legitimate software is normally installed in root-owned directories. Attackers and some installers
+  stage executables in writable locations because no privileges are needed to write there.
+conditions:
+  all:
+  - field: exe
+    op: path_under
+    value: $writable_dirs
+  - not:
+      field: kernel_thread
+      op: equals
+      value: true
+finding:
+  title: Process {name} (pid {pid}) is executing from {exe}
+  explanation: 'Process {name} with pid {pid}, owned by {user}, runs the executable {exe}, which is under
+    a writable directory. Command line: {cmdline}.'
+  artifact: pid {pid} {exe}
+false_positives:
+- Package managers, language runtimes, CI jobs and installers that unpack and run helpers from /tmp.
+- Developer workstations running locally built binaries from scratch directories.
+- Snap/Flatpak or AppImage mounts that appear under /tmp.
+investigation_steps:
+- Review the full command line, parent process and start time for the process.
+- Check whether the file still exists, its owner, mtime and SHA-256, and compare the hash with threat
+  intelligence.
+- Determine which user or service started it and whether that matches expected activity.
+- Look for persistence referencing the same path (see LTH-PERS-003).
+limitations:
+- Only the executable path at collection time is known; the file may have been replaced or deleted since.
+references:
+- https://attack.mitre.org/tactics/TA0002/

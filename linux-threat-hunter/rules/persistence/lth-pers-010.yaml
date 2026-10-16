@@ -1,0 +1,38 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PERS-010
+name: SSH authorized_keys changed compared with baseline
+version: 1.0.0
+type: baseline
+data_source: baseline
+severity: medium
+confidence: medium
+classification: observation
+description: An authorized_keys file is new or its content hash changed compared with the baseline. Only
+  the hash is collected, never key material.
+rationale: Adding a key to authorized_keys gives durable remote access without a password.
+baseline:
+  categories:
+  - persistence
+  changes:
+  - added
+  - modified
+  where:
+    field: kind
+    op: equals
+    value: ssh_authorized_keys
+finding:
+  title: 'authorized_keys {change}: {key}'
+  explanation: '{key} was {change} relative to the baseline (changed fields: {changed_fields}).'
+  artifact: '{key}'
+attack:
+- tactic: persistence
+  technique: T1098.004
+false_positives:
+- Users or automation rotating keys.
+- New administrators onboarded.
+investigation_steps:
+- On the host, review the file's keys with the account owner (this tool does not read them).
+- Correlate with SSH 'Accepted publickey' events.
+- Check ownership and permissions of the .ssh directory.
+limitations:
+- Key contents are intentionally not collected; only that something changed is known.

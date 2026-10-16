@@ -1,0 +1,34 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-COR-001
+name: Failed-login burst followed by successful login (same source)
+version: 1.0.0
+type: correlation
+data_source: findings
+severity: high
+confidence: medium
+classification: correlation
+description: Links LTH-AUTH-001 (burst of failures) and LTH-AUTH-002 (success after failures) for the
+  same source address within the window.
+rationale: 'Two independent views of the same source address, close in time, raise the priority of the
+  lead. It remains a lead: it does not prove the account was compromised.'
+params:
+  window_seconds: 1800
+correlate:
+  a:
+  - LTH-AUTH-001
+  b:
+  - LTH-AUTH-002
+  join_on: ip
+  require_event_time: true
+finding:
+  title: Failure burst and later success linked for source {join_value}
+  explanation: Findings from {rule_a} and {rule_b} share source address {join_value} within the correlation
+    window.
+false_positives:
+- 'Same causes as the linked rules: mistyped passwords, scanners, automation.'
+investigation_steps:
+- Follow the investigation steps of both linked findings.
+- Establish what the successful session did.
+limitations:
+- Correlation window is 1800 seconds by default; events outside it are not linked.
+- Only events with usable timestamps are correlated.

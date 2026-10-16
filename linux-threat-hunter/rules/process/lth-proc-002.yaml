@@ -1,0 +1,32 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PROC-002
+name: Process matches an analyst-supplied IOC
+version: 1.0.0
+type: ioc
+data_source: process
+severity: high
+confidence: medium
+classification: ioc_match
+description: A process's executable SHA-256, name or path equals an indicator from the supplied IOC file.
+rationale: Analyst-supplied indicators represent artifacts already associated with suspicious activity.
+  Exact matches are cheap to verify and high value to triage. An IOC match shows an artifact equals a
+  listed indicator; it does not by itself confirm compromise.
+ioc:
+  indicator_types:
+  - sha256
+  - process_name
+  - file_path
+finding:
+  title: Process {name} (pid {pid}) matches IOC {indicator}
+  explanation: The {matched_field} of process {name} (pid {pid}, user {user}) matched the {indicator_type}
+    indicator {indicator}.
+  artifact: pid {pid} {exe}
+false_positives:
+- The indicator list may be stale, over-broad or contain shared infrastructure (CDNs, scanners).
+- Security tooling or an analyst may legitimately handle the indicator (sandboxes, threat-intel lookups).
+- 'Process names are not unique: a benign program can share a name with a malicious one (prefer hash IOCs).'
+investigation_steps:
+- Confirm the indicator's source, age and confidence in your own threat-intelligence records.
+- Review the cited evidence record and surrounding activity (parent process, timestamps, owner).
+- Escalate through your incident-response process before taking any containment action.
+references: []

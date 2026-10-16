@@ -1,0 +1,61 @@
+[
+  {
+    "is_executable": false,
+    "mode": "0644",
+    "mtime": "2025-10-14T03:23:00Z",
+    "owner": "root",
+    "path": "/etc/passwd",
+    "setuid": false,
+    "sha256": "b8017b4a63ecc8ef39dbe57eafb783b70e30215eb7c10fb3483aad7451905f4c",
+    "size": 29,
+    "world_writable": false
+  },
+  {
+    "is_executable": false,
+    "mode": "0440",
+    "mtime": "2025-10-14T03:23:00Z",
+    "owner": "deploy",
+    "path": "/etc/sudoers",
+    "setuid": false,
+    "sha256": "4c5ef9bf2d9e921497a8313a92f05ea642babff218120c685ca1bc8eb0b3f15f",
+    "size": 25,
+    "world_writable": false
+  },
+  {
+    "is_executable": false,
+    "mode": "0666",
+    "mtime": "2025-10-14T03:23:00Z",
+    "owner": "root",
+    "path": "/etc/ssh/sshd_config",
+    "setuid": false,
+    "sha256": "54af76d6eb22ce2d95b0cdf8ec5598ed3ad93d34ae4ab48619c36877ccafe79f",
+    "size": 46,
+    "world_writable": true
+  },
+  {
+    "file_type": "elf",
+    "is_executable": true,
+    "mode": "0755",
+    "mtime": "2025-10-14T03:23:00Z",
+    "owner": "root",
+    "path": "/tmp/.cache/updater",
+    "setuid": false,
+    "sha256": "6b12bb490904488249c0409d2ed838fac75ed403699541afd7bee939297dd36f",
+    "size": 26,
+    "source_dir": "/tmp",
+    "world_writable": false
+  },
+  {
+    "file_type": "script",
+    "is_executable": true,
+    "mode": "0755",
+    "mtime": "2025-10-14T03:23:00Z",
+    "owner": "alice",
+    "path": "/dev/shm/.x",
+    "setuid": false,
+    "sha256": "e8c589cde2185fa68d06db170a541318c56d37d0929c8eb31ab0c81f063d808c",
+    "size": 25,
+    "source_dir": "/dev/shm",
+    "world_writable": false
+  }
+]

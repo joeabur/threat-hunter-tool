@@ -1,0 +1,34 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-FILE-004
+name: Unexpected owner on a security-relevant file
+version: 1.0.0
+type: match
+data_source: file
+severity: high
+confidence: medium
+classification: observation
+description: A selected file under /etc is owned by an account other than root.
+rationale: Authentication and sudo configuration is root-owned on standard systems. Different ownership
+  lets that account change privileged behaviour.
+conditions:
+  all:
+  - field: owner
+    op: not_equals
+    value: root
+  - field: path
+    op: path_under
+    value: $security_config_dirs
+  - field: source_dir
+    op: exists
+    value: false
+finding:
+  title: '{path} is owned by {owner}'
+  explanation: '{path} has owner {owner} and mode {mode}; root ownership is expected.'
+  artifact: '{path}'
+false_positives:
+- Files deliberately delegated to a service account by an administrator.
+- Container or chroot images where UID mapping makes names differ.
+investigation_steps:
+- Verify the owner against configuration management or package ownership.
+- Review the file for modifications.
+- Determine when ownership changed (mtime/ctime, audit logs).

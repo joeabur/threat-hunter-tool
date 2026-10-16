@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "description": "SYNTHETIC indicators for training only. No real threat intelligence.",
+  "options": {
+    "match_subdomains": false
+  },
+  "indicators": {
+    "sha256": [
+      {
+        "value": "6b12bb490904488249c0409d2ed838fac75ed403699541afd7bee939297dd36f",
+        "description": "Synthetic 'updater' sample",
+        "severity": "high",
+        "references": [
+          "https://example.test/synthetic/ioc-1"
+        ]
+      }
+    ],
+    "process_names": [],
+    "file_paths": [
+      {
+        "value": "/tmp/.cache/updater",
+        "description": "Synthetic staging path",
+        "severity": "high"
+      }
+    ],
+    "ips": [
+      {
+        "value": "203.0.113.50",
+        "description": "Synthetic C2 address (TEST-NET-3)",
+        "severity": "high"
+      },
+      {
+        "value": "198.51.100.23",
+        "description": "Synthetic suspicious SSH source (TEST-NET-2)",
+        "severity": "medium"
+      }
+    ],
+    "domains": [
+      {
+        "value": "bad-update.example.test",
+        "description": "Synthetic payload domain",
+        "severity": "high"
+      }
+    ]
+  }
+}

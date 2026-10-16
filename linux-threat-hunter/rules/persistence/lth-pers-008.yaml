@@ -1,0 +1,37 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PERS-008
+name: New or modified systemd timer compared with baseline
+version: 1.0.0
+type: baseline
+data_source: baseline
+severity: medium
+confidence: medium
+classification: observation
+description: A systemd timer unit is not in the trusted baseline or has changed.
+rationale: Timers schedule execution like cron but are easy to overlook. A new timer is worth reviewing
+  alongside the service it activates.
+baseline:
+  categories:
+  - persistence
+  changes:
+  - added
+  - modified
+  where:
+    field: kind
+    op: equals
+    value: systemd_timer
+finding:
+  title: 'systemd timer {change} since baseline: {key}'
+  explanation: 'Timer {key} was {change} relative to the baseline (changed fields: {changed_fields}).'
+  artifact: '{key}'
+attack:
+- tactic: persistence
+  technique: T1053.006
+false_positives:
+- Package updates (apt-daily, fstrim) and administrator scheduling.
+investigation_steps:
+- Read the timer and the service it activates (Unit=).
+- Review OnCalendar/OnBootSec for unusual frequency.
+- Check mtime and ownership.
+references:
+- https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html

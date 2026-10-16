@@ -1,0 +1,32 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PROC-006
+name: Suspicious command pattern in imported events
+version: 1.0.0
+type: match
+data_source: event
+severity: medium
+confidence: low
+classification: heuristic
+description: An imported command event (events.json, for example from shell audit logging) matches the
+  configurable suspicious command patterns.
+rationale: Imported events extend visibility to history that process snapshots miss. The same tunable
+  patterns as LTH-PROC-005 are applied.
+conditions:
+  field: command
+  op: regex_any
+  value: $suspicious_command_patterns
+finding:
+  title: Suspicious command pattern in imported event from {user}
+  explanation: 'An imported event recorded {user} running: {command}'
+  artifact: '{source} event at {timestamp}'
+attack:
+- tactic: execution
+  technique: T1059.004
+false_positives:
+- Documented installer one-liners.
+- Authorized testing.
+investigation_steps:
+- Confirm the event source's integrity and that the user and time are plausible.
+- Review neighbouring events for the same user and session.
+limitations:
+- The tool cannot verify how the imported events were produced or whether they are complete.

@@ -1,0 +1,40 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PERS-003
+name: Service command references a writable path
+version: 1.0.0
+type: match
+data_source: persistence
+severity: high
+confidence: medium
+classification: heuristic
+description: A systemd service Exec* command references a path under a writable location such as /tmp
+  or /dev/shm.
+rationale: Services run at boot and often with high privileges. Pointing one at a world-writable path
+  allows anyone able to write there to influence what runs.
+conditions:
+  all:
+  - field: kind
+    op: in
+    value:
+    - systemd_service
+    - systemd_dropin
+  - field: commands_text
+    op: text_references_path_under
+    value: $writable_dirs
+finding:
+  title: Service {path} runs a command in a writable location
+  explanation: 'Exec directives in {path} reference a writable directory: {commands_text}'
+  artifact: '{path}'
+attack:
+- tactic: persistence
+  technique: T1543.002
+false_positives:
+- Services deliberately using a private temp directory for scratch files (check whether it is the executable
+  or only an argument).
+- Development or CI services.
+investigation_steps:
+- Identify who owns the referenced path and whether it exists.
+- Check how the unit file arrived (package, management tool or manual).
+- Compare with a baseline and review journal entries for the unit.
+references:
+- https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html

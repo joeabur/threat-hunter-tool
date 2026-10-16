@@ -1,0 +1,2 @@
+Oct 14 02:05:11 lab-host-01 sshd[1201]: Accepted publickey for alice from 192.0.2.10 port 40022 ssh2: ED25519 SHA256:synthetic
+Oct 14 02:06:30 lab-host-01 sudo:    alice : TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/usr/bin/apt update

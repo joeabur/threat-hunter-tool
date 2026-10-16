@@ -1,0 +1,34 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PERS-011
+name: ld.so.preload added or changed
+version: 1.0.0
+type: baseline
+data_source: baseline
+severity: high
+confidence: medium
+classification: observation
+description: /etc/ld.so.preload exists but is not in the baseline, or changed.
+rationale: Libraries listed in /etc/ld.so.preload are loaded into every dynamically linked process. The
+  file is empty or absent on most systems.
+baseline:
+  categories:
+  - persistence
+  changes:
+  - added
+  - modified
+  where:
+    field: kind
+    op: equals
+    value: ld_preload
+finding:
+  title: /etc/ld.so.preload {change}
+  explanation: '{key} was {change} relative to the baseline (changed fields: {changed_fields}).'
+  artifact: '{key}'
+attack:
+- tactic: persistence
+  technique: T1574.006
+false_positives:
+- Legitimate instrumentation or security products that preload libraries.
+investigation_steps:
+- Read the listed library paths and verify their packages and hashes.
+- Check owner, mtime and the library files' locations.

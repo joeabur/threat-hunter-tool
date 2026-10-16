@@ -1,0 +1,30 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PROC-004
+name: Running executable changed since baseline
+version: 1.0.0
+type: baseline
+data_source: baseline
+severity: medium
+confidence: medium
+classification: observation
+description: The SHA-256 of a running executable differs from the hash recorded in the trusted baseline.
+rationale: A changed binary at the same path is expected after package updates but is also how trojanized
+  binaries appear. The tool reports the difference; the analyst decides which it is.
+baseline:
+  categories:
+  - executables
+  changes:
+  - modified
+finding:
+  title: Executable {key} changed since the baseline
+  explanation: 'The running executable {key} had a different SHA-256 than recorded in the baseline (changed
+    fields: {changed_fields}).'
+false_positives:
+- Package or kernel updates replacing binaries.
+- Self-updating software.
+investigation_steps:
+- Compare against the package manager's records (for example dpkg --verify or rpm -V) on a trusted system.
+- Check update history around the file's mtime.
+- Obtain the old and new hashes and compare with reputation sources offline.
+limitations:
+- Only executables of processes running at both collection times are compared.

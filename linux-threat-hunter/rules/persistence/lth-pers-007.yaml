@@ -1,0 +1,41 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PERS-007
+name: Download-and-execute pattern in persistence commands
+version: 1.0.0
+type: match
+data_source: persistence
+severity: high
+confidence: medium
+classification: heuristic
+description: Commands in a service, cron job, rc script or shell startup file match the suspicious command
+  patterns (variables.suspicious_command_patterns).
+rationale: Persistence that fetches and executes remote content on each run lets an attacker change behaviour
+  at will and is rarely needed by legitimate scheduled jobs.
+conditions:
+  all:
+  - field: kind
+    op: in
+    value:
+    - systemd_service
+    - systemd_dropin
+    - cron_job
+    - cron_script
+    - rc_script
+    - shell_startup
+  - field: commands_text
+    op: regex_any
+    value: $suspicious_command_patterns
+finding:
+  title: Suspicious command pattern in {kind} {path}
+  explanation: 'Commands in {path} match a suspicious pattern: {commands_text}'
+  artifact: '{path}'
+attack:
+- tactic: execution
+  technique: T1059.004
+false_positives:
+- Auto-update jobs that deliberately fetch scripts from a trusted internal source.
+- Documented bootstrap scripts.
+investigation_steps:
+- Identify the remote host and whether it belongs to your organisation.
+- Check when the artifact was created and by whom.
+- Retrieve the remote content safely (without executing it) if policy allows.
