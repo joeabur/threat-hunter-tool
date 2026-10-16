@@ -65,7 +65,7 @@ def test_hash_mismatch_is_reported(config: dict[str, Any], tmp_path: Path) -> No
         tmp_path / "e", {"collected_at": "2025-10-14T09:00:00Z"}, {"processes.json": [{"pid": 1, "name": "a"}]}
     )
     assert not load_evidence(tmp_path / "e", config).warnings
-    (tmp_path / "e" / "processes.json").write_text('[{"pid": 1, "name": "tampered"}]')
+    (tmp_path / "e" / "processes.json").write_bytes(b'[{"pid": 1, "name": "tampered"}]')
     assert any("does not match manifest" in w for w in load_evidence(tmp_path / "e", config).warnings)
 
 

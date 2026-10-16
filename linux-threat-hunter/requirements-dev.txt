@@ -6,3 +6,4 @@ ruff==0.17.1
 mypy==2.4.0
 types-PyYAML==6.0.12.20260906
 build>=1.2
+tzdata; sys_platform == "win32"

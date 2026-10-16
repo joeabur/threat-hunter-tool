@@ -76,7 +76,7 @@ def test_read_regular_file_limits(tmp_path: Path) -> None:
 
 def test_read_text_tail_drops_partial_line(tmp_path: Path) -> None:
     f = tmp_path / "log"
-    f.write_text("aaaa\nbbbb\ncccc\n")
+    f.write_bytes(b"aaaa\nbbbb\ncccc\n")
     text, cut = read_text_tail(f, 8)
     assert cut and text == "cccc\n"
 

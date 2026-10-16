@@ -138,6 +138,7 @@ def test_persistence_modules_only_in_full_profile(fs: CollectContext) -> None:
     assert mods and mods[0]["name"] == "nf_tables"
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX permission bits")
 def test_files_collector_never_reads_sensitive_files(fs: CollectContext) -> None:
     root = fs.fs_root
     (root / "etc/shadow").write_text("root:$6$hash:::\n")
@@ -194,6 +195,7 @@ def test_host_collector_partial_when_tools_missing(fs: CollectContext) -> None:
     assert host["interfaces"] is None  # not claimed when unavailable
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="live collection is Linux-only")
 def test_orchestration_isolates_failures_and_refuses_overwrite(
     fs: CollectContext, tmp_path: Path, monkeypatch: Any
 ) -> None:
