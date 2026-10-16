@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "comment": "Suppressions record analyst decisions. Each needs an id, a ruleId, a written reason (15+ characters) and at least one match criterion. They can expire. Suppressed findings still appear in reports.",
+  "suppressions": [
+    {
+      "id": "SUP-001",
+      "ruleId": "WTH-TASK-001",
+      "reason": "OneDrive standalone updater is installed per-user by IT policy and was reviewed.",
+      "match": {
+        "FullName": "\\OneDrive Standalone Update Task-S-1-5-21-1111111111-2222222222-3333333333-1001"
+      },
+      "createdBy": "analyst@example.com",
+      "expires": "2027-06-30"
+    }
+  ]
+}

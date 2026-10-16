@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "comment": "Default Windows Threat Hunter configuration. Override it with a file passed to -ConfigPath; objects merge key by key, arrays replace.",
+  "collection": {
+    "collectors": [
+      "ScheduledTasks",
+      "Services",
+      "RegistryRun",
+      "StartupFolders",
+      "WmiSubscriptions",
+      "LocalAccounts",
+      "Processes",
+      "Network",
+      "Defender",
+      "SecurityEvents",
+      "PowerShellEvents",
+      "SysmonEvents"
+    ],
+    "eventLookbackHours": 24,
+    "maxEventsPerChannel": 2000,
+    "maxProcesses": 5000,
+    "fileMetadata": "Basic",
+    "maxFilesToHash": 300,
+    "privilegedGroups": [
+      "Administrators"
+    ],
+    "includeProcessOwner": false,
+    "includeOtherUserProfiles": false
+  },
+  "limits": {
+    "maxInputFileBytes": 52428800,
+    "maxRegexInputLength": 8192,
+    "maxEvidenceValueLength": 1024,
+    "maxEventDataLength": 8192,
+    "maxFindingsPerRule": 500,
+    "maxItemsPerDataSource": 200000
+  },
+  "redaction": {
+    "enabled": true,
+    "maskUserProfilePaths": true,
+    "principalFields": [
+      "UserId",
+      "Author",
+      "StartName",
+      "Owner",
+      "AccountName",
+      "MemberName",
+      "ShortName",
+      "TargetUserName",
+      "SubjectUserName",
+      "User",
+      "DetectionUser"
+    ],
+    "secretPatterns": [
+      "(?i)(?:password|passwd|pwd|secret|token|apikey|api[-_]key|access[-_]key)\\s*[=:]\\s*(?<v>\"[^\"]*\"|\\'[^\\']*\\'|[^\\s;,&]+)",
+      "(?i)(?:^|\\s)(?:--?|/)(?:password|passwd|pwd|secret|token|apikey|api-key|accesskey)(?:\\s+|[:=])(?<v>\"[^\"]*\"|\\'[^\\']*\\'|\\S+)",
+      "(?i)\\bbearer\\s+(?<v>[A-Za-z0-9._~+/=-]{16,})",
+      "\\b(?<v>AKIA[0-9A-Z]{16})\\b",
+      "(?<v>eyJ[A-Za-z0-9_-]{10,}\\.[A-Za-z0-9_-]{10,}\\.[A-Za-z0-9_-]{10,})",
+      "(?i)://[^/\\s:@]+:(?<v>[^@\\s/]+)@"
+    ]
+  },
+  "lists": {
+    "userWritablePathFragments": [
+      "\\Users\\",
+      "\\AppData\\",
+      "\\Temp\\",
+      "\\ProgramData\\",
+      "\\$Recycle.Bin\\",
+      "\\PerfLogs\\",
+      "\\Downloads\\",
+      "%appdata%",
+      "%localappdata%",
+      "%temp%",
+      "%tmp%",
+      "%userprofile%",
+      "%public%"
+    ],
+    "trustedExecutablePrefixes": [
+      "%ProgramData%\\Microsoft\\Windows Defender\\",
+      "%ProgramData%\\Microsoft\\Windows Defender Advanced Threat Protection\\"
+    ],
+    "systemBinaryDirectories": [
+      "%SystemRoot%\\System32\\",
+      "%SystemRoot%\\SysWOW64\\"
+    ],
+    "systemProcessNames": [
+      "svchost.exe",
+      "lsass.exe",
+      "csrss.exe",
+      "smss.exe",
+      "wininit.exe",
+      "services.exe",
+      "winlogon.exe",
+      "spoolsv.exe",
+      "taskhostw.exe",
+      "dllhost.exe"
+    ],
+    "scriptInterpreters": [
+      "cmd.exe",
+      "powershell.exe",
+      "pwsh.exe",
+      "wscript.exe",
+      "cscript.exe",
+      "mshta.exe",
+      "rundll32.exe",
+      "regsvr32.exe",
+      "wmic.exe"
+    ],
+    "officeApplications": [
+      "winword.exe",
+      "excel.exe",
+      "powerpnt.exe",
+      "outlook.exe",
+      "onenote.exe",
+      "mspub.exe",
+      "visio.exe",
+      "msaccess.exe"
+    ],
+    "networkSuspectProcessNames": [
+      "wscript.exe",
+      "cscript.exe",
+      "mshta.exe",
+      "regsvr32.exe",
+      "rundll32.exe",
+      "certutil.exe",
+      "bitsadmin.exe"
+    ],
+    "scriptAndExecutableExtensions": [
+      ".exe",
+      ".dll",
+      ".scr",
+      ".com",
+      ".bat",
+      ".cmd",
+      ".vbs",
+      ".vbe",
+      ".js",
+      ".jse",
+      ".wsf",
+      ".wsh",
+      ".hta",
+      ".ps1",
+      ".jar",
+      ".msi"
+    ],
+    "defenderExclusionExtensions": [
+      "exe",
+      ".exe",
+      "dll",
+      ".dll",
+      "ps1",
+      ".ps1",
+      "bat",
+      ".bat",
+      "cmd",
+      ".cmd",
+      "vbs",
+      ".vbs",
+      "js",
+      ".js",
+      "scr",
+      ".scr"
+    ],
+    "monitoredPrivilegedGroups": [
+      "Administrators"
+    ],
+    "expectedPrivilegedMembers": [
+      "Administrator",
+      "Domain Admins"
+    ],
+    "expectedWmiConsumers": [],
+    "localSystemAccounts": [
+      "SYSTEM",
+      "NT AUTHORITY\\SYSTEM",
+      "S-1-5-18"
+    ]
+  },
+  "patterns": {
+    "encodedPowerShell": [
+      "(?i)\\s-(?:e|ec|en[a-z]*)\\s+[A-Za-z0-9+/=]{20,}"
+    ],
+    "downloadCradle": [
+      "(?i)\\b(?:iex|invoke-expression)\\b.{0,200}\\b(?:downloadstring|downloadfile|invoke-webrequest|iwr|invoke-restmethod|irm|net\\.webclient)\\b",
+      "(?i)\\bnet\\.webclient\\b.{0,200}\\bdownload(?:string|file)\\b",
+      "(?i)\\b(?:downloadstring|downloadfile)\\s*\\(",
+      "(?i)\\bstart-bitstransfer\\b.{0,200}https?://"
+    ],
+    "scriptHostArguments": [
+      "(?i)\\s-w(?:in(?:dowstyle)?)?\\s+hidden\\b.{0,150}\\s-(?:ep|exec(?:utionpolicy)?)\\s+bypass\\b",
+      "(?i)\\s-(?:ep|exec(?:utionpolicy)?)\\s+bypass\\b.{0,150}\\s-w(?:in(?:dowstyle)?)?\\s+hidden\\b",
+      "(?i)\\s-nop(?:rofile)?\\b.{0,150}\\s-w(?:in(?:dowstyle)?)?\\s+hidden\\b",
+      "(?i)\\b(?:wscript|cscript)(?:\\.exe)?\\b.{0,100}\\.(?:vbs|vbe|js|jse|wsf)\\b",
+      "(?i)\\bmshta(?:\\.exe)?\\s+(?:https?:|vbscript:|javascript:)"
+    ],
+    "lolbinAbuse": [
+      "(?i)\\bcertutil(?:\\.exe)?\\b.{0,150}-(?:urlcache|verifyctl)\\b",
+      "(?i)\\bregsvr32(?:\\.exe)?\\b.{0,150}(?:/i:https?://|scrobj\\.dll)",
+      "(?i)\\brundll32(?:\\.exe)?\\b.{0,150}(?:javascript:|mshtml,\\s*runhtmlapplication)",
+      "(?i)\\bmshta(?:\\.exe)?\\s+https?://",
+      "(?i)\\bbitsadmin(?:\\.exe)?\\b.{0,150}/transfer\\b",
+      "(?i)\\bwmic(?:\\.exe)?\\b.{0,150}\\bprocess\\s+call\\s+create\\b"
+    ],
+    "serviceShellWrapper": [
+      "(?i)\\b(?:cmd|powershell|pwsh)(?:\\.exe)?\\b.{0,100}\\s(?:/c|-c|-command|-enc\\w*)\\b"
+    ],
+    "powershellScriptBlockSuspicious": [
+      "(?i)\\b(?:iex|invoke-expression)\\b.{0,200}\\b(?:downloadstring|downloadfile|invoke-webrequest|iwr|invoke-restmethod|irm|net\\.webclient)\\b",
+      "(?i)\\b(?:downloadstring|downloadfile)\\s*\\(",
+      "(?i)amsi(?:utils|initfailed)",
+      "(?i)\\[reflection\\.assembly\\]::load",
+      "(?i)\\bvirtualalloc(?:ex)?\\b",
+      "(?i)\\bfrombase64string\\b.{0,200}\\b(?:iex|invoke-expression)\\b",
+      "(?i)\\badd-mppreference\\b.{0,100}-exclusion"
+    ]
+  },
+  "ruleOverrides": {},
+  "reporting": {
+    "formats": [
+      "Json",
+      "Csv",
+      "Html"
+    ],
+    "includeSuppressed": true
+  },
+  "suppressionFile": null
+}

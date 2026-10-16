@@ -1,0 +1,3 @@
+<?xml version="1.0"?>
+<!DOCTYPE Event [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+<Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event"><System><Provider Name="x"/><EventID>1</EventID></System><EventData><Data Name="A">&xxe;</Data></EventData></Event>

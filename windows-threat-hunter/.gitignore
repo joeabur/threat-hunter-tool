@@ -1,0 +1,8 @@
+# Reports, live snapshots and test output can contain host names, account names and command lines.
+/reports/
+/snapshots/
+test-results*.xml
+TestResults/
+*.log
+# Keep the synthetic examples that ship with the project.
+!sample-data/**

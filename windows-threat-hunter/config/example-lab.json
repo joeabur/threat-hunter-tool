@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "comment": "Example override for a lab or a noisy environment. Arrays replace the defaults; objects merge. Validate with: Test-WthConfiguration -Path .\\config\\example-lab.json",
+  "collection": {
+    "eventLookbackHours": 72,
+    "fileMetadata": "HashAndSignature"
+  },
+  "lists": {
+    "expectedPrivilegedMembers": [
+      "Administrator",
+      "Domain Admins",
+      "LabAdmin"
+    ]
+  },
+  "ruleOverrides": {
+    "WTH-EVT-001": {
+      "threshold": 5,
+      "windowMinutes": 15
+    },
+    "WTH-NET-003": {
+      "enabled": true
+    },
+    "WTH-PROC-001": {
+      "severity": "Low"
+    }
+  }
+}

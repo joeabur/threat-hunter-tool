@@ -1,0 +1,676 @@
+{
+  "schemaVersion": 1,
+  "kind": "WthSnapshot",
+  "synthetic": true,
+  "description": "SIMULATED benign workstation: expected to produce no findings. Synthetic data, not collected from a real endpoint.",
+  "host": "WS-BENIGN-01",
+  "collectedAt": "2026-10-16T09:30:00.000Z",
+  "redacted": false,
+  "tool": {
+    "Name": "WindowsThreatHunter",
+    "Version": "synthetic-sample"
+  },
+  "platform": {
+    "OperatingSystem": "SYNTHETIC (not a real system)",
+    "PowerShellVersion": "5.1 (simulated)",
+    "PowerShellEdition": "Desktop",
+    "Elevated": true
+  },
+  "environment": {
+    "SystemRoot": "C:\\Windows",
+    "windir": "C:\\Windows",
+    "SystemDrive": "C:",
+    "ProgramFiles": "C:\\Program Files",
+    "ProgramFiles(x86)": "C:\\Program Files (x86)",
+    "ProgramData": "C:\\ProgramData",
+    "ALLUSERSPROFILE": "C:\\ProgramData"
+  },
+  "coverage": [
+    {
+      "DataSource": "ScheduledTask",
+      "Collector": "ScheduledTasks",
+      "Status": "Collected",
+      "ItemCount": 4,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "Service",
+      "Collector": "Services",
+      "Status": "Collected",
+      "ItemCount": 4,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "RegistryRun",
+      "Collector": "RegistryRun",
+      "Status": "Collected",
+      "ItemCount": 2,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "StartupItem",
+      "Collector": "StartupFolders",
+      "Status": "Collected",
+      "ItemCount": 2,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "WmiSubscription",
+      "Collector": "WmiSubscriptions",
+      "Status": "Collected",
+      "ItemCount": 0,
+      "RequiresElevation": "Yes",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "LocalAccount",
+      "Collector": "LocalAccounts",
+      "Status": "Collected",
+      "ItemCount": 4,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "LocalGroupMember",
+      "Collector": "LocalAccounts",
+      "Status": "Collected",
+      "ItemCount": 2,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "Process",
+      "Collector": "Processes",
+      "Status": "Collected",
+      "ItemCount": 9,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "NetworkConnection",
+      "Collector": "Network",
+      "Status": "Collected",
+      "ItemCount": 4,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "DefenderStatus",
+      "Collector": "Defender",
+      "Status": "Collected",
+      "ItemCount": 1,
+      "RequiresElevation": "No",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "DefenderExclusion",
+      "Collector": "Defender",
+      "Status": "Collected",
+      "ItemCount": 0,
+      "RequiresElevation": "Yes",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "DefenderEvent",
+      "Collector": "Defender",
+      "Status": "Collected",
+      "ItemCount": 0,
+      "RequiresElevation": "Maybe",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "Event.Security",
+      "Collector": "SecurityEvents",
+      "Status": "Collected",
+      "ItemCount": 3,
+      "RequiresElevation": "Yes",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "Event.PowerShell",
+      "Collector": "PowerShellEvents",
+      "Status": "Collected",
+      "ItemCount": 1,
+      "RequiresElevation": "Maybe",
+      "Message": "Synthetic data."
+    },
+    {
+      "DataSource": "Event.Sysmon",
+      "Collector": "SysmonEvents",
+      "Status": "Collected",
+      "ItemCount": 1,
+      "RequiresElevation": "Maybe",
+      "Message": "Synthetic data."
+    }
+  ],
+  "items": {
+    "ScheduledTask": [
+      {
+        "TaskName": "Schedule Scan",
+        "TaskPath": "\\Microsoft\\Windows\\UpdateOrchestrator\\",
+        "FullName": "\\Microsoft\\Windows\\UpdateOrchestrator\\Schedule Scan",
+        "State": "Ready",
+        "Author": "Microsoft Corporation",
+        "UserId": "NT AUTHORITY\\SYSTEM",
+        "RunLevel": "Limited",
+        "Hidden": false,
+        "TriggerTypes": [
+          "MSFT_TaskDailyTrigger"
+        ],
+        "ActionIndex": 0,
+        "ActionType": "Exec",
+        "ActionExecute": "C:\\Windows\\system32\\UsoClient.exe",
+        "ActionArguments": "StartScan",
+        "ActionCommandLine": "C:\\Windows\\system32\\UsoClient.exe StartScan",
+        "ComClassId": null,
+        "ExecutablePath": "C:\\Windows\\system32\\UsoClient.exe",
+        "ExecutableExists": true
+      },
+      {
+        "TaskName": "ScheduledDefrag",
+        "TaskPath": "\\Microsoft\\Windows\\Defrag\\",
+        "FullName": "\\Microsoft\\Windows\\Defrag\\ScheduledDefrag",
+        "State": "Ready",
+        "Author": "Microsoft Corporation",
+        "UserId": "NT AUTHORITY\\SYSTEM",
+        "RunLevel": "Limited",
+        "Hidden": false,
+        "TriggerTypes": [
+          "MSFT_TaskDailyTrigger"
+        ],
+        "ActionIndex": 0,
+        "ActionType": "Exec",
+        "ActionExecute": "C:\\Windows\\system32\\defrag.exe",
+        "ActionArguments": "-c -h -o -$",
+        "ActionCommandLine": "C:\\Windows\\system32\\defrag.exe -c -h -o -$",
+        "ComClassId": null,
+        "ExecutablePath": "C:\\Windows\\system32\\defrag.exe",
+        "ExecutableExists": true
+      },
+      {
+        "TaskName": "Nightly Backup",
+        "TaskPath": "\\CorpBackup\\",
+        "FullName": "\\CorpBackup\\Nightly Backup",
+        "State": "Ready",
+        "Author": "CORP\\ITOps",
+        "UserId": "CORP\\svc-backup",
+        "RunLevel": "Limited",
+        "Hidden": false,
+        "TriggerTypes": [
+          "MSFT_TaskDailyTrigger"
+        ],
+        "ActionIndex": 0,
+        "ActionType": "Exec",
+        "ActionExecute": "C:\\Program Files\\CorpBackup\\backup.exe",
+        "ActionArguments": "/nightly",
+        "ActionCommandLine": "C:\\Program Files\\CorpBackup\\backup.exe /nightly",
+        "ComClassId": null,
+        "ExecutablePath": "C:\\Program Files\\CorpBackup\\backup.exe",
+        "ExecutableExists": true
+      },
+      {
+        "TaskName": "DefenderScan",
+        "TaskPath": "\\Microsoft\\Windows\\Windows Defender\\",
+        "FullName": "\\Microsoft\\Windows\\Windows Defender\\DefenderScan",
+        "State": "Ready",
+        "Author": "Microsoft Corporation",
+        "UserId": "NT AUTHORITY\\SYSTEM",
+        "RunLevel": "Limited",
+        "Hidden": false,
+        "TriggerTypes": [
+          "MSFT_TaskDailyTrigger"
+        ],
+        "ActionIndex": 0,
+        "ActionType": "Exec",
+        "ActionExecute": "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MpCmdRun.exe",
+        "ActionArguments": "-Scan -ScanType 1",
+        "ActionCommandLine": "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MpCmdRun.exe -Scan -ScanType 1",
+        "ComClassId": null,
+        "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MpCmdRun.exe",
+        "ExecutableExists": true
+      }
+    ],
+    "Service": [
+      {
+        "Name": "Spooler",
+        "DisplayName": "Print Spooler",
+        "PathName": "C:\\Windows\\System32\\spoolsv.exe",
+        "ExecutablePath": "C:\\Windows\\System32\\spoolsv.exe",
+        "Arguments": "",
+        "StartMode": "Auto",
+        "State": "Running",
+        "StartName": "LocalSystem",
+        "UnquotedPathWithSpaces": false,
+        "ExecutableExists": true
+      },
+      {
+        "Name": "Dhcp",
+        "DisplayName": "DHCP Client",
+        "PathName": "C:\\Windows\\system32\\svchost.exe -k LocalServiceNetworkRestricted -p",
+        "ExecutablePath": "C:\\Windows\\system32\\svchost.exe",
+        "Arguments": "-k LocalServiceNetworkRestricted -p",
+        "StartMode": "Auto",
+        "State": "Running",
+        "StartName": "NT AUTHORITY\\LocalService",
+        "UnquotedPathWithSpaces": false,
+        "ExecutableExists": true
+      },
+      {
+        "Name": "WinDefend",
+        "DisplayName": "Microsoft Defender Antivirus Service",
+        "PathName": "\"C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MsMpEng.exe\"",
+        "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MsMpEng.exe",
+        "Arguments": "",
+        "StartMode": "Auto",
+        "State": "Running",
+        "StartName": "LocalSystem",
+        "UnquotedPathWithSpaces": false,
+        "ExecutableExists": true
+      },
+      {
+        "Name": "CorpAgent",
+        "DisplayName": "Corp Management Agent",
+        "PathName": "\"C:\\Program Files\\CorpAgent\\agent.exe\" --service",
+        "ExecutablePath": "C:\\Program Files\\CorpAgent\\agent.exe",
+        "Arguments": "--service",
+        "StartMode": "Auto",
+        "State": "Running",
+        "StartName": "LocalSystem",
+        "UnquotedPathWithSpaces": false,
+        "ExecutableExists": true
+      }
+    ],
+    "RegistryRun": [
+      {
+        "Hive": "HKLM",
+        "KeyPath": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+        "RunType": "Run",
+        "ValueName": "SecurityHealth",
+        "ValueKind": "String",
+        "Data": "%windir%\\system32\\SecurityHealthSystray.exe",
+        "ExecutablePath": "C:\\Windows\\system32\\SecurityHealthSystray.exe",
+        "Arguments": "",
+        "ExecutableExists": true
+      },
+      {
+        "Hive": "HKLM",
+        "KeyPath": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+        "RunType": "Run",
+        "ValueName": "VMware User Process",
+        "ValueKind": "String",
+        "Data": "\"C:\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe\" -n vmusr",
+        "ExecutablePath": "C:\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe",
+        "Arguments": "-n vmusr",
+        "ExecutableExists": true
+      }
+    ],
+    "StartupItem": [
+      {
+        "Scope": "AllUsers",
+        "Path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Corp Portal.lnk",
+        "FileName": "Corp Portal.lnk",
+        "Extension": ".lnk",
+        "IsShortcut": true,
+        "TargetPath": "C:\\Program Files\\CorpPortal\\portal.exe",
+        "TargetArguments": "",
+        "TargetCommandLine": "C:\\Program Files\\CorpPortal\\portal.exe",
+        "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+        "SizeBytes": 1024,
+        "ExecutablePath": "C:\\Program Files\\CorpPortal\\portal.exe",
+        "ExecutableExists": true
+      },
+      {
+        "Scope": "AllUsers",
+        "Path": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\desktop.ini",
+        "FileName": "desktop.ini",
+        "Extension": ".ini",
+        "IsShortcut": false,
+        "TargetPath": null,
+        "TargetArguments": null,
+        "TargetCommandLine": "",
+        "LastWriteTimeUtc": "2026-10-15T23:00:00.000Z",
+        "SizeBytes": 1024,
+        "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\desktop.ini",
+        "ExecutableExists": true
+      }
+    ],
+    "WmiSubscription": [],
+    "LocalAccount": [
+      {
+        "AccountName": "Administrator",
+        "Enabled": false,
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-500",
+        "PasswordRequired": true,
+        "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+        "LastLogon": "2026-10-16T04:00:00.000Z"
+      },
+      {
+        "AccountName": "DefaultAccount",
+        "Enabled": false,
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-503",
+        "PasswordRequired": false,
+        "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+        "LastLogon": "2026-10-16T04:00:00.000Z"
+      },
+      {
+        "AccountName": "Guest",
+        "Enabled": false,
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-501",
+        "PasswordRequired": false,
+        "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+        "LastLogon": "2026-10-16T04:00:00.000Z"
+      },
+      {
+        "AccountName": "labuser",
+        "Enabled": true,
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-1001",
+        "PasswordRequired": true,
+        "PasswordLastSet": "2026-08-14T21:00:00.000Z",
+        "LastLogon": "2026-10-16T04:00:00.000Z"
+      }
+    ],
+    "LocalGroupMember": [
+      {
+        "Group": "Administrators",
+        "MemberName": "WS-BENIGN-01\\Administrator",
+        "ShortName": "Administrator",
+        "ObjectClass": "User",
+        "PrincipalSource": "Local",
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-500"
+      },
+      {
+        "Group": "Administrators",
+        "MemberName": "CORP\\Domain Admins",
+        "ShortName": "Domain Admins",
+        "ObjectClass": "Group",
+        "PrincipalSource": "ActiveDirectory",
+        "SID": "S-1-5-21-1111111111-2222222222-3333333333-512"
+      }
+    ],
+    "Process": [
+      {
+        "ProcessId": 4,
+        "ParentProcessId": 0,
+        "Name": "System",
+        "ExecutablePath": null,
+        "CommandLine": null,
+        "CommandLineAvailable": false,
+        "CreationTime": "2026-10-16T07:00:00.000Z",
+        "Owner": null,
+        "ParentName": null,
+        "ParentExecutablePath": null,
+        "ParentReliable": false
+      },
+      {
+        "ProcessId": 88,
+        "ParentProcessId": 4,
+        "Name": "Registry",
+        "ExecutablePath": null,
+        "CommandLine": null,
+        "CommandLineAvailable": false,
+        "CreationTime": "2026-10-16T07:00:00.000Z",
+        "Owner": null,
+        "ParentName": null,
+        "ParentExecutablePath": null,
+        "ParentReliable": false
+      },
+      {
+        "ProcessId": 620,
+        "ParentProcessId": 4,
+        "Name": "smss.exe",
+        "ExecutablePath": "C:\\Windows\\System32\\smss.exe",
+        "CommandLine": null,
+        "CommandLineAvailable": false,
+        "CreationTime": "2026-10-16T07:00:00.000Z",
+        "Owner": null,
+        "ParentName": "System",
+        "ParentExecutablePath": null,
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 800,
+        "ParentProcessId": 620,
+        "Name": "services.exe",
+        "ExecutablePath": "C:\\Windows\\System32\\services.exe",
+        "CommandLine": null,
+        "CommandLineAvailable": false,
+        "CreationTime": "2026-10-16T07:00:00.000Z",
+        "Owner": null,
+        "ParentName": "smss.exe",
+        "ParentExecutablePath": null,
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 900,
+        "ParentProcessId": 800,
+        "Name": "svchost.exe",
+        "ExecutablePath": "C:\\Windows\\System32\\svchost.exe",
+        "CommandLine": "C:\\Windows\\system32\\svchost.exe -k netsvcs -p",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T07:00:00.000Z",
+        "Owner": null,
+        "ParentName": "services.exe",
+        "ParentExecutablePath": null,
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 1500,
+        "ParentProcessId": 800,
+        "Name": "MsMpEng.exe",
+        "ExecutablePath": "C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.24090.11-0\\MsMpEng.exe",
+        "CommandLine": null,
+        "CommandLineAvailable": false,
+        "CreationTime": "2026-10-16T07:00:00.000Z",
+        "Owner": null,
+        "ParentName": "services.exe",
+        "ParentExecutablePath": null,
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 3300,
+        "ParentProcessId": 3000,
+        "Name": "explorer.exe",
+        "ExecutablePath": "C:\\Windows\\explorer.exe",
+        "CommandLine": "C:\\Windows\\Explorer.EXE",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T07:00:00.000Z",
+        "Owner": null,
+        "ParentName": null,
+        "ParentExecutablePath": null,
+        "ParentReliable": false
+      },
+      {
+        "ProcessId": 4400,
+        "ParentProcessId": 3300,
+        "Name": "chrome.exe",
+        "ExecutablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+        "CommandLine": "\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\"",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T07:00:00.000Z",
+        "Owner": null,
+        "ParentName": "explorer.exe",
+        "ParentExecutablePath": "C:\\Windows\\explorer.exe",
+        "ParentReliable": true
+      },
+      {
+        "ProcessId": 5500,
+        "ParentProcessId": 3300,
+        "Name": "powershell.exe",
+        "ExecutablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "CommandLine": "powershell.exe -NoProfile -File C:\\Scripts\\inventory.ps1",
+        "CommandLineAvailable": true,
+        "CreationTime": "2026-10-16T07:00:00.000Z",
+        "Owner": null,
+        "ParentName": "explorer.exe",
+        "ParentExecutablePath": "C:\\Windows\\explorer.exe",
+        "ParentReliable": true
+      }
+    ],
+    "NetworkConnection": [
+      {
+        "Protocol": "TCP",
+        "State": "Listen",
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 135,
+        "RemoteAddress": "0.0.0.0",
+        "RemotePort": 0,
+        "OwningProcess": 900,
+        "ProcessName": "svchost.exe",
+        "ProcessPath": "C:\\Windows\\System32\\svchost.exe",
+        "IsListening": true,
+        "LocalIsLoopback": false,
+        "RemoteIsPublic": false
+      },
+      {
+        "Protocol": "TCP",
+        "State": "Listen",
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 445,
+        "RemoteAddress": "0.0.0.0",
+        "RemotePort": 0,
+        "OwningProcess": 4,
+        "ProcessName": "System",
+        "ProcessPath": null,
+        "IsListening": true,
+        "LocalIsLoopback": false,
+        "RemoteIsPublic": false
+      },
+      {
+        "Protocol": "TCP",
+        "State": "Established",
+        "LocalAddress": "10.20.0.15",
+        "LocalPort": 51022,
+        "RemoteAddress": "203.0.113.80",
+        "RemotePort": 443,
+        "OwningProcess": 4400,
+        "ProcessName": "chrome.exe",
+        "ProcessPath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+        "IsListening": false,
+        "LocalIsLoopback": false,
+        "RemoteIsPublic": true
+      },
+      {
+        "Protocol": "UDP",
+        "State": "Bound",
+        "LocalAddress": "0.0.0.0",
+        "LocalPort": 5353,
+        "RemoteAddress": null,
+        "RemotePort": 0,
+        "OwningProcess": 900,
+        "ProcessName": "svchost.exe",
+        "ProcessPath": "C:\\Windows\\System32\\svchost.exe",
+        "IsListening": true,
+        "LocalIsLoopback": false,
+        "RemoteIsPublic": false
+      }
+    ],
+    "DefenderStatus": [
+      {
+        "AMRunningMode": "Normal",
+        "AntivirusEnabled": true,
+        "AMServiceEnabled": true,
+        "RealTimeProtectionEnabled": true,
+        "BehaviorMonitorEnabled": true,
+        "IoavProtectionEnabled": true,
+        "IsTamperProtected": true,
+        "AntivirusSignatureAgeDays": 1,
+        "AntivirusSignatureLastUpdated": "2026-10-15T09:00:00.000Z"
+      }
+    ],
+    "DefenderExclusion": [],
+    "DefenderEvent": [],
+    "Event.Security": [
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:05:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-BENIGN-01",
+        "RecordId": 1000,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-BENIGN-01",
+          "IpAddress": "10.20.0.44",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:08:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-BENIGN-01",
+        "RecordId": 1001,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-BENIGN-01",
+          "IpAddress": "10.20.0.44",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      },
+      {
+        "Channel": "Security",
+        "EventId": 4625,
+        "TimeCreated": "2026-10-16T09:11:00.000Z",
+        "Provider": "Microsoft-Windows-Security-Auditing",
+        "Computer": "WS-BENIGN-01",
+        "RecordId": 1002,
+        "Data": {
+          "TargetUserName": "labuser",
+          "TargetDomainName": "WS-BENIGN-01",
+          "IpAddress": "10.20.0.44",
+          "LogonType": "3",
+          "Status": "0xc000006d",
+          "SubStatus": "0xc000006a",
+          "WorkstationName": "KALI-LAB"
+        }
+      }
+    ],
+    "Event.PowerShell": [
+      {
+        "Channel": "Microsoft-Windows-PowerShell/Operational",
+        "EventId": 4104,
+        "TimeCreated": "2026-10-16T09:10:00.000Z",
+        "Provider": "Microsoft-Windows-PowerShell",
+        "Computer": "WS-BENIGN-01",
+        "RecordId": 9003,
+        "Data": {
+          "MessageNumber": "1",
+          "MessageTotal": "1",
+          "ScriptBlockText": "Get-ChildItem C:\\Scripts | Sort-Object Name",
+          "ScriptBlockId": "00000000-0000-0000-0000-000000000003",
+          "Path": ""
+        }
+      }
+    ],
+    "Event.Sysmon": [
+      {
+        "Channel": "Microsoft-Windows-Sysmon/Operational",
+        "EventId": 1,
+        "TimeCreated": "2026-10-16T09:12:00.000Z",
+        "Provider": "Microsoft-Windows-Sysmon",
+        "Computer": "WS-BENIGN-01",
+        "RecordId": 5000,
+        "Data": {
+          "Image": "C:\\Windows\\System32\\notepad.exe",
+          "CommandLine": "notepad.exe notes.txt",
+          "ParentImage": "C:\\Windows\\explorer.exe",
+          "User": "WS-BENIGN-01\\labuser",
+          "ProcessGuid": "{55555555-5555-5555-5555-555555555555}",
+          "ImageName": "notepad.exe",
+          "ParentImageName": "explorer.exe"
+        }
+      }
+    ]
+  }
+}

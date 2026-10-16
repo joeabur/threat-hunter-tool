@@ -1,0 +1,872 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "WTH-TASK-001",
+      "name": "Scheduled task runs a program from a user-writable path",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "ScheduledTask",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A scheduled task action starts an executable located in a directory that ordinary users or processes can write to (user profile, AppData, Temp, ProgramData).",
+      "rationale": "Attackers use scheduled tasks for persistence and often stage payloads where they have write access. Legitimate per-user software also installs here, so this is a lead, not proof.",
+      "evidenceRequirements": [
+        "Scheduled task definitions readable by the collecting account",
+        "Task action executable path"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "ActionType",
+            "op": "equals",
+            "value": "Exec"
+          },
+          {
+            "all": [
+              {
+                "field": "ExecutablePath",
+                "op": "exists"
+              },
+              {
+                "field": "ExecutablePath",
+                "op": "pathContainsAny",
+                "list": "userWritablePathFragments"
+              },
+              {
+                "not": {
+                  "field": "ExecutablePath",
+                  "op": "pathStartsWithAny",
+                  "list": "trustedExecutablePrefixes"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "FullName",
+        "State",
+        "UserId",
+        "RunLevel",
+        "ActionCommandLine",
+        "ExecutablePath",
+        "ExecutableExists",
+        "Author"
+      ],
+      "titleTemplate": "Scheduled task {FullName} runs a program from a user-writable path",
+      "attack": [
+        "T1053.005"
+      ],
+      "falsePositives": [
+        "Per-user application updaters (OneDrive, Teams, browsers) that register tasks in AppData",
+        "Software installers that place tasks under ProgramData",
+        "Developer or administrator automation kept in the user profile"
+      ],
+      "recommendedNextStep": "Identify who created the task (Author, creation time in the task XML) and compare the executable with its publisher. Check the file hash and signature, and look for the same path in other persistence locations.",
+      "remediation": "If the task is not approved, an authorized responder could disable it and preserve the binary for analysis after evidence is captured. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "FullName",
+        "ActionIndex"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/windows/win32/taskschd/task-scheduler-start-page"
+      ]
+    },
+    {
+      "id": "WTH-TASK-002",
+      "name": "Scheduled task action uses suspicious script or download patterns",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "ScheduledTask",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A scheduled task action command line contains an encoded PowerShell argument, a download-and-execute pattern, a hidden-window bypass combination, a script host running a script file, or a living-off-the-land download pattern.",
+      "rationale": "Persistence tasks that launch obfuscated or remote-fetched script content hide intent from reviewers. An encoded command is common in legitimate management tooling, so the pattern is evidence to review, not proof of malware.",
+      "evidenceRequirements": [
+        "Scheduled task definitions readable by the collecting account",
+        "Task action command line"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "ActionType",
+            "op": "equals",
+            "value": "Exec"
+          },
+          {
+            "any": [
+              {
+                "field": "ActionCommandLine",
+                "op": "matchesList",
+                "list": "encodedPowerShell"
+              },
+              {
+                "field": "ActionCommandLine",
+                "op": "matchesList",
+                "list": "downloadCradle"
+              },
+              {
+                "field": "ActionCommandLine",
+                "op": "matchesList",
+                "list": "scriptHostArguments"
+              },
+              {
+                "field": "ActionCommandLine",
+                "op": "matchesList",
+                "list": "lolbinAbuse"
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "FullName",
+        "State",
+        "UserId",
+        "RunLevel",
+        "ActionCommandLine",
+        "ExecutablePath"
+      ],
+      "titleTemplate": "Scheduled task {FullName} uses a suspicious script or download pattern",
+      "attack": [
+        "T1053.005",
+        "T1059.001",
+        "T1027.010"
+      ],
+      "falsePositives": [
+        "Endpoint management and deployment tools that pass encoded PowerShell",
+        "Administrator scripts that use -WindowStyle Hidden for unattended runs",
+        "Backup or monitoring agents that call script hosts"
+      ],
+      "recommendedNextStep": "Decode the argument offline (do not execute it) and read it. Establish the task creator and creation time, and check whether the same content appears in PowerShell script block logs.",
+      "remediation": "If the content is not approved, an authorized responder could disable the task and collect the script for analysis. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "FullName",
+        "ActionIndex"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pwsh"
+      ]
+    },
+    {
+      "id": "WTH-TASK-003",
+      "name": "Privileged scheduled task runs a program from a user-writable path",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "ScheduledTask",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A task that runs as SYSTEM or with the highest run level starts an executable from a user-writable directory.",
+      "rationale": "A privileged task that executes a file any user can replace is both a persistence mechanism and a privilege-escalation opportunity, which makes it more significant than the same path in a limited task.",
+      "evidenceRequirements": [
+        "Scheduled task definitions readable by the collecting account",
+        "Task principal and run level",
+        "Task action executable path"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "ActionType",
+            "op": "equals",
+            "value": "Exec"
+          },
+          {
+            "all": [
+              {
+                "field": "ExecutablePath",
+                "op": "exists"
+              },
+              {
+                "field": "ExecutablePath",
+                "op": "pathContainsAny",
+                "list": "userWritablePathFragments"
+              },
+              {
+                "not": {
+                  "field": "ExecutablePath",
+                  "op": "pathStartsWithAny",
+                  "list": "trustedExecutablePrefixes"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "field": "UserId",
+                "op": "inList",
+                "list": "localSystemAccounts"
+              },
+              {
+                "field": "RunLevel",
+                "op": "equals",
+                "value": "Highest"
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "FullName",
+        "State",
+        "UserId",
+        "RunLevel",
+        "ActionCommandLine",
+        "ExecutablePath",
+        "Author"
+      ],
+      "titleTemplate": "Privileged scheduled task {FullName} runs a program from a user-writable path",
+      "attack": [
+        "T1053.005"
+      ],
+      "falsePositives": [
+        "Vendor software that installs a SYSTEM maintenance task under ProgramData",
+        "Lab and build machines with tools in user directories"
+      ],
+      "recommendedNextStep": "Review the ACL on the executable and its folder to see who can modify it. Compare the file with the vendor package and review when the task and file were created.",
+      "remediation": "If the task is not approved, an authorized responder could disable it and restrict write access to the folder. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "FullName",
+        "ActionIndex"
+      ]
+    },
+    {
+      "id": "WTH-TASK-004",
+      "name": "Scheduled task refers to an executable that does not exist",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "ScheduledTask",
+      "severity": "Low",
+      "confidence": "Low",
+      "findingType": "Heuristic",
+      "description": "A task that is not disabled points to an executable path that does not exist on disk.",
+      "rationale": "A task whose payload is missing can be a leftover from an uninstalled product, or evidence that a payload was removed after use. The rule only fires when existence was checked successfully.",
+      "evidenceRequirements": [
+        "Scheduled task definitions readable by the collecting account",
+        "File existence check on an absolute path"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "ActionType",
+            "op": "equals",
+            "value": "Exec"
+          },
+          {
+            "field": "ExecutablePath",
+            "op": "exists"
+          },
+          {
+            "field": "ExecutableExists",
+            "op": "isFalse"
+          },
+          {
+            "field": "State",
+            "op": "notEquals",
+            "value": "Disabled"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "FullName",
+        "State",
+        "UserId",
+        "ActionCommandLine",
+        "ExecutablePath",
+        "ExecutableExists"
+      ],
+      "titleTemplate": "Scheduled task {FullName} points to a missing executable",
+      "attack": [],
+      "falsePositives": [
+        "Stale tasks left behind by uninstalled software",
+        "Paths on removable or network drives that are not mounted",
+        "Executables that are created on demand"
+      ],
+      "recommendedNextStep": "Check the task creation time and whether the missing path was recently deleted (USN journal, Sysmon file events, backups).",
+      "remediation": "Stale tasks can be reviewed for cleanup by an authorized administrator. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "FullName",
+        "ActionIndex"
+      ],
+      "limitations": [
+        "A missing executable alone is not a technique, so this rule has no ATT&CK mapping."
+      ]
+    },
+    {
+      "id": "WTH-SVC-001",
+      "name": "Service binary is located in a user-writable path",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "Service",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A Windows service image path points into a directory that ordinary users or processes can write to.",
+      "rationale": "Services run before and independently of user logon, usually with high privileges. A service binary in a writable location is a common persistence and privilege-escalation pattern.",
+      "evidenceRequirements": [
+        "Service configuration (Win32_Service)",
+        "Service image path"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "ExecutablePath",
+            "op": "exists"
+          },
+          {
+            "field": "ExecutablePath",
+            "op": "pathContainsAny",
+            "list": "userWritablePathFragments"
+          },
+          {
+            "not": {
+              "field": "ExecutablePath",
+              "op": "pathStartsWithAny",
+              "list": "trustedExecutablePrefixes"
+            }
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Name",
+        "DisplayName",
+        "PathName",
+        "ExecutablePath",
+        "StartMode",
+        "State",
+        "StartName",
+        "ExecutableExists"
+      ],
+      "titleTemplate": "Service {Name} runs from a user-writable path",
+      "attack": [
+        "T1543.003"
+      ],
+      "falsePositives": [
+        "Per-user or portable applications installed as services",
+        "Software installed under ProgramData that runs as a service",
+        "Test and development machines"
+      ],
+      "recommendedNextStep": "Compare the file with the vendor package, check its hash and signature, and review who can write to the folder. Check the service creation event (System 7045 / Security 4697) for who installed it.",
+      "remediation": "If the service is not approved, an authorized responder could stop and disable it and preserve the binary after evidence is captured. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Name"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/windows/win32/services/services"
+      ]
+    },
+    {
+      "id": "WTH-SVC-002",
+      "name": "Service image path is unquoted and contains spaces",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "Service",
+      "severity": "Low",
+      "confidence": "Medium",
+      "findingType": "Observation",
+      "description": "A service image path contains spaces and is not enclosed in quotes.",
+      "rationale": "Windows may resolve an unquoted path that contains spaces to an unintended executable if an attacker can write earlier in the path, which allows privilege escalation or persistence. This is a misconfiguration that is still common in third-party software.",
+      "evidenceRequirements": [
+        "Service configuration (Win32_Service)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "UnquotedPathWithSpaces",
+            "op": "isTrue"
+          },
+          {
+            "field": "ExecutablePath",
+            "op": "exists"
+          },
+          {
+            "field": "StartMode",
+            "op": "notEquals",
+            "value": "Disabled"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Name",
+        "DisplayName",
+        "PathName",
+        "ExecutablePath",
+        "StartMode",
+        "StartName"
+      ],
+      "titleTemplate": "Service {Name} has an unquoted image path with spaces",
+      "attack": [
+        "T1574.009"
+      ],
+      "falsePositives": [
+        "Widespread in older third-party software with no malicious intent",
+        "Vendor installers that never quoted the path"
+      ],
+      "recommendedNextStep": "Check whether any directory in the unquoted path is writable by non-administrators and whether a file already exists at an earlier path segment (for example C:\\Program.exe).",
+      "remediation": "An authorized administrator could correct the service path by quoting it, after confirming the vendor supports the change. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Name"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicea"
+      ]
+    },
+    {
+      "id": "WTH-SVC-003",
+      "name": "Service command line uses a shell, script host or download pattern",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "Service",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A service image path wraps a shell or script host (cmd.exe /c, powershell -Command) or contains an encoded command, a download-and-execute pattern, or a living-off-the-land download pattern.",
+      "rationale": "Real service executables implement the service control protocol themselves. A service that is only a command-line wrapper is unusual and is a frequent shape for malicious persistence.",
+      "evidenceRequirements": [
+        "Service configuration (Win32_Service)",
+        "Service image path with arguments"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "PathName",
+            "op": "exists"
+          },
+          {
+            "any": [
+              {
+                "field": "PathName",
+                "op": "matchesList",
+                "list": "encodedPowerShell"
+              },
+              {
+                "field": "PathName",
+                "op": "matchesList",
+                "list": "downloadCradle"
+              },
+              {
+                "field": "PathName",
+                "op": "matchesList",
+                "list": "scriptHostArguments"
+              },
+              {
+                "field": "PathName",
+                "op": "matchesList",
+                "list": "lolbinAbuse"
+              },
+              {
+                "field": "PathName",
+                "op": "matchesList",
+                "list": "serviceShellWrapper"
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Name",
+        "DisplayName",
+        "PathName",
+        "ExecutablePath",
+        "StartMode",
+        "State",
+        "StartName"
+      ],
+      "titleTemplate": "Service {Name} uses a shell, script host or download pattern",
+      "attack": [
+        "T1543.003"
+      ],
+      "falsePositives": [
+        "Management tools that create wrapper services for scripts",
+        "Legacy applications run through srvany-style wrappers"
+      ],
+      "recommendedNextStep": "Read the full command line, find who installed the service (System 7045 / Security 4697) and when, and review any script it launches without running it.",
+      "remediation": "If the service is not approved, an authorized responder could stop and disable it after preserving evidence. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Name"
+      ]
+    },
+    {
+      "id": "WTH-SVC-004",
+      "name": "Service refers to an image that does not exist",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "Service",
+      "severity": "Low",
+      "confidence": "Low",
+      "findingType": "Heuristic",
+      "description": "An enabled service points to an image file that does not exist on disk.",
+      "rationale": "A service whose binary is missing is usually a leftover from an uninstall, but can also indicate a payload that was deleted after use. The rule only fires when existence was checked successfully.",
+      "evidenceRequirements": [
+        "Service configuration (Win32_Service)",
+        "File existence check on an absolute path"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "ExecutablePath",
+            "op": "exists"
+          },
+          {
+            "field": "ExecutableExists",
+            "op": "isFalse"
+          },
+          {
+            "field": "StartMode",
+            "op": "notEquals",
+            "value": "Disabled"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Name",
+        "DisplayName",
+        "PathName",
+        "ExecutablePath",
+        "StartMode",
+        "State",
+        "ExecutableExists"
+      ],
+      "titleTemplate": "Service {Name} refers to a missing image",
+      "attack": [],
+      "falsePositives": [
+        "Services left behind by uninstalled software",
+        "Services whose binaries are created on demand or live on unavailable drives"
+      ],
+      "recommendedNextStep": "Review the service installation time and whether the file was deleted recently. Check backups or EDR file telemetry for the missing path.",
+      "remediation": "Orphaned services can be reviewed for cleanup by an authorized administrator. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Name"
+      ],
+      "limitations": [
+        "A missing image alone is not a technique, so this rule has no ATT&CK mapping."
+      ]
+    },
+    {
+      "id": "WTH-REG-001",
+      "name": "Run or RunOnce entry starts a program from a user-writable path",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "RegistryRun",
+      "severity": "Medium",
+      "confidence": "Low",
+      "findingType": "Heuristic",
+      "description": "A Run or RunOnce registry value launches an executable from a user-writable directory.",
+      "rationale": "Run keys execute at logon and are one of the most common persistence locations. Many legitimate per-user applications also register themselves from AppData, so confidence is low until the program is verified.",
+      "evidenceRequirements": [
+        "HKLM and current-user HKCU Run/RunOnce keys",
+        "Value data"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "ExecutablePath",
+            "op": "exists"
+          },
+          {
+            "field": "ExecutablePath",
+            "op": "pathContainsAny",
+            "list": "userWritablePathFragments"
+          },
+          {
+            "not": {
+              "field": "ExecutablePath",
+              "op": "pathStartsWithAny",
+              "list": "trustedExecutablePrefixes"
+            }
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Hive",
+        "KeyPath",
+        "ValueName",
+        "Data",
+        "ExecutablePath",
+        "ExecutableExists"
+      ],
+      "titleTemplate": "Run entry {ValueName} starts a program from a user-writable path",
+      "attack": [
+        "T1547.001"
+      ],
+      "falsePositives": [
+        "Per-user applications such as chat clients, cloud sync and updaters",
+        "Software installed without administrator rights"
+      ],
+      "recommendedNextStep": "Verify the publisher of the executable (hash, signature), the key last-write time, and whether other users or machines have the same entry.",
+      "remediation": "If the entry is not approved, an authorized responder could remove or disable it after exporting the key as evidence. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Hive",
+        "KeyPath",
+        "ValueName"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys"
+      ],
+      "limitations": [
+        "Other users' HKCU hives are not read, so entries in their profiles are not visible."
+      ]
+    },
+    {
+      "id": "WTH-REG-002",
+      "name": "Run or RunOnce entry uses suspicious script or download patterns",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "RegistryRun",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A Run or RunOnce value contains an encoded PowerShell argument, a download-and-execute pattern, a hidden-window bypass combination, a script host running a script file, or a living-off-the-land download pattern.",
+      "rationale": "Autostart entries that run obfuscated or remotely fetched content are a common persistence technique, but the same constructs are used by legitimate installers and management tools.",
+      "evidenceRequirements": [
+        "HKLM and current-user HKCU Run/RunOnce keys",
+        "Value data"
+      ],
+      "condition": {
+        "any": [
+          {
+            "field": "Data",
+            "op": "matchesList",
+            "list": "encodedPowerShell"
+          },
+          {
+            "field": "Data",
+            "op": "matchesList",
+            "list": "downloadCradle"
+          },
+          {
+            "field": "Data",
+            "op": "matchesList",
+            "list": "scriptHostArguments"
+          },
+          {
+            "field": "Data",
+            "op": "matchesList",
+            "list": "lolbinAbuse"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Hive",
+        "KeyPath",
+        "ValueName",
+        "Data",
+        "ExecutablePath"
+      ],
+      "titleTemplate": "Run entry {ValueName} uses a suspicious script or download pattern",
+      "attack": [
+        "T1547.001"
+      ],
+      "falsePositives": [
+        "Installers that stage RunOnce entries with PowerShell",
+        "Management agents"
+      ],
+      "recommendedNextStep": "Decode and read the command offline. Determine when the value was created and by which process (Sysmon 13 if available).",
+      "remediation": "If the entry is not approved, an authorized responder could remove it after exporting the key. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Hive",
+        "KeyPath",
+        "ValueName"
+      ]
+    },
+    {
+      "id": "WTH-STARTUP-001",
+      "name": "Executable or script file in a Startup folder",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "StartupItem",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A Startup folder contains an executable or script file (.exe, .bat, .cmd, .vbs, .js, .ps1, .hta and similar) rather than only shortcuts.",
+      "rationale": "Files in a Startup folder run at logon. Most legitimate entries are .lnk shortcuts; a raw script or binary is less common and is a simple persistence method.",
+      "evidenceRequirements": [
+        "All-users and current-user Startup folder listings"
+      ],
+      "condition": {
+        "field": "Extension",
+        "op": "inList",
+        "list": "scriptAndExecutableExtensions"
+      },
+      "evidenceFields": [
+        "Scope",
+        "Path",
+        "FileName",
+        "Extension",
+        "SizeBytes",
+        "LastWriteTimeUtc"
+      ],
+      "titleTemplate": "Startup folder contains {FileName}",
+      "attack": [
+        "T1547.001"
+      ],
+      "falsePositives": [
+        "Administrator logon scripts placed in the folder on purpose",
+        "Portable tools launched at logon"
+      ],
+      "recommendedNextStep": "Read the file without executing it, check its hash, and review the last-write time against other activity on the host.",
+      "remediation": "If the file is not approved, an authorized responder could move it to an evidence location after capturing it. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Scope",
+        "FileName"
+      ],
+      "limitations": [
+        "Other users' Startup folders are only read from an elevated session with collection.includeOtherUserProfiles."
+      ]
+    },
+    {
+      "id": "WTH-STARTUP-002",
+      "name": "Startup shortcut targets a user-writable path or a script pattern",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "StartupItem",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A shortcut in a Startup folder points to a program in a user-writable directory, or its target command line matches a suspicious script or download pattern.",
+      "rationale": "Shortcuts are the normal form of startup entries, so the target is what matters. A target in a writable directory or with obfuscated arguments is worth review.",
+      "evidenceRequirements": [
+        "All-users and current-user Startup folder listings",
+        "Shortcut target (resolved without launching it)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "IsShortcut",
+            "op": "isTrue"
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "field": "TargetPath",
+                    "op": "exists"
+                  },
+                  {
+                    "field": "TargetPath",
+                    "op": "pathContainsAny",
+                    "list": "userWritablePathFragments"
+                  },
+                  {
+                    "not": {
+                      "field": "TargetPath",
+                      "op": "pathStartsWithAny",
+                      "list": "trustedExecutablePrefixes"
+                    }
+                  }
+                ]
+              },
+              {
+                "field": "TargetCommandLine",
+                "op": "matchesList",
+                "list": "encodedPowerShell"
+              },
+              {
+                "field": "TargetCommandLine",
+                "op": "matchesList",
+                "list": "downloadCradle"
+              },
+              {
+                "field": "TargetCommandLine",
+                "op": "matchesList",
+                "list": "scriptHostArguments"
+              },
+              {
+                "field": "TargetCommandLine",
+                "op": "matchesList",
+                "list": "lolbinAbuse"
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Scope",
+        "Path",
+        "FileName",
+        "TargetPath",
+        "TargetArguments",
+        "LastWriteTimeUtc"
+      ],
+      "titleTemplate": "Startup shortcut {FileName} has a suspicious target",
+      "attack": [
+        "T1547.001"
+      ],
+      "falsePositives": [
+        "Shortcuts to per-user applications",
+        "Shortcuts created by software installed in the user profile"
+      ],
+      "recommendedNextStep": "Resolve the shortcut target, verify the program, and review the shortcut creation time and the process that created it.",
+      "remediation": "If the shortcut is not approved, an authorized responder could remove it after capturing it. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Scope",
+        "FileName"
+      ]
+    },
+    {
+      "id": "WTH-WMI-001",
+      "name": "Permanent WMI event subscription with a command or script consumer",
+      "version": "1.0.0",
+      "category": "Persistence",
+      "dataSource": "WmiSubscription",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A permanent WMI event consumer (CommandLineEventConsumer or ActiveScriptEventConsumer) exists in root\\subscription and is not in the expected consumer list.",
+      "rationale": "Permanent event subscriptions survive reboots, run without a visible process or startup entry, and are a known stealthy persistence method. Legitimate use is rare, which is why unknown consumers deserve review.",
+      "evidenceRequirements": [
+        "root\\subscription consumers, filters and bindings (usually requires an elevated session)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "Kind",
+            "op": "in",
+            "values": [
+              "CommandLineEventConsumer",
+              "ActiveScriptEventConsumer"
+            ]
+          },
+          {
+            "field": "Name",
+            "op": "notInList",
+            "list": "expectedWmiConsumers"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Kind",
+        "Name",
+        "CommandLineTemplate",
+        "ExecutablePath",
+        "ScriptingEngine",
+        "ScriptTextPreview",
+        "FilterName",
+        "FilterQuery",
+        "Bound"
+      ],
+      "titleTemplate": "WMI {Kind} {Name} is configured",
+      "attack": [
+        "T1546.003"
+      ],
+      "falsePositives": [
+        "Older enterprise management or monitoring agents that use WMI subscriptions",
+        "Hardware vendor utilities"
+      ],
+      "recommendedNextStep": "Review the filter query (what triggers it), the command or script it runs, and the owning product. Compare with other hosts in the fleet.",
+      "remediation": "If the subscription is not approved, an authorized responder could remove the filter, consumer and binding after exporting them as evidence. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Kind",
+        "Name"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/windows/win32/wmisdk/monitoring-events"
+      ]
+    }
+  ]
+}

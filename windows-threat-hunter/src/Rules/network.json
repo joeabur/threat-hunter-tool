@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "WTH-NET-001",
+      "name": "Listening socket owned by a process in a user-writable path",
+      "version": "1.0.0",
+      "category": "Network",
+      "dataSource": "NetworkConnection",
+      "severity": "Medium",
+      "confidence": "Low",
+      "findingType": "Heuristic",
+      "description": "A process whose executable lives in a user-writable directory is listening on a non-loopback address.",
+      "rationale": "A listener outside loopback can accept connections from the network. Per-user server software (development servers, sync tools) also listens, so an unexpected owner is the signal, not the port.",
+      "evidenceRequirements": [
+        "Listening sockets with owning process",
+        "Process executable path for the owning PID"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "IsListening",
+            "op": "isTrue"
+          },
+          {
+            "field": "LocalIsLoopback",
+            "op": "isFalse"
+          },
+          {
+            "all": [
+              {
+                "field": "ProcessPath",
+                "op": "exists"
+              },
+              {
+                "field": "ProcessPath",
+                "op": "pathContainsAny",
+                "list": "userWritablePathFragments"
+              },
+              {
+                "not": {
+                  "field": "ProcessPath",
+                  "op": "pathStartsWithAny",
+                  "list": "trustedExecutablePrefixes"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Protocol",
+        "LocalAddress",
+        "LocalPort",
+        "OwningProcess",
+        "ProcessName",
+        "ProcessPath"
+      ],
+      "titleTemplate": "{ProcessName} listens on port {LocalPort} from a user-writable path",
+      "attack": [],
+      "falsePositives": [
+        "Developer tools and local web servers",
+        "Peer-to-peer or sync clients installed per user"
+      ],
+      "recommendedNextStep": "Identify the process, its parent and start time, and whether the port is reachable from other hosts (host firewall rules). Check for matching persistence findings.",
+      "remediation": "If the listener is not approved, an authorized responder could block the port at the network layer and investigate the process. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Protocol",
+        "LocalPort",
+        "ProcessPath"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection"
+      ],
+      "limitations": [
+        "A listening port by itself is not a technique, so this rule has no ATT&CK mapping."
+      ]
+    },
+    {
+      "id": "WTH-NET-002",
+      "name": "Established outbound connection from a script host or proxy-execution binary",
+      "version": "1.0.0",
+      "category": "Network",
+      "dataSource": "NetworkConnection",
+      "severity": "Medium",
+      "confidence": "Low",
+      "findingType": "Heuristic",
+      "description": "wscript, cscript, mshta, regsvr32, rundll32, certutil or bitsadmin has an established connection to a public IP address.",
+      "rationale": "These binaries rarely need direct internet access in normal use, and attackers use them to fetch or run remote content. Some enterprise software legitimately drives them over the network.",
+      "evidenceRequirements": [
+        "Established TCP connections with owning process",
+        "Process name for the owning PID"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "Protocol",
+            "op": "equals",
+            "value": "TCP"
+          },
+          {
+            "field": "State",
+            "op": "equals",
+            "value": "Established"
+          },
+          {
+            "field": "RemoteIsPublic",
+            "op": "isTrue"
+          },
+          {
+            "field": "ProcessName",
+            "op": "inList",
+            "list": "networkSuspectProcessNames"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Protocol",
+        "State",
+        "LocalAddress",
+        "LocalPort",
+        "RemoteAddress",
+        "RemotePort",
+        "OwningProcess",
+        "ProcessName",
+        "ProcessPath"
+      ],
+      "titleTemplate": "{ProcessName} has an established connection to {RemoteAddress}:{RemotePort}",
+      "attack": [
+        "T1218"
+      ],
+      "falsePositives": [
+        "Software deployment or licensing tools that call these binaries",
+        "Windows components that briefly use rundll32 for network features"
+      ],
+      "recommendedNextStep": "Look up the remote address in your threat intelligence and DNS/proxy logs, find the parent process and command line, and review what the process loaded.",
+      "remediation": "If the connection is not approved, an authorized responder could block the destination and contain the host after preserving evidence. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "ProcessName",
+        "RemoteAddress",
+        "RemotePort"
+      ],
+      "limitations": [
+        "A connection is a point-in-time observation; an unfamiliar address is not proof of malicious activity."
+      ]
+    },
+    {
+      "id": "WTH-NET-003",
+      "name": "Outbound connection from a process in a user-writable path",
+      "version": "1.0.0",
+      "category": "Network",
+      "dataSource": "NetworkConnection",
+      "severity": "Low",
+      "confidence": "Low",
+      "findingType": "Heuristic",
+      "description": "A process running from a user-writable directory has an established connection to a public IP address.",
+      "rationale": "This is a broad contextual signal: most per-user software (browsers, chat, sync) behaves this way. It is disabled by default and is meant to be enabled when investigating a specific host.",
+      "evidenceRequirements": [
+        "Established TCP connections with owning process",
+        "Process executable path for the owning PID"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "State",
+            "op": "equals",
+            "value": "Established"
+          },
+          {
+            "field": "RemoteIsPublic",
+            "op": "isTrue"
+          },
+          {
+            "all": [
+              {
+                "field": "ProcessPath",
+                "op": "exists"
+              },
+              {
+                "field": "ProcessPath",
+                "op": "pathContainsAny",
+                "list": "userWritablePathFragments"
+              },
+              {
+                "not": {
+                  "field": "ProcessPath",
+                  "op": "pathStartsWithAny",
+                  "list": "trustedExecutablePrefixes"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Protocol",
+        "LocalAddress",
+        "LocalPort",
+        "RemoteAddress",
+        "RemotePort",
+        "OwningProcess",
+        "ProcessName",
+        "ProcessPath"
+      ],
+      "titleTemplate": "{ProcessName} (user-writable path) is connected to {RemoteAddress}:{RemotePort}",
+      "attack": [],
+      "falsePositives": [
+        "Browsers, collaboration tools, update checkers and any per-user application"
+      ],
+      "recommendedNextStep": "Use as context: combine with execution and persistence findings for the same process before drawing conclusions.",
+      "remediation": "No action is recommended from this finding alone. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "ProcessPath",
+        "RemoteAddress",
+        "RemotePort"
+      ],
+      "limitations": [
+        "Disabled by default (ruleOverrides can enable it). Unusual endpoints or ports are not proof of malicious behavior."
+      ],
+      "enabled": false
+    }
+  ]
+}

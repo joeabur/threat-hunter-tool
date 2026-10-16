@@ -1,0 +1,287 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "WTH-DEF-001",
+      "name": "Windows Defender real-time protection is off while Defender is the active antivirus",
+      "version": "1.0.0",
+      "category": "Defender",
+      "dataSource": "DefenderStatus",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Observation",
+      "description": "Defender is running in normal mode but real-time protection or the antivirus engine is reported as disabled.",
+      "rationale": "Attackers disable real-time protection to run tools undetected. It is also turned off by administrators for troubleshooting and when another product takes over, which is why passive mode is excluded.",
+      "evidenceRequirements": [
+        "Get-MpComputerStatus (AMRunningMode, RealTimeProtectionEnabled, AntivirusEnabled)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "AMRunningMode",
+            "op": "equals",
+            "value": "Normal"
+          },
+          {
+            "any": [
+              {
+                "field": "RealTimeProtectionEnabled",
+                "op": "isFalse"
+              },
+              {
+                "field": "AntivirusEnabled",
+                "op": "isFalse"
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "AMRunningMode",
+        "AntivirusEnabled",
+        "RealTimeProtectionEnabled",
+        "BehaviorMonitorEnabled",
+        "IsTamperProtected",
+        "AntivirusSignatureLastUpdated"
+      ],
+      "titleTemplate": "Defender real-time protection is disabled",
+      "attack": [
+        "T1562.001"
+      ],
+      "falsePositives": [
+        "Temporary troubleshooting by an administrator",
+        "A third-party product that was installed or removed recently"
+      ],
+      "recommendedNextStep": "Check Defender operational events 5001/5007 and Group Policy/MDM for who changed the setting and when. Confirm whether another endpoint protection product is expected.",
+      "remediation": "An authorized administrator could re-enable protection through policy once the reason for the change is understood. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "AMRunningMode"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/defender-endpoint/troubleshoot-microsoft-defender-antivirus"
+      ]
+    },
+    {
+      "id": "WTH-DEF-002",
+      "name": "Windows Defender reported a detection",
+      "version": "1.0.0",
+      "category": "Defender",
+      "dataSource": "DefenderEvent",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Observation",
+      "description": "A Defender malware detection (event 1116) or remediation action (event 1117) was logged within the collection window.",
+      "rationale": "Defender is reporting that it found or acted on something suspicious. The detection itself is reliable evidence that Defender saw the item, but it does not show whether the threat ran or persists.",
+      "evidenceRequirements": [
+        "Microsoft-Windows-Windows Defender/Operational events 1116 and 1117"
+      ],
+      "condition": {
+        "field": "EventId",
+        "op": "in",
+        "values": [
+          1116,
+          1117
+        ]
+      },
+      "evidenceFields": [
+        "EventId",
+        "TimeCreated",
+        "Data.ThreatName",
+        "Data.SeverityName",
+        "Data.CategoryName",
+        "Data.Path",
+        "Data.ProcessName",
+        "Data.DetectionUser",
+        "Data.ActionName"
+      ],
+      "titleTemplate": "Defender event {EventId}: {Data.ThreatName}",
+      "attack": [],
+      "falsePositives": [
+        "Test files such as the EICAR string",
+        "Quarantined downloads that never executed"
+      ],
+      "recommendedNextStep": "Check whether the remediation succeeded, whether the file executed first (Sysmon, process telemetry), and look for related persistence or network findings.",
+      "remediation": "Follow your incident response process; Defender may already have quarantined the item. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Data.ThreatName",
+        "Data.Path",
+        "TimeCreated"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/defender-endpoint/troubleshoot-microsoft-defender-antivirus"
+      ],
+      "limitations": [
+        "A detection is not an ATT&CK technique, so this rule has no ATT&CK mapping."
+      ]
+    },
+    {
+      "id": "WTH-DEF-003",
+      "name": "Risky Windows Defender exclusion",
+      "version": "1.0.0",
+      "category": "Defender",
+      "dataSource": "DefenderExclusion",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A Defender exclusion covers a user-writable path, a whole drive, an executable file extension, or a script interpreter process.",
+      "rationale": "Exclusions in writable locations or for executable types create places where malware is not scanned, and attackers add them to protect their tools. Some software vendors document exclusions as well.",
+      "evidenceRequirements": [
+        "Get-MpPreference exclusions (visible to administrators only)"
+      ],
+      "condition": {
+        "any": [
+          {
+            "all": [
+              {
+                "field": "Type",
+                "op": "equals",
+                "value": "Path"
+              },
+              {
+                "any": [
+                  {
+                    "field": "Value",
+                    "op": "pathContainsAny",
+                    "list": "userWritablePathFragments"
+                  },
+                  {
+                    "field": "Value",
+                    "op": "matches",
+                    "value": "^[A-Za-z]:\\\\?$"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "field": "Type",
+                "op": "equals",
+                "value": "Extension"
+              },
+              {
+                "field": "Value",
+                "op": "inList",
+                "list": "defenderExclusionExtensions"
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "field": "Type",
+                "op": "equals",
+                "value": "Process"
+              },
+              {
+                "field": "Value",
+                "op": "inList",
+                "list": "scriptInterpreters"
+              }
+            ]
+          }
+        ]
+      },
+      "evidenceFields": [
+        "Type",
+        "Value"
+      ],
+      "titleTemplate": "Defender {Type} exclusion: {Value}",
+      "attack": [
+        "T1562.001"
+      ],
+      "falsePositives": [
+        "Exclusions recommended by database, backup or developer-tool vendors",
+        "Build servers excluding output folders"
+      ],
+      "recommendedNextStep": "Establish who added the exclusion and when (Defender events 5007, policy history) and whether it matches a documented vendor requirement.",
+      "remediation": "If the exclusion is not required, an authorized administrator could remove it through policy. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Type",
+        "Value"
+      ],
+      "references": [
+        "https://learn.microsoft.com/en-us/defender-endpoint/configure-exclusions-microsoft-defender-antivirus"
+      ]
+    },
+    {
+      "id": "WTH-DEF-004",
+      "name": "Windows Defender signatures are stale",
+      "version": "1.0.0",
+      "category": "Defender",
+      "dataSource": "DefenderStatus",
+      "severity": "Low",
+      "confidence": "High",
+      "findingType": "Observation",
+      "description": "Antivirus signatures are seven or more days old.",
+      "rationale": "Outdated signatures reduce detection of known threats. This is a hygiene signal, not evidence of an attack.",
+      "evidenceRequirements": [
+        "Get-MpComputerStatus (AntivirusSignatureAge)"
+      ],
+      "condition": {
+        "field": "AntivirusSignatureAgeDays",
+        "op": "gte",
+        "value": 7
+      },
+      "evidenceFields": [
+        "AntivirusSignatureAgeDays",
+        "AntivirusSignatureLastUpdated",
+        "AMRunningMode"
+      ],
+      "titleTemplate": "Defender signatures are {AntivirusSignatureAgeDays} days old",
+      "attack": [],
+      "falsePositives": [
+        "Offline or air-gapped systems that update manually",
+        "Machines that were powered off for several days"
+      ],
+      "recommendedNextStep": "Check connectivity to the update source, WSUS/Intune policy, and whether the host was offline.",
+      "remediation": "An authorized administrator could trigger a signature update. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "AMRunningMode"
+      ],
+      "limitations": [
+        "A stale signature is a hygiene finding without an ATT&CK mapping."
+      ]
+    },
+    {
+      "id": "WTH-DEF-005",
+      "name": "Windows Defender real-time protection was disabled (event 5001)",
+      "version": "1.0.0",
+      "category": "Defender",
+      "dataSource": "DefenderEvent",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Observation",
+      "description": "Defender logged event 5001 (real-time protection disabled) within the collection window.",
+      "rationale": "The event shows the setting was turned off at that time, whether by an administrator, a policy or a user.",
+      "evidenceRequirements": [
+        "Microsoft-Windows-Windows Defender/Operational event 5001"
+      ],
+      "condition": {
+        "field": "EventId",
+        "op": "equals",
+        "value": 5001
+      },
+      "evidenceFields": [
+        "EventId",
+        "TimeCreated",
+        "Data.ProductName",
+        "Data.ProductVersion"
+      ],
+      "titleTemplate": "Defender real-time protection disabled at {TimeCreated}",
+      "attack": [
+        "T1562.001"
+      ],
+      "falsePositives": [
+        "Administrators troubleshooting performance or compatibility",
+        "Installation of another endpoint protection product"
+      ],
+      "recommendedNextStep": "Correlate with the logon session and process activity around the event time and with change tickets.",
+      "remediation": "An authorized administrator could re-enable protection after the reason is understood. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "TimeCreated"
+      ]
+    }
+  ]
+}

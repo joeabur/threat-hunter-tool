@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "WTH-PROC-001",
+      "name": "Process running from a user-writable path",
+      "version": "1.0.0",
+      "category": "Execution",
+      "dataSource": "Process",
+      "severity": "Low",
+      "confidence": "Low",
+      "findingType": "Heuristic",
+      "description": "A running process has an executable located in a user-writable directory.",
+      "rationale": "Malware often executes from locations where it has write access. Many legitimate user-mode applications run from the profile as well, so the rule is intentionally low severity and low confidence and works best as context for other findings.",
+      "evidenceRequirements": [
+        "Process inventory with executable paths (some paths need an elevated session)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "ExecutablePath",
+            "op": "exists"
+          },
+          {
+            "field": "ExecutablePath",
+            "op": "pathContainsAny",
+            "list": "userWritablePathFragments"
+          },
+          {
+            "not": {
+              "field": "ExecutablePath",
+              "op": "pathStartsWithAny",
+              "list": "trustedExecutablePrefixes"
+            }
+          }
+        ]
+      },
+      "evidenceFields": [
+        "ProcessId",
+        "ParentProcessId",
+        "Name",
+        "ExecutablePath",
+        "CommandLine",
+        "ParentName",
+        "CreationTime"
+      ],
+      "titleTemplate": "Process {Name} (PID {ProcessId}) is running from a user-writable path",
+      "attack": [],
+      "falsePositives": [
+        "Browsers, chat clients, cloud sync tools and developer tools installed per user",
+        "Portable applications"
+      ],
+      "recommendedNextStep": "Check the file hash and signature, the parent process, the command line and network connections for the same PID. Look for the same path in persistence findings.",
+      "remediation": "If the process is not approved, an authorized responder could isolate the host and preserve memory and the binary before terminating anything. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "ExecutablePath",
+        "CommandLine"
+      ],
+      "limitations": [
+        "Running from a writable path is a weak signal on its own, so this rule has no ATT&CK mapping."
+      ]
+    },
+    {
+      "id": "WTH-PROC-002",
+      "name": "PowerShell started with an encoded command",
+      "version": "1.0.0",
+      "category": "Execution",
+      "dataSource": "Process",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A PowerShell process was started with -EncodedCommand (or an unambiguous abbreviation) followed by a base64 payload.",
+      "rationale": "Encoding hides script content from casual review and is frequently used to deliver or stage payloads. Management tools also use it to avoid quoting problems, so the command must be decoded and read.",
+      "evidenceRequirements": [
+        "Process inventory with command lines (other users' command lines need an elevated session)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "Name",
+            "op": "in",
+            "values": [
+              "powershell.exe",
+              "pwsh.exe"
+            ]
+          },
+          {
+            "field": "CommandLine",
+            "op": "matchesList",
+            "list": "encodedPowerShell"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "ProcessId",
+        "ParentProcessId",
+        "Name",
+        "ParentName",
+        "CommandLine",
+        "CreationTime"
+      ],
+      "titleTemplate": "PowerShell PID {ProcessId} was started with an encoded command",
+      "attack": [
+        "T1059.001",
+        "T1027.010"
+      ],
+      "falsePositives": [
+        "Configuration management and deployment tools",
+        "Monitoring agents",
+        "Administrators wrapping scripts for remote execution"
+      ],
+      "recommendedNextStep": "Decode the payload offline (do not run it), review the parent process, and look for matching PowerShell script block events (4104).",
+      "remediation": "If the activity is not approved, an authorized responder could contain the host and collect the process tree before taking action. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Name",
+        "CommandLine"
+      ]
+    },
+    {
+      "id": "WTH-PROC-003",
+      "name": "Office application started a script interpreter",
+      "version": "1.0.0",
+      "category": "Execution",
+      "dataSource": "Process",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "An Office application is the parent of cmd.exe, PowerShell, a script host, mshta, rundll32, regsvr32 or wmic.",
+      "rationale": "Documents that run macros or exploit the application commonly launch an interpreter. Legitimate Office add-ins and automation can also do this, so the document and user context matter.",
+      "evidenceRequirements": [
+        "Process inventory with parent names (parent is recorded only when the parent started before the child)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "ParentName",
+            "op": "inList",
+            "list": "officeApplications"
+          },
+          {
+            "field": "Name",
+            "op": "inList",
+            "list": "scriptInterpreters"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "ProcessId",
+        "Name",
+        "ParentProcessId",
+        "ParentName",
+        "CommandLine",
+        "CreationTime"
+      ],
+      "titleTemplate": "{ParentName} started {Name} (PID {ProcessId})",
+      "attack": [
+        "T1204.002"
+      ],
+      "falsePositives": [
+        "Office add-ins and macros used by the business",
+        "Print or export automation that calls cmd.exe"
+      ],
+      "recommendedNextStep": "Identify the document that was open, how it arrived, and the full child command line. Check recent email or download activity for the user.",
+      "remediation": "If the activity is not approved, an authorized responder could contain the host and preserve the document and process tree. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "ProcessId",
+        "ParentName",
+        "Name"
+      ],
+      "limitations": [
+        "The process snapshot may miss short-lived children; Sysmon event 1 (WTH-EVT-008) is more complete when available."
+      ]
+    },
+    {
+      "id": "WTH-PROC-004",
+      "name": "Living-off-the-land command line pattern",
+      "version": "1.0.0",
+      "category": "Execution",
+      "dataSource": "Process",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A command line matches a known abuse pattern for built-in binaries: certutil -urlcache, regsvr32 with a remote scriptlet, rundll32 with javascript or mshtml, mshta with a URL, bitsadmin /transfer, or wmic process call create.",
+      "rationale": "Attackers use signed system binaries to download or execute content. Each binary has legitimate uses, so the specific arguments are what make the pattern notable.",
+      "evidenceRequirements": [
+        "Process inventory with command lines"
+      ],
+      "condition": {
+        "any": [
+          {
+            "field": "CommandLine",
+            "op": "matchesList",
+            "list": "lolbinAbuse"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "ProcessId",
+        "Name",
+        "ParentName",
+        "CommandLine",
+        "CreationTime"
+      ],
+      "titleTemplate": "{Name} (PID {ProcessId}) matches a living-off-the-land pattern",
+      "attack": [
+        "T1218",
+        "T1105"
+      ],
+      "falsePositives": [
+        "Administrative scripts that use certutil or bitsadmin to move files",
+        "Software deployment using regsvr32 /i for COM registration"
+      ],
+      "recommendedNextStep": "Review the full command line and URL, the parent process, and any file the command created. Check network connections for the same PID.",
+      "remediation": "If the activity is not approved, an authorized responder could contain the host and preserve the downloaded content. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Name",
+        "CommandLine"
+      ]
+    },
+    {
+      "id": "WTH-PROC-005",
+      "name": "System process name running outside System32",
+      "version": "1.0.0",
+      "category": "Execution",
+      "dataSource": "Process",
+      "severity": "High",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A process with the name of a core Windows process (svchost.exe, lsass.exe, csrss.exe and similar) runs from a path outside System32 and SysWOW64.",
+      "rationale": "Malware commonly copies a trusted process name to blend in. Core processes should always run from the Windows system directories.",
+      "evidenceRequirements": [
+        "Process inventory with executable paths (protected processes may hide their path without elevation)"
+      ],
+      "condition": {
+        "all": [
+          {
+            "field": "Name",
+            "op": "inList",
+            "list": "systemProcessNames"
+          },
+          {
+            "field": "ExecutablePath",
+            "op": "exists"
+          },
+          {
+            "not": {
+              "field": "ExecutablePath",
+              "op": "pathStartsWithAny",
+              "list": "systemBinaryDirectories"
+            }
+          }
+        ]
+      },
+      "evidenceFields": [
+        "ProcessId",
+        "ParentProcessId",
+        "Name",
+        "ExecutablePath",
+        "CommandLine",
+        "ParentName",
+        "CreationTime"
+      ],
+      "titleTemplate": "{Name} (PID {ProcessId}) is running from an unexpected path",
+      "attack": [
+        "T1036.005"
+      ],
+      "falsePositives": [
+        "Renamed copies of tools used for testing",
+        "Side-by-side servicing activity (rare)"
+      ],
+      "recommendedNextStep": "Compare the file hash with the system copy, check the signature, the parent process and the process tree.",
+      "remediation": "If the process is malicious, an authorized responder should preserve memory and the binary before any containment action. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Name",
+        "ExecutablePath"
+      ]
+    },
+    {
+      "id": "WTH-PROC-006",
+      "name": "Download-and-execute pattern in a process command line",
+      "version": "1.0.0",
+      "category": "Execution",
+      "dataSource": "Process",
+      "severity": "Medium",
+      "confidence": "Medium",
+      "findingType": "Heuristic",
+      "description": "A command line contains an Invoke-Expression download cradle (IEX with DownloadString, Invoke-WebRequest or WebClient), DownloadFile/DownloadString calls, or Start-BitsTransfer from a URL.",
+      "rationale": "Fetching and running remote content in memory is a common first-stage technique. Software installers and administrators also use these constructs.",
+      "evidenceRequirements": [
+        "Process inventory with command lines"
+      ],
+      "condition": {
+        "any": [
+          {
+            "field": "CommandLine",
+            "op": "matchesList",
+            "list": "downloadCradle"
+          }
+        ]
+      },
+      "evidenceFields": [
+        "ProcessId",
+        "Name",
+        "ParentName",
+        "CommandLine",
+        "CreationTime"
+      ],
+      "titleTemplate": "{Name} (PID {ProcessId}) contains a download-and-execute pattern",
+      "attack": [
+        "T1059.001",
+        "T1105"
+      ],
+      "falsePositives": [
+        "Installers and package managers that use PowerShell web requests",
+        "Administrator bootstrap scripts"
+      ],
+      "recommendedNextStep": "Identify the URL and the content it served (without fetching it from a production host), the parent process, and network connections for the PID.",
+      "remediation": "If the activity is not approved, an authorized responder could block the URL at the proxy and contain the host after preserving evidence. This toolkit never changes the system; any action is a manual decision for an authorized responder after validation.",
+      "dedupeFields": [
+        "Name",
+        "CommandLine"
+      ]
+    }
+  ]
+}
