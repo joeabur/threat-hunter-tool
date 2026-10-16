@@ -1,5 +1,5 @@
 BeforeAll {
-    . (Join-Path $PSScriptRoot '..' 'TestHelpers.ps1')
+    . (Join-Path (Join-Path $PSScriptRoot '..') 'TestHelpers.ps1')
     Import-WthTestModule
     $script:Tmp = New-WthTestDirectory
     $script:Result = Invoke-WthHunt -SnapshotPath (Get-WthTestPath 'sample-data/snapshots/lab-intrusion.json')

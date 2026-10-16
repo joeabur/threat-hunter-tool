@@ -1,8 +1,8 @@
 # Portable integration tests: run the real command-line script in a child PowerShell and check exit codes,
 # output and files. These run on any OS and use only synthetic data.
-BeforeDiscovery { . (Join-Path $PSScriptRoot '..' 'TestHelpers.ps1') }
+BeforeDiscovery { . (Join-Path (Join-Path $PSScriptRoot '..') 'TestHelpers.ps1') }
 BeforeAll {
-    . (Join-Path $PSScriptRoot '..' 'TestHelpers.ps1')
+    . (Join-Path (Join-Path $PSScriptRoot '..') 'TestHelpers.ps1')
     $script:Script = Get-WthTestPath 'scripts/Invoke-WindowsThreatHunter.ps1'
     $script:Pwsh = (Get-Process -Id $PID).Path
     $script:Tmp = New-WthTestDirectory

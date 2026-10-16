@@ -1,6 +1,6 @@
 # Documentation, command, link, schema and CI consistency tests.
 BeforeDiscovery {
-    . (Join-Path $PSScriptRoot '..' 'TestHelpers.ps1')
+    . (Join-Path (Join-Path $PSScriptRoot '..') 'TestHelpers.ps1')
     $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
     $mdFiles = @(Get-ChildItem -LiteralPath $root -Recurse -Filter *.md -File | Where-Object { $_.FullName -notmatch '[\\/](test-results|TestResults)[\\/]' })
     $docFiles = @($mdFiles | ForEach-Object { @{ Path = $_.FullName; Name = $_.FullName.Substring($root.Length + 1) } })
@@ -11,7 +11,7 @@ BeforeDiscovery {
     }
 }
 BeforeAll {
-    . (Join-Path $PSScriptRoot '..' 'TestHelpers.ps1')
+    . (Join-Path (Join-Path $PSScriptRoot '..') 'TestHelpers.ps1')
     $script:Readme = Get-Content -LiteralPath (Get-WthTestPath 'README.md') -Raw
 }
 

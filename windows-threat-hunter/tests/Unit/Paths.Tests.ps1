@@ -1,8 +1,8 @@
 BeforeDiscovery {
-    . (Join-Path $PSScriptRoot '..' 'TestHelpers.ps1')
+    . (Join-Path (Join-Path $PSScriptRoot '..') 'TestHelpers.ps1')
 }
 BeforeAll {
-    . (Join-Path $PSScriptRoot '..' 'TestHelpers.ps1')
+    . (Join-Path (Join-Path $PSScriptRoot '..') 'TestHelpers.ps1')
     Import-WthTestModule
     $script:Tmp = New-WthTestDirectory
 }

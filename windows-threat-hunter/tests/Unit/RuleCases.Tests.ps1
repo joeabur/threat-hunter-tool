@@ -1,6 +1,6 @@
 # Data-driven positive and negative scenarios for every shipped rule (tests/Fixtures/rule-cases.json).
 BeforeDiscovery {
-    . (Join-Path $PSScriptRoot '..' 'TestHelpers.ps1')
+    . (Join-Path (Join-Path $PSScriptRoot '..') 'TestHelpers.ps1')
     $casePath = Join-Path (Join-Path $PSScriptRoot '..') 'Fixtures' | Join-Path -ChildPath 'rule-cases.json'
     $data = Get-Content -LiteralPath $casePath -Raw | ConvertFrom-Json
     $scenarios = foreach ($p in $data.cases.PSObject.Properties) {
@@ -14,7 +14,7 @@ BeforeDiscovery {
 }
 
 BeforeAll {
-    . (Join-Path $PSScriptRoot '..' 'TestHelpers.ps1')
+    . (Join-Path (Join-Path $PSScriptRoot '..') 'TestHelpers.ps1')
     Import-WthTestModule
     $script:Cases = Get-Content -LiteralPath (Join-Path $script:FixtureRoot 'rule-cases.json') -Raw | ConvertFrom-Json
 }

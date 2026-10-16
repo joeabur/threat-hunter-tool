@@ -1,8 +1,8 @@
 # Collector tests use mocks of the Get-WthRaw* shims, so they run on any OS. Live collection is covered by
 # tests/Integration (Windows only).
-BeforeDiscovery { . (Join-Path $PSScriptRoot '..' 'TestHelpers.ps1') }
+BeforeDiscovery { . (Join-Path (Join-Path $PSScriptRoot '..') 'TestHelpers.ps1') }
 BeforeAll {
-    . (Join-Path $PSScriptRoot '..' 'TestHelpers.ps1')
+    . (Join-Path (Join-Path $PSScriptRoot '..') 'TestHelpers.ps1')
     Import-WthTestModule
 }
 
