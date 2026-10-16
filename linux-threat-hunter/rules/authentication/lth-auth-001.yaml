@@ -1,0 +1,45 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-AUTH-001
+name: Repeated failed SSH authentication
+version: 1.0.0
+type: threshold
+data_source: auth
+severity: medium
+confidence: medium
+classification: heuristic
+description: Failed SSH authentication events from one source address reach the configured count within
+  the configured window.
+rationale: Bursts of failures from one source are consistent with password guessing, but also with misconfigured
+  clients and scanners. Threshold and window are configurable.
+conditions:
+  field: event
+  op: equals
+  value: ssh_failed
+params:
+  count: 5
+  window_seconds: 300
+group_by:
+- src_ip
+finding:
+  title: '{count} failed SSH logins from {src_ip} within {window_seconds}s'
+  explanation: '{count} failed SSH authentication events from {src_ip} between {first_seen} and {last_seen}
+    targeted {distinct_users} account(s): {users}. Threshold: {threshold}.'
+  artifact: SSH failures from {src_ip}
+attack:
+- tactic: credential-access
+  technique: T1110
+false_positives:
+- Vulnerability scanners and authorized penetration tests.
+- Automation with an expired password or key.
+- Users mistyping passwords (usually from one or two addresses, few attempts).
+- NAT gateways aggregating many users behind one address.
+investigation_steps:
+- Check whether the source is a known scanner, bastion or corporate NAT.
+- Look at which usernames were tried (valid accounts vs. generic names).
+- Check for a later success from the same address (see LTH-AUTH-002).
+- Consider rate limiting at the network layer after review. This tool will not change anything.
+limitations:
+- Only 'Failed <method>' sshd lines are counted. 'Invalid user' lines are not double counted.
+- Distributed attempts from many addresses will not reach a per-address threshold.
+references:
+- https://attack.mitre.org/techniques/T1110/

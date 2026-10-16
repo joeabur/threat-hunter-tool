@@ -1,0 +1,38 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PERS-002
+name: Persistence references a missing executable
+version: 1.0.0
+type: match
+data_source: persistence
+severity: low
+confidence: medium
+classification: observation
+description: A systemd service or cron job references an absolute executable path that did not exist at
+  collection time.
+rationale: Dangling persistence entries can be leftovers from removed software, or a payload that deletes
+  itself after staging. They are worth a look either way.
+conditions:
+  all:
+  - field: kind
+    op: in
+    value:
+    - systemd_service
+    - systemd_dropin
+    - cron_job
+  - field: exec_exists
+    op: equals
+    value: false
+finding:
+  title: '{kind} references missing executable {exec_path}'
+  explanation: '{path} references {exec_path}, which did not exist when the evidence was collected.'
+  artifact: '{path}'
+false_positives:
+- Software removed without cleaning its units or cron entries.
+- Executables on not-yet-mounted filesystems.
+- Units guarded by ConditionPathExists.
+investigation_steps:
+- Check package history for the executable's removal.
+- Look for the same path in other persistence artifacts and in shell history.
+- Review the artifact's mtime and owner.
+limitations:
+- Existence is evaluated once, at collection time, on the host's namespace.

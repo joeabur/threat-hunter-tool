@@ -1,0 +1,39 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PERS-005
+name: Shell startup file changed compared with baseline
+version: 1.0.0
+type: baseline
+data_source: baseline
+severity: medium
+confidence: medium
+classification: observation
+description: A system or per-user shell startup file (.bashrc, .profile, /etc/profile.d/*) is new or modified
+  compared with the baseline.
+rationale: Shell startup files run commands at every login or shell start and are a known place to hide
+  persistence.
+baseline:
+  categories:
+  - persistence
+  changes:
+  - added
+  - modified
+  where:
+    field: kind
+    op: equals
+    value: shell_startup
+finding:
+  title: 'Shell startup file {change}: {key}'
+  explanation: '{key} was {change} relative to the baseline (changed fields: {changed_fields}).'
+  artifact: '{key}'
+attack:
+- tactic: privilege-escalation
+  technique: T1546.004
+false_positives:
+- Users customizing prompts, aliases and PATH.
+- Version managers (nvm, pyenv) editing startup files.
+investigation_steps:
+- Diff the file against a trusted copy or backup.
+- Look for download commands, base64 blobs or references to hidden files.
+- Check which user owns and last modified the file.
+limitations:
+- Only the configured set of startup files is observed.

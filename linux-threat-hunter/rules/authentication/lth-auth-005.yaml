@@ -1,0 +1,31 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-AUTH-005
+name: Authentication from an analyst-supplied suspicious IP
+version: 1.0.0
+type: ioc
+data_source: auth
+severity: medium
+confidence: medium
+classification: ioc_match
+description: An authentication event's source address equals an IP from the IOC file.
+rationale: Activity from addresses already linked to suspicious behaviour deserves attention. An IOC match
+  shows an artifact equals a listed indicator; it does not by itself confirm compromise.
+ioc:
+  indicator_types:
+  - ip
+  group_by:
+  - src_ip
+  - event
+finding:
+  title: Authentication event from IOC address {src_ip}
+  explanation: '{event} for {user} from {src_ip} matched IOC {indicator}. Identical events from this source
+    are grouped (see evidence.occurrences).'
+  artifact: auth.log line {line_no}
+false_positives:
+- The indicator list may be stale, over-broad or contain shared infrastructure (CDNs, scanners).
+- Security tooling or an analyst may legitimately handle the indicator (sandboxes, threat-intel lookups).
+- Shared or recycled addresses (cloud, VPN, CGNAT).
+investigation_steps:
+- Confirm the indicator's source, age and confidence in your own threat-intelligence records.
+- Review the cited evidence record and surrounding activity (parent process, timestamps, owner).
+- Escalate through your incident-response process before taking any containment action.

@@ -1,0 +1,100 @@
+name: linux-threat-hunter tests
+
+on:
+  push:
+    branches: [main]
+    paths: ["linux-threat-hunter/**", ".github/workflows/linux-threat-hunter-*.yml"]
+  pull_request:            # never pull_request_target: untrusted PR code gets no secrets
+    paths: ["linux-threat-hunter/**", ".github/workflows/linux-threat-hunter-*.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lth-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: linux-threat-hunter
+
+jobs:
+  lint-and-types:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # Actions are pinned to full commit SHAs (tag in the comment). Dependabot (github-actions ecosystem)
+      # or `pinact` should keep them current.
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: linux-threat-hunter/requirements-dev.txt
+      - run: python -m pip install -r requirements-dev.txt && python -m pip install -e . --no-deps
+      - name: Ruff lint
+        run: ruff check .
+      - name: Ruff format
+        run: ruff format --check .
+      - name: Type check
+        run: mypy
+      - name: Rule schema validation
+        run: python -m linux_threat_hunter rules validate
+      - name: Config mirrors defaults / docs consistent (part of test suite)
+        run: python -m pytest -q tests/unit/test_rules.py tests/integration/test_docs.py
+
+  tests:
+    needs: lint-and-types
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.11", "3.12", "3.13"]
+        include:
+          # Portable core suite on other platforms. Not claimed as supported until these have a recorded green run.
+          - {os: macos-latest, python-version: "3.12"}
+          - {os: windows-latest, python-version: "3.12"}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.os != 'ubuntu-latest' }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install -r requirements-dev.txt && python -m pip install -e . --no-deps
+      - name: Unit and integration tests
+        run: python -m pytest -q
+      - name: CLI smoke tests (synthetic data)
+        shell: bash
+        run: |
+          python -m linux_threat_hunter info
+          python -m linux_threat_hunter rules list
+          python -m linux_threat_hunter collect --profile basic --output ./ci-evidence --dry-run
+          python -m linux_threat_hunter baseline create --input examples/synthetic-baseline-evidence --output ./ci-baseline.json
+          python -m linux_threat_hunter hunt --input examples/synthetic-evidence --iocs examples/iocs.json --baseline ./ci-baseline.json --output ./ci-results
+          python -m linux_threat_hunter report --input ./ci-results --output ./ci-reports
+          test -s ci-reports/summary.md && test -s ci-reports/findings.csv
+
+  packaging:
+    needs: lint-and-types
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
+        with:
+          python-version: "3.12"
+      - name: Build sdist and wheel
+        run: python -m pip install build twine && python -m build && python -m twine check dist/*
+      - name: Install the wheel in a clean venv and run it from another directory
+        run: |
+          python -m venv /tmp/wheel-venv
+          /tmp/wheel-venv/bin/pip install dist/*.whl
+          cd /tmp && /tmp/wheel-venv/bin/linux-threat-hunter rules validate

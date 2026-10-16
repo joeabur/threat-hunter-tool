@@ -1,0 +1,31 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-NET-002
+name: New listening service compared with baseline
+version: 1.0.0
+type: baseline
+data_source: baseline
+severity: medium
+confidence: medium
+classification: observation
+description: A listening TCP/UDP socket is not present in the baseline, or its owning process changed.
+rationale: Unexpected listeners can be backdoors or newly installed services. Unfamiliar is not malicious;
+  the comparison simply focuses review.
+baseline:
+  categories:
+  - listeners
+  changes:
+  - added
+  - modified
+finding:
+  title: 'Listener {change} since baseline: {key}'
+  explanation: '{key} (process {process}) is {change} relative to the baseline.'
+  artifact: '{key}'
+false_positives:
+- New legitimate services, development servers, containers publishing ports.
+- Ephemeral UDP listeners.
+investigation_steps:
+- Identify the process and package that own the port.
+- Check whether the service is expected and how it was started.
+- Review firewall policy for exposure.
+limitations:
+- Process names are only visible with sufficient privileges at collection time.

@@ -1,0 +1,12 @@
+{
+  "architecture": "x86_64",
+  "distribution": {
+    "id": "ubuntu",
+    "pretty_name": "Ubuntu 24.04 LTS (synthetic)",
+    "version_id": "24.04"
+  },
+  "hostname": "lab-host-01",
+  "init_system": "systemd",
+  "kernel": "6.8.0-synthetic",
+  "uptime_seconds": 345600
+}

@@ -1,0 +1,35 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-FILE-002
+name: Executable file in a watched writable directory
+version: 1.0.0
+type: match
+data_source: file
+severity: medium
+confidence: low
+classification: heuristic
+description: An executable file (execute bit set) was found in a configured scan directory such as /tmp,
+  /var/tmp or /dev/shm.
+rationale: Executables are unusual in scratch directories and are a common place to stage tools. Many
+  legitimate installers also leave them briefly.
+conditions:
+  all:
+  - field: source_dir
+    op: exists
+    value: true
+  - field: is_executable
+    op: equals
+    value: true
+finding:
+  title: Executable {path} ({file_type}) in {source_dir}
+  explanation: '{path} (owner {owner}, mode {mode}, type {file_type}) has execute permission in a watched
+    directory.'
+  artifact: '{path}'
+false_positives:
+- Installer, build and test tooling that unpack helpers to /tmp.
+- Language runtimes caching compiled objects.
+investigation_steps:
+- Hash the file and look for related processes and persistence.
+- Check owner, mtime and who was logged in at that time.
+- Do not execute it; analyze it in an isolated environment.
+limitations:
+- Scan depth and number of entries are bounded (collection.executable_scan_max_entries).

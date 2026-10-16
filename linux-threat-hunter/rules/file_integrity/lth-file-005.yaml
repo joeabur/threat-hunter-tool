@@ -1,0 +1,27 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-FILE-005
+name: File matches an analyst-supplied IOC
+version: 1.0.0
+type: ioc
+data_source: file
+severity: high
+confidence: medium
+classification: ioc_match
+description: A collected file's SHA-256 or path equals an indicator from the IOC file.
+rationale: Hash and path indicators identify specific files. An IOC match shows an artifact equals a listed
+  indicator; it does not by itself confirm compromise.
+ioc:
+  indicator_types:
+  - sha256
+  - file_path
+finding:
+  title: File {path} matches IOC {indicator}
+  explanation: '{path} matched the {indicator_type} indicator {indicator} (field {matched_field}).'
+  artifact: '{path}'
+false_positives:
+- The indicator list may be stale, over-broad or contain shared infrastructure (CDNs, scanners).
+- Security tooling or an analyst may legitimately handle the indicator (sandboxes, threat-intel lookups).
+investigation_steps:
+- Confirm the indicator's source, age and confidence in your own threat-intelligence records.
+- Review the cited evidence record and surrounding activity (parent process, timestamps, owner).
+- Escalate through your incident-response process before taking any containment action.

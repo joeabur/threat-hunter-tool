@@ -1,0 +1,33 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-FILE-003
+name: World-writable security-relevant file
+version: 1.0.0
+type: match
+data_source: file
+severity: high
+confidence: high
+classification: observation
+description: A selected file under /etc is writable by any user.
+rationale: World-writable configuration under /etc lets any local user alter authentication or system
+  behaviour. This is a permission fact, not evidence of misuse.
+conditions:
+  all:
+  - field: world_writable
+    op: equals
+    value: true
+  - field: path
+    op: path_under
+    value: $security_config_dirs
+  - field: source_dir
+    op: exists
+    value: false
+finding:
+  title: '{path} is world-writable (mode {mode})'
+  explanation: '{path} (owner {owner}) has mode {mode}, which allows any user to modify it.'
+  artifact: '{path}'
+false_positives:
+- Rare, misconfigured lab or container images.
+investigation_steps:
+- Check whether the file's content was modified (compare with baseline).
+- Find out how permissions were changed (history, configuration management).
+- Review recent logins and file modification times.

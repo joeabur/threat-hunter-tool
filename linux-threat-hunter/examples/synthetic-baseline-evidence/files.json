@@ -1,0 +1,35 @@
+[
+  {
+    "is_executable": false,
+    "mode": "0644",
+    "mtime": "2025-06-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/passwd",
+    "setuid": false,
+    "sha256": "b8017b4a63ecc8ef39dbe57eafb783b70e30215eb7c10fb3483aad7451905f4c",
+    "size": 29,
+    "world_writable": false
+  },
+  {
+    "is_executable": false,
+    "mode": "0440",
+    "mtime": "2025-06-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/sudoers",
+    "setuid": false,
+    "sha256": "4a6f8cc4945df48b4b0f0b8300bf829323ffcfa66ffa9ce3a4ff242ff993338c",
+    "size": 25,
+    "world_writable": false
+  },
+  {
+    "is_executable": false,
+    "mode": "0644",
+    "mtime": "2025-06-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/ssh/sshd_config",
+    "setuid": false,
+    "sha256": "54af76d6eb22ce2d95b0cdf8ec5598ed3ad93d34ae4ab48619c36877ccafe79f",
+    "size": 46,
+    "world_writable": false
+  }
+]

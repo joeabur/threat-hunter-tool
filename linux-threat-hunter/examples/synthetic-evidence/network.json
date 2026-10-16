@@ -1,0 +1,68 @@
+[
+  {
+    "listening": true,
+    "local_addr": "0.0.0.0",
+    "local_port": 22,
+    "pid": 800,
+    "process": "sshd",
+    "proto": "tcp",
+    "remote_addr": null,
+    "remote_port": null,
+    "state": "LISTEN"
+  },
+  {
+    "listening": true,
+    "local_addr": "0.0.0.0",
+    "local_port": 80,
+    "pid": 900,
+    "process": "nginx",
+    "proto": "tcp",
+    "remote_addr": null,
+    "remote_port": null,
+    "state": "LISTEN"
+  },
+  {
+    "listening": true,
+    "local_addr": "127.0.0.53",
+    "local_port": 53,
+    "pid": null,
+    "process": null,
+    "proto": "udp",
+    "remote_addr": null,
+    "remote_port": null,
+    "state": "UNCONN"
+  },
+  {
+    "listening": false,
+    "local_addr": "10.0.0.5",
+    "local_port": 51234,
+    "pid": 4242,
+    "process": "updater",
+    "proto": "tcp",
+    "remote_addr": "203.0.113.50",
+    "remote_port": 4444,
+    "state": "ESTAB"
+  },
+  {
+    "listening": true,
+    "local_addr": "0.0.0.0",
+    "local_port": 8081,
+    "pid": 4300,
+    "process": "python3",
+    "proto": "tcp",
+    "remote_addr": null,
+    "remote_port": null,
+    "state": "LISTEN"
+  },
+  {
+    "listening": false,
+    "local_addr": "10.0.0.5",
+    "local_port": 22,
+    "pid": 2000,
+    "process": "sshd",
+    "proto": "tcp",
+    "remote_addr": "192.0.2.10",
+    "remote_port": 40022,
+    "state": "ESTAB"
+  }
+]

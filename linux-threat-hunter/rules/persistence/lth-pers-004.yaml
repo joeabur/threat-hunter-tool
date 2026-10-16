@@ -1,0 +1,38 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PERS-004
+name: New or modified cron entry compared with baseline
+version: 1.0.0
+type: baseline
+data_source: baseline
+severity: medium
+confidence: medium
+classification: observation
+description: A cron file or cron script is not in the trusted baseline or its content, owner or mode changed.
+rationale: Cron is a long-standing persistence and scheduled-execution mechanism that survives reboot
+  and needs no service registration.
+baseline:
+  categories:
+  - persistence
+  changes:
+  - added
+  - modified
+  where:
+    field: kind
+    op: in
+    value:
+    - cron_file
+    - cron_script
+finding:
+  title: 'cron artifact {change} since baseline: {key}'
+  explanation: '{kind} {key} was {change} relative to the baseline (changed fields: {changed_fields}).'
+  artifact: '{key}'
+attack:
+- tactic: persistence
+  technique: T1053.003
+false_positives:
+- Package-provided cron jobs (logrotate, certbot) added or updated.
+- Administrator-scheduled maintenance.
+investigation_steps:
+- Read the cron file's commands (do not run them) and note the user field.
+- Compare mtime and ownership with change records.
+- Inspect referenced scripts and their hashes.

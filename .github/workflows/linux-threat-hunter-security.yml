@@ -1,0 +1,69 @@
+name: linux-threat-hunter security
+
+on:
+  push:
+    branches: [main]
+    paths: ["linux-threat-hunter/**", ".github/workflows/linux-threat-hunter-*.yml"]
+  pull_request:
+    paths: ["linux-threat-hunter/**", ".github/workflows/linux-threat-hunter-*.yml"]
+  schedule:
+    - cron: "17 4 * * 1"     # weekly: new advisories can affect unchanged dependencies
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: linux-threat-hunter
+
+jobs:
+  dependency-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
+        with:
+          python-version: "3.12"
+      - name: Audit pinned dependencies for known vulnerabilities
+        run: python -m pip install pip-audit && pip-audit -r requirements-dev.txt
+
+  static-analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
+        with:
+          python-version: "3.12"
+      - name: Bandit (security-focused static analysis)
+        run: python -m pip install bandit && bandit -q -r src -ll
+      - name: Ruff security rules (S)
+        run: python -m pip install -r requirements-dev.txt && ruff check src
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
+        with:
+          python-version: "3.12"
+      - name: detect-secrets (synthetic examples and tests are excluded by design; the walkthrough only shows synthetic hashes)
+        run: |
+          python -m pip install detect-secrets
+          detect-secrets scan --all-files --exclude-files '^(examples|tests|docs/walkthrough\.md)' > /tmp/secrets.json
+          python - <<'PY'
+          import json, sys
+          found = json.load(open("/tmp/secrets.json"))["results"]
+          if found:
+              print("Potential secrets:", {k: len(v) for k, v in found.items()})
+              sys.exit(1)
+          print("no potential secrets found")
+          PY

@@ -1,0 +1,6 @@
+# Example allowlist: AppImage mounts under /tmp are expected on this (synthetic) workstation.
+allowlists:
+  LTH-PROC-001:
+    - field: exe
+      op: startswith
+      value: /tmp/.mount_

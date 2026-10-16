@@ -1,0 +1,35 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PROC-005
+name: Suspicious command pattern in process command line
+version: 1.0.0
+type: match
+data_source: process
+severity: medium
+confidence: low
+classification: heuristic
+description: A process command line matches one of the configurable suspicious command patterns (variables.suspicious_command_patterns).
+rationale: Download-and-execute pipes, /dev/tcp redirections and netcat -e are common in reverse shells
+  and staged payload delivery, but also appear in legitimate admin one-liners. Patterns are bounded regexes
+  you can tune.
+conditions:
+  field: cmdline
+  op: regex_any
+  value: $suspicious_command_patterns
+finding:
+  title: Suspicious command pattern in pid {pid} ({name})
+  explanation: 'The command line of {name} (pid {pid}, user {user}) matched a configured suspicious pattern:
+    {cmdline}'
+  artifact: pid {pid} {name}
+attack:
+- tactic: execution
+  technique: T1059.004
+false_positives:
+- Installers documented as 'curl ... | sh' (package bootstrap scripts).
+- Administrators testing connectivity with bash /dev/tcp or nc.
+investigation_steps:
+- Identify the user and parent process that launched it.
+- Retrieve the downloaded script (do not execute it) from a safe environment if the URL is known.
+- Look for outbound connections from the same pid.
+limitations:
+- Command lines are redacted for configured secrets, which can hide parts of a pattern.
+- Short-lived processes may have exited before collection.

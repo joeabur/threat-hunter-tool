@@ -1,0 +1,43 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PERS-001
+name: New or modified systemd service compared with baseline
+version: 1.0.0
+type: baseline
+data_source: baseline
+severity: medium
+confidence: medium
+classification: observation
+description: A systemd service unit or drop-in file is not in the trusted baseline or its content, owner
+  or mode changed.
+rationale: Creating or modifying a service is a common persistence method and requires no exploit. A baseline
+  turns 'is this unit normal here?' into a concrete difference.
+baseline:
+  categories:
+  - persistence
+  changes:
+  - added
+  - modified
+  where:
+    field: kind
+    op: in
+    value:
+    - systemd_service
+    - systemd_dropin
+finding:
+  title: 'systemd unit {change} since baseline: {key}'
+  explanation: 'The {kind} {key} was {change} relative to the baseline (changed fields: {changed_fields}).
+    Referenced executable: {exec_path}.'
+  artifact: '{key}'
+attack:
+- tactic: persistence
+  technique: T1543.002
+false_positives:
+- Package installs and upgrades that add or change units.
+- Configuration management and legitimate administrator changes.
+investigation_steps:
+- Read the unit and its drop-ins (do not start them) and note ExecStart and User.
+- Check the unit's mtime against change tickets and package logs.
+- Inspect the referenced executable's owner, location and hash.
+- Look at journal entries for when the unit was enabled.
+references:
+- https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html

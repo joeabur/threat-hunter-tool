@@ -1,0 +1,35 @@
+[
+  {
+    "listening": true,
+    "local_addr": "0.0.0.0",
+    "local_port": 22,
+    "pid": 800,
+    "process": "sshd",
+    "proto": "tcp",
+    "remote_addr": null,
+    "remote_port": null,
+    "state": "LISTEN"
+  },
+  {
+    "listening": true,
+    "local_addr": "0.0.0.0",
+    "local_port": 80,
+    "pid": 900,
+    "process": "nginx",
+    "proto": "tcp",
+    "remote_addr": null,
+    "remote_port": null,
+    "state": "LISTEN"
+  },
+  {
+    "listening": true,
+    "local_addr": "127.0.0.53",
+    "local_port": 53,
+    "pid": null,
+    "process": null,
+    "proto": "udp",
+    "remote_addr": null,
+    "remote_port": null,
+    "state": "UNCONN"
+  }
+]

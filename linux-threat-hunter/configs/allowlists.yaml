@@ -1,0 +1,11 @@
+# Allowlists suppress findings for known-good records. Each entry is a condition
+# (same grammar as rule conditions, see docs/rule-authoring.md). Suppressed counts are reported
+# per rule, so suppression is never silent. Always record WHY next to each entry.
+#
+# '*' applies to every rule; a rule ID applies to that rule only.
+allowlists: {}
+#  LTH-PROC-001:
+#    # AppImage mounts are expected on analyst workstations (ticket SEC-123)
+#    - field: exe
+#      op: startswith
+#      value: /tmp/.mount_

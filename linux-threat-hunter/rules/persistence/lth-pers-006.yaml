@@ -1,0 +1,33 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-PERS-006
+name: Persistence artifact matches an analyst-supplied IOC
+version: 1.0.0
+type: ioc
+data_source: persistence
+severity: high
+confidence: medium
+classification: ioc_match
+description: A persistence artifact's hash, path, referenced executable, or an IP/domain in its commands
+  equals a supplied indicator.
+rationale: Persistence that references known-bad infrastructure or files is a strong lead. An IOC match
+  shows an artifact equals a listed indicator; it does not by itself confirm compromise.
+ioc:
+  indicator_types:
+  - sha256
+  - process_name
+  - file_path
+  - ip
+  - domain
+finding:
+  title: Persistence artifact {path} matches IOC {indicator}
+  explanation: '{kind} {path} matched the {indicator_type} indicator {indicator} through field {matched_field}.'
+  artifact: '{path}'
+false_positives:
+- The indicator list may be stale, over-broad or contain shared infrastructure (CDNs, scanners).
+- Security tooling or an analyst may legitimately handle the indicator (sandboxes, threat-intel lookups).
+investigation_steps:
+- Confirm the indicator's source, age and confidence in your own threat-intelligence records.
+- Review the cited evidence record and surrounding activity (parent process, timestamps, owner).
+- Escalate through your incident-response process before taking any containment action.
+limitations:
+- Domain and IP matching inspects only tokens present in the collected (bounded) file content.

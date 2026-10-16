@@ -1,0 +1,47 @@
+# Linux Threat Hunter detection rule (schema: docs/rule-authoring.md)
+id: LTH-AUTH-002
+name: Successful SSH login after repeated failures
+version: 1.0.0
+type: sequence
+data_source: auth
+severity: high
+confidence: medium
+classification: heuristic
+description: An SSH login succeeds from an address that produced repeated failures shortly before.
+rationale: Success after a burst of failures from the same address can indicate that guessing worked,
+  though it can equally be a user who mistyped before getting it right. This does not prove an account
+  was compromised.
+params:
+  count: 5
+  window_seconds: 900
+group_by:
+- src_ip
+sequence:
+  first:
+    field: event
+    op: equals
+    value: ssh_failed
+  then:
+    field: event
+    op: equals
+    value: ssh_accepted
+finding:
+  title: SSH login for {user} from {src_ip} after {failures} failures
+  explanation: 'An accepted SSH login for {user} from {src_ip} followed {failures} failed attempts (users
+    tried: {failed_users}) within {window_seconds}s, starting {first_failure}.'
+  artifact: SSH login from {src_ip} for {user}
+attack:
+- tactic: credential-access
+  technique: T1110
+false_positives:
+- A legitimate user mistyping a password several times before succeeding.
+- Penetration tests and red-team exercises.
+- Automation retrying after transient failures.
+investigation_steps:
+- Verify with the account owner whether the login was theirs.
+- Check the source address against known user locations and VPN ranges.
+- Review what the session did (sudo events, new processes, persistence changes).
+- Check whether the failures targeted the same account that later succeeded.
+limitations:
+- Requires both failure and success events in the same log with usable timestamps.
+- Rotated logs are not collected, so earlier failures may be missing.
