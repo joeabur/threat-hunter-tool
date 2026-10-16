@@ -1,0 +1,51 @@
+{
+  "collected_at": "2026-03-10T14:30:00.000000Z",
+  "records": [
+    {
+      "arch": "arm64",
+      "boot_time": "2026-03-01T08:00:00.000000Z",
+      "hostname": "synthetic-mac.example.test",
+      "interfaces": [
+        {
+          "addresses": [
+            "192.168.1.20"
+          ],
+          "flags": [
+            "UP",
+            "RUNNING"
+          ],
+          "name": "en0"
+        }
+      ],
+      "local_utc_offset": "+00:00",
+      "os": {
+        "build": "23F79",
+        "product_name": "macOS",
+        "version": "14.5"
+      },
+      "routes": [
+        {
+          "destination": "default",
+          "gateway": "192.168.1.1",
+          "interface": "en0"
+        }
+      ],
+      "security": {
+        "filevault": "on",
+        "firewall": "on",
+        "gatekeeper": "enabled",
+        "sip": "enabled"
+      },
+      "sessions": [
+        {
+          "since": "Mar 1 08:05",
+          "tty": "console",
+          "user": "alice"
+        }
+      ],
+      "uptime_seconds": 801000
+    }
+  ],
+  "schema_version": 1,
+  "source": "system"
+}

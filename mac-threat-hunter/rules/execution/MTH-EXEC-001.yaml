@@ -1,0 +1,34 @@
+id: MTH-EXEC-001
+name: Process executing from a user-writable location
+version: 1
+type: pattern
+source: process
+description: >-
+  A running process's executable lives in a directory that unprivileged users can write to
+  (for example /tmp or /Users/Shared) and is not covered by a documented exception.
+rationale: >-
+  Legitimate software is normally installed under /System, /usr, /Applications or a package
+  manager prefix. Malware and droppers often execute from temporary or shared writable
+  directories because they do not need privileges to write there.
+severity: medium
+confidence: medium
+title: "Process running from writable location: {name}"
+requires: [path]
+context_fields: [sha256, codesign_status, parent_name]
+conditions:
+  all:
+    - {field: path, op: path_under, value: "$setting:writable_locations"}
+  none:
+    - {field: path, op: path_under, value: "$allowlist:writable_location_exceptions"}
+evidence_fields: [pid, ppid, name, path, user, cmdline, parent_name, sha256, codesign_status]
+false_positives:
+  - Installers, updaters and app translocation run from temporary directories by design.
+  - Developer build outputs and test binaries executed from scratch directories.
+  - Software installed for all users under /Users/Shared in managed environments.
+investigation:
+  - Review the process's parent and ancestors and its start time against user activity.
+  - Hash the file and check it against internal allowlists and analyst-supplied IOCs.
+  - Inspect code-signing status and whether the file is still present on disk.
+  - Check for network connections and persistence entries referencing the same path.
+references:
+  - https://developer.apple.com/documentation/security/code_signing_services

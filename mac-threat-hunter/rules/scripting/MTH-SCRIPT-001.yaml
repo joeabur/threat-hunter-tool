@@ -1,0 +1,34 @@
+id: MTH-SCRIPT-001
+name: Download piped directly into a shell
+version: 1
+type: pattern
+source: [process, log, persistence]
+description: >-
+  A command line, log message or persistence/startup entry pipes the output of curl or wget
+  straight into a shell interpreter.
+rationale: >-
+  Piping a download into a shell executes remote content without inspection. It is a common
+  delivery method for droppers, though also a common installation idiom for legitimate tools.
+severity: high
+confidence: medium
+title: "Download-and-execute pattern in {source}"
+requires: [search_text]
+conditions:
+  all:
+    - {field: search_text, op: regex, value: '(?:curl|wget)\s[^|]{0,200}\|\s*(?:sudo\s+)?(?:ba|z)?sh\b'}
+evidence_fields: [name, process, path, pid, user, search_text, parent_name, kind]
+attack:
+  techniques: [T1105, T1059.004]
+  justification: >-
+    Fetching content from a remote host (Ingress Tool Transfer) and feeding it to a Unix
+    shell (Unix Shell) is exactly what the matched pattern expresses.
+false_positives:
+  - Well-known installers documented as "curl ... | sh" (Homebrew, rustup, nvm).
+  - Administrators bootstrapping tooling from internal servers.
+investigation:
+  - Identify the URL and host being fetched and whether they are approved internally.
+  - Find the parent process and the user session that issued the command.
+  - Check for persistence entries or files written afterwards by the spawned shell.
+references:
+  - https://attack.mitre.org/techniques/T1105/
+  - https://attack.mitre.org/techniques/T1059/004/

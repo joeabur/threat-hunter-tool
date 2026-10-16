@@ -1,0 +1,157 @@
+{
+  "created_at": "2026-03-01T09:00:00.000000Z",
+  "host": {
+    "arch": "arm64",
+    "hostname": "synthetic-mac.example.test",
+    "os": {
+      "build": "23F79",
+      "product_name": "macOS",
+      "version": "14.5"
+    }
+  },
+  "integrity": {
+    "algorithm": "sha256-of-canonical-observations",
+    "value": "fff6692e7eab511dabb1ac3e67bc11104e8d46b5b8d172ab1b9bd8e1effc245e"
+  },
+  "kind": "mac-threat-hunter-baseline",
+  "observations": {
+    "config": {
+      "os_build": {
+        "value": "23F79"
+      },
+      "os_version": {
+        "value": "14.5"
+      },
+      "security_filevault": {
+        "value": "on"
+      },
+      "security_firewall": {
+        "value": "on"
+      },
+      "security_gatekeeper": {
+        "value": "enabled"
+      },
+      "security_sip": {
+        "value": "enabled"
+      }
+    },
+    "files": {
+      "/Users/alice/Downloads/tool-installer": {
+        "is_executable": true,
+        "kind": "watched_file",
+        "mode": "0755",
+        "owner": "alice",
+        "sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "size": 52000
+      },
+      "/etc/hosts": {
+        "is_executable": false,
+        "kind": "config_file",
+        "mode": "0644",
+        "owner": "root",
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "size": 1024
+      },
+      "/etc/ssh/sshd_config": {
+        "is_executable": false,
+        "kind": "config_file",
+        "mode": "0644",
+        "owner": "root",
+        "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "size": 1024
+      },
+      "/etc/sudoers": {
+        "is_executable": false,
+        "kind": "config_file",
+        "mode": "0440",
+        "owner": "root",
+        "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+        "size": 1024
+      }
+    },
+    "listeners": {
+      "tcp/49152/rapportd": {
+        "local_address": "*",
+        "local_port": 49152,
+        "process_name": "rapportd",
+        "process_path": "/sbin/launchd",
+        "proto": "tcp",
+        "user": "alice"
+      },
+      "tcp/631/cupsd": {
+        "local_address": "127.0.0.1",
+        "local_port": 631,
+        "process_name": "cupsd",
+        "process_path": "/sbin/launchd",
+        "proto": "tcp",
+        "user": "root"
+      },
+      "tcp/7000/ControlCenter": {
+        "local_address": "*",
+        "local_port": 7000,
+        "process_name": "ControlCenter",
+        "process_path": "/sbin/launchd",
+        "proto": "tcp",
+        "user": "alice"
+      }
+    },
+    "persistence": {
+      "/Library/LaunchAgents/com.microsoft.update.agent.plist": {
+        "keep_alive": false,
+        "kind": "launch_agent",
+        "label": "com.microsoft.update.agent",
+        "mode": "0644",
+        "owner": "root",
+        "program_exists": true,
+        "program_path": "/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/Microsoft Update Assistant",
+        "program_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "run_at_load": true,
+        "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "/Library/LaunchDaemons/com.vendor.legit.plist": {
+        "keep_alive": false,
+        "kind": "launch_daemon",
+        "label": "com.vendor.legit.helper",
+        "mode": "0644",
+        "owner": "root",
+        "program_exists": true,
+        "program_path": "/Library/PrivilegedHelperTools/com.vendor.legit.helper",
+        "program_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "run_at_load": true,
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "/Users/alice/.zshrc": {
+        "kind": "shell_startup",
+        "mode": "0644",
+        "owner": "alice",
+        "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+      }
+    }
+  },
+  "schema_version": 1,
+  "source_evidence": {
+    "collected_at": "2026-03-10T14:30:00.000000Z",
+    "counts": {
+      "config": 6,
+      "files": 4,
+      "listeners": 3,
+      "persistence": 3
+    },
+    "files": [
+      "files.json",
+      "network.json",
+      "persistence.json",
+      "processes.json",
+      "system.json",
+      "unified_log.ndjson"
+    ],
+    "path_name": "synthetic-evidence-clean",
+    "synthetic": true
+  },
+  "tool_version": "0.1.0",
+  "warnings": [
+    "A baseline records what was observed, not what is safe: if the host was already compromised when the baseline was taken, the compromise is now part of the baseline.",
+    "Routine updates (OS, apps, package managers) legitimately change many tracked items; review every difference before accepting it.",
+    "The integrity hash detects accidental edits and corruption only. It is not a signature and does not authenticate who created the file; store baselines somewhere trusted."
+  ]
+}

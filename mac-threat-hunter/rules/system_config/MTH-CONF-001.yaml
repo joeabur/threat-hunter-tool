@@ -1,0 +1,28 @@
+id: MTH-CONF-001
+name: System Integrity Protection or Gatekeeper reported disabled
+version: 1
+type: pattern
+source: system
+description: >-
+  Collected security configuration reports System Integrity Protection or Gatekeeper as
+  disabled.
+rationale: >-
+  SIP and Gatekeeper are core macOS protections. Disabling them is sometimes needed for
+  development or debugging but it also lowers the barrier for malware, so the state is
+  worth confirming against policy.
+severity: medium
+confidence: high
+title: "Core macOS protection reported disabled"
+conditions:
+  any:
+    - {field: security_sip, op: equals, value: disabled}
+    - {field: security_gatekeeper, op: equals, value: disabled}
+evidence_fields: [security_sip, security_gatekeeper, os_version, os_build, hostname]
+false_positives:
+  - Kernel-extension, driver or security-research development machines.
+  - Lab hosts with documented exceptions.
+investigation:
+  - Compare to fleet policy and device-management configuration for this host.
+  - Establish when and by whom protections were changed (installer logs, MDM history).
+references:
+  - https://support.apple.com/guide/security/system-integrity-protection-secb7ea06b49/web

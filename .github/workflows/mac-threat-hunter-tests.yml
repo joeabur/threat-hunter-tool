@@ -1,0 +1,58 @@
+name: mac-threat-hunter tests
+
+on:
+  push:
+    branches: [main]
+    paths: ["mac-threat-hunter/**", ".github/workflows/mac-threat-hunter-*.yml"]
+  pull_request:
+    paths: ["mac-threat-hunter/**", ".github/workflows/mac-threat-hunter-*.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mac-threat-hunter-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: mac-threat-hunter
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / py${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[dev]"
+      - name: Lint
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          ruff format --check .
+          ruff check .
+          mypy src
+      - name: Validate rules
+        run: python -m mac_threat_hunter rules validate
+      - name: Tests
+        run: python -m pytest -q
+      - name: CLI smoke test (synthetic evidence)
+        shell: bash
+        run: |
+          python -m mac_threat_hunter doctor
+          python -m mac_threat_hunter collect --profile basic --dry-run
+          bash scripts/run-demo.sh
+      - name: Build distribution
+        if: matrix.os == 'ubuntu-latest' && matrix.python == '3.13'
+        run: python -m build

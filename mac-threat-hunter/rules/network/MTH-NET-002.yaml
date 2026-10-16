@@ -1,0 +1,29 @@
+id: MTH-NET-002
+name: Established connection from a process in a writable location
+version: 1
+type: pattern
+source: network
+description: >-
+  An established network connection belongs to a process whose executable lives in a
+  user-writable directory.
+rationale: >-
+  Malware staged in temporary directories needs network access for command-and-control or
+  tool transfer. The path is the signal; the destination alone is not treated as suspicious.
+severity: medium
+confidence: medium
+title: "Connection from writable-path process: {process_name}"
+requires: [process_path]
+conditions:
+  all:
+    - {field: state, op: equals, value: ESTABLISHED}
+    - {field: process_path, op: path_under, value: "$setting:writable_locations"}
+  none:
+    - {field: process_path, op: path_under, value: "$allowlist:writable_location_exceptions"}
+evidence_fields: [proto, state, local_address, local_port, remote_address, remote_host, remote_port, pid, process_name, process_path, process_association]
+false_positives:
+  - Installers and updaters downloading components while running from temporary directories.
+investigation:
+  - Check the destination against threat intelligence and internal allowlists.
+  - Review the process's ancestry, file hash and persistence entries.
+  - If process association was joined by PID rather than reported by lsof, confirm it is current.
+references: []

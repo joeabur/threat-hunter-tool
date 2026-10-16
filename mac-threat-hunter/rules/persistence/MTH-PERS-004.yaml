@@ -1,0 +1,32 @@
+id: MTH-PERS-004
+name: Launch item runs an inline shell or script command
+version: 1
+type: pattern
+source: persistence
+description: >-
+  A LaunchAgent or LaunchDaemon starts a shell or scripting host with an inline command
+  (sh -c, bash -c, osascript -e, ...) instead of a regular executable.
+rationale: >-
+  Inline commands in launch items hide their logic in a plist and are used by persistence
+  implants; they are less common in vendor-installed jobs.
+severity: medium
+confidence: medium
+title: "Launch item runs inline command: {label}"
+requires: [search_text]
+conditions:
+  all:
+    - {field: kind, op: in, value: [launch_agent, launch_daemon]}
+    - {field: search_text, op: regex, value: '(?:^|[\s/])(?:sh|bash|zsh|osascript)\s+-[ce]\b'}
+evidence_fields: [kind, path, label, owner, mode, program_arguments, run_at_load, keep_alive, sha256]
+attack:
+  techniques: [T1543.001, T1543.004, T1059]
+  justification: >-
+    A launchd job whose action is an interpreter running an inline command combines launchd
+    persistence with command and scripting interpreter use.
+false_positives:
+  - Vendor and IT management jobs that wrap commands in /bin/sh -c.
+investigation:
+  - Read the full command and any files or URLs it references.
+  - Check who owns the plist and when it was created or last changed.
+references:
+  - https://attack.mitre.org/techniques/T1543/001/

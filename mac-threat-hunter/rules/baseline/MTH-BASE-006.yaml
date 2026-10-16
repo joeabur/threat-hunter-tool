@@ -1,0 +1,20 @@
+id: MTH-BASE-006
+name: New listening service since baseline
+version: 1
+type: baseline
+source: network
+description: A listening socket (protocol, port and process) is present that was not in the baseline.
+rationale: >-
+  New listeners change the host's remote attack surface and may represent backdoors or
+  unauthorised services.
+severity: medium
+confidence: medium
+title: "New listener: {key}"
+baseline: {category: listeners, change: added}
+evidence_fields: [proto, local_address, local_port, process_name, process_path, user]
+false_positives:
+  - Developer servers and newly installed software.
+investigation:
+  - Identify the process and whether the service is approved.
+  - Check firewall state and reachability from other hosts.
+references: []

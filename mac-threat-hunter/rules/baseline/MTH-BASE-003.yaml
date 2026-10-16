@@ -1,0 +1,17 @@
+id: MTH-BASE-003
+name: Persistence artifact removed since baseline
+version: 1
+type: baseline
+source: persistence
+description: A persistence artifact present in the baseline is no longer present.
+rationale: >-
+  Removal usually reflects an uninstall, but attackers also delete artifacts to hide activity.
+severity: informational
+confidence: medium
+title: "Persistence artifact removed: {key}"
+baseline: {category: persistence, change: removed}
+false_positives:
+  - Software that was uninstalled.
+investigation:
+  - Confirm an uninstall or update explains the removal.
+references: []

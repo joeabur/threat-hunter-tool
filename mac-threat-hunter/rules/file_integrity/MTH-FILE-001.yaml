@@ -1,0 +1,29 @@
+id: MTH-FILE-001
+name: Recently modified executable in a writable location
+version: 1
+type: pattern
+source: file
+description: >-
+  An executable file in a watched writable directory (for example /private/tmp or
+  /Users/Shared) was modified within the last 14 days before collection.
+rationale: >-
+  Droppers and payload stages are often written to writable shared or temporary directories
+  shortly before execution.
+severity: medium
+confidence: low
+title: "Recent executable in writable location: {path}"
+requires: [path, age_days]
+conditions:
+  all:
+    - {field: is_executable, op: equals, value: true}
+    - {field: path, op: path_under, value: "$setting:writable_locations"}
+    - {field: age_days, op: lte, value: 14}
+  none:
+    - {field: path, op: path_under, value: "$allowlist:writable_location_exceptions"}
+evidence_fields: [path, kind, owner, mode, size, mtime, age_days, is_macho, sha256]
+false_positives:
+  - Build outputs, test fixtures and installers unpacked into temporary directories.
+investigation:
+  - Hash the file and compare to IOCs; copy it for static analysis, do not run it.
+  - Look for processes, launch items or connections that reference the same path.
+references: []

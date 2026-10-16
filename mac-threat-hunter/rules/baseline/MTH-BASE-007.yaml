@@ -1,0 +1,20 @@
+id: MTH-BASE-007
+name: Recorded system configuration value changed since baseline
+version: 1
+type: baseline
+source: system
+description: A recorded security setting or OS version differs from the baseline.
+rationale: >-
+  Changes to SIP, Gatekeeper, FileVault or firewall state alter the host's protections;
+  OS version changes explain many other differences.
+severity: medium
+confidence: high
+title: "Configuration changed: {key}"
+baseline: {category: config, change: modified}
+evidence_fields: [key, changed_attributes]
+false_positives:
+  - OS updates (version and build values change).
+  - Approved policy changes.
+investigation:
+  - Compare before and after values in the change details and match to change records.
+references: []

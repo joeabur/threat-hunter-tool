@@ -1,0 +1,23 @@
+id: MTH-BASE-005
+name: New executable file in a watched location since baseline
+version: 1
+type: baseline
+source: file
+description: An executable file appears in a watched location that was not present in the baseline.
+rationale: >-
+  New executables in watched writable locations are candidates for dropped payloads.
+severity: medium
+confidence: low
+title: "New executable file: {key}"
+baseline:
+  category: files
+  change: added
+  filters:
+    all:
+      - {field: is_executable, op: equals, value: true}
+evidence_fields: [kind, owner, mode, size, sha256, is_macho]
+false_positives:
+  - Software installers and build outputs.
+investigation:
+  - Hash the file and check the creating process, download history and signatures.
+references: []

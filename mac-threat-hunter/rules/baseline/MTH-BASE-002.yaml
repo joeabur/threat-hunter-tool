@@ -1,0 +1,20 @@
+id: MTH-BASE-002
+name: Persistence artifact modified since baseline
+version: 1
+type: baseline
+source: persistence
+description: A persistence artifact's recorded attributes (hash, program, permissions) differ from the baseline.
+rationale: >-
+  Modifying an existing launch item or startup file is a quiet way to change what runs
+  automatically.
+severity: high
+confidence: medium
+title: "Persistence artifact modified: {key}"
+baseline: {category: persistence, change: modified}
+evidence_fields: [kind, label, program_path, owner, mode, sha256]
+false_positives:
+  - Legitimate software updates that rewrite their launch plists.
+investigation:
+  - Compare before and after attributes in the baseline change details.
+  - Confirm that a vendor update explains the change.
+references: []

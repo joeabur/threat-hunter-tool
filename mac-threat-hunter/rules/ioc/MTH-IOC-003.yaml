@@ -1,0 +1,28 @@
+id: MTH-IOC-003
+name: Network connection or its process matches an analyst-supplied indicator
+version: 1
+type: ioc
+source: network
+description: >-
+  A connection's remote IP address or hostname, or its owning process's path or hash, matches
+  a supplied indicator.
+rationale: >-
+  Contact with indicator addresses or domains, or traffic from an indicator process, links
+  the endpoint to known infrastructure. The match does not show what data was exchanged.
+severity: high
+confidence: medium
+title: "Connection matches IOC {indicator}"
+ioc:
+  matches:
+    - {type: ip, fields: [remote_address]}
+    - {type: domain, fields: [remote_host]}
+    - {type: sha256, fields: [process_sha256]}
+    - {type: path, fields: [process_path]}
+evidence_fields: [proto, state, local_address, local_port, remote_address, remote_host, remote_port, pid, process_name, process_path, process_association]
+false_positives:
+  - Shared hosting or CDN addresses reused by legitimate services.
+  - Indicators that have been reassigned since publication.
+investigation:
+  - Confirm the connection's process and whether it is still running.
+  - Check proxy, DNS and firewall logs for corroborating context.
+references: []

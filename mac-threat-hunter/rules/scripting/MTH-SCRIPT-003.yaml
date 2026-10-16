@@ -1,0 +1,31 @@
+id: MTH-SCRIPT-003
+name: osascript requesting administrator privileges
+version: 1
+type: pattern
+source: [process, log]
+description: >-
+  An osascript invocation uses "with administrator privileges" to run commands as root after a
+  password prompt.
+rationale: >-
+  AppleScript is a convenient way to prompt a user for credentials and then run commands as
+  root. Malware uses this to escalate privileges after social engineering the password prompt.
+severity: medium
+confidence: medium
+title: "osascript requesting administrator privileges"
+requires: [search_text]
+conditions:
+  all:
+    - {field: search_text, op: regex, value: 'osascript.{0,200}with administrator privileges'}
+evidence_fields: [name, process, path, pid, user, search_text, parent_name]
+attack:
+  techniques: [T1548.004, T1059.002]
+  justification: >-
+    The pattern is AppleScript asking the user to authorise elevated execution, matching
+    Elevated Execution with Prompt and AppleScript.
+false_positives:
+  - Legitimate installers and IT scripts that elevate through AppleScript dialogs.
+investigation:
+  - Identify the parent application and whether the user expected a password prompt.
+  - Review the commands run with elevated rights and any files they created.
+references:
+  - https://attack.mitre.org/techniques/T1548/004/

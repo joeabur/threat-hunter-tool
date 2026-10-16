@@ -1,0 +1,27 @@
+id: MTH-IOC-002
+name: Persistence artifact matches an analyst-supplied indicator
+version: 1
+type: ioc
+source: persistence
+description: >-
+  A persistence artifact, its referenced program, or the commands it runs match a supplied
+  indicator (hash, path, IP address or domain token).
+rationale: >-
+  Persistence mechanisms commonly reference payload paths, hashes or command-and-control
+  addresses that appear in indicator lists.
+severity: high
+confidence: medium
+title: "Persistence artifact matches IOC {indicator}"
+ioc:
+  matches:
+    - {type: sha256, fields: [sha256, program_sha256]}
+    - {type: path, fields: [path, program_path]}
+    - {type: ip, fields: [search_text], text: true}
+    - {type: domain, fields: [search_text], text: true}
+evidence_fields: [kind, path, label, program_path, program_arguments, program_sha256, sha256, owner, mode]
+false_positives:
+  - Indicator values shared with legitimate software.
+investigation:
+  - Verify the indicator context and compare with sibling artifacts from the same vendor.
+  - Copy (do not run) the referenced program and review it.
+references: []

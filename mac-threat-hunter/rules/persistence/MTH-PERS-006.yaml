@@ -1,0 +1,34 @@
+id: MTH-PERS-006
+name: Shell startup file contains download, decode or reverse-shell style commands
+version: 1
+type: pattern
+source: persistence
+description: >-
+  A shell startup file (.zshrc, .zprofile, /etc/zshrc, ...) contains lines that download
+  content, decode base64, call osascript, reference temporary paths or open interactive
+  network shells.
+rationale: >-
+  Shell startup files run every time a shell opens, so attackers append commands there for
+  persistence. Only suspicious-looking lines are recorded, never the whole file.
+severity: low
+confidence: low
+title: "Suspicious-looking line in shell startup file: {path}"
+requires: [search_text]
+conditions:
+  all:
+    - {field: kind, op: equals, value: shell_startup}
+    - {field: search_text, op: regex, value: '(?:curl|wget)\b|base64\b|osascript\b|/tmp/|/private/tmp/|bash\s+-i\b|\bnc\s+-|python[0-9.]*\s+-c\b'}
+evidence_fields: [kind, path, owner, mode, mtime, lines_of_interest, sha256]
+attack:
+  techniques: [T1546.004]
+  justification: >-
+    Commands placed in shell startup files execute whenever a shell starts, which is Unix Shell
+    Configuration Modification; the rule inspects only the file's current content.
+false_positives:
+  - Developer environments that call curl or wget for version managers and completions.
+  - Dotfile repositories that reference temporary directories.
+investigation:
+  - Read the matched lines in context and compare with the baseline hash.
+  - Check which user owns the file and when it was last modified.
+references:
+  - https://attack.mitre.org/techniques/T1546/004/

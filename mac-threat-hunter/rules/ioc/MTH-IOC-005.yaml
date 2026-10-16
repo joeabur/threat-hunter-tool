@@ -1,0 +1,25 @@
+id: MTH-IOC-005
+name: Command line or log message contains an analyst-supplied IP or domain
+version: 1
+type: ioc
+source: [process, log]
+description: >-
+  An IP address or domain token found in a process command line or a unified log message
+  exactly equals a supplied indicator.
+rationale: >-
+  Scripts and tools often carry their download or command-and-control address on the command
+  line or in log output.
+severity: medium
+confidence: low
+title: "Command or log text references IOC {indicator}"
+ioc:
+  matches:
+    - {type: ip, fields: [search_text], text: true}
+    - {type: domain, fields: [search_text], text: true}
+evidence_fields: [name, process, path, pid, user, search_text]
+false_positives:
+  - Log messages that quote an address while blocking or documenting it.
+  - Security tooling that itself references indicator values.
+investigation:
+  - Read the surrounding command or log context and the originating process.
+references: []

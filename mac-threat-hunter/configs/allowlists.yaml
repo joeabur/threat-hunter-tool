@@ -1,0 +1,76 @@
+# Named allowlists referenced from rules as "$allowlist:<name>". Review these for your fleet:
+# a permissive allowlist hides real findings.
+schema_version: 1
+lists:
+  trusted_exec_prefixes:
+    - /System/
+    - /usr/
+    - /bin/
+    - /sbin/
+    - /Applications/
+    - /Library/Apple/
+    - /Library/Developer/CommandLineTools/
+    - /opt/homebrew/
+  writable_location_exceptions:     # legitimate executables that live under writable-looking paths
+    - /private/var/folders/*/*/*/AppTranslocation/*
+    - /Users/*/Library/Caches/com.apple.*
+  persistence_label_prefixes:       # launchd labels considered expected on this fleet
+    - com.apple.
+    - com.microsoft.
+    - com.google.keystone
+    - org.macports.
+    - homebrew.mxcl.
+    - com.vendor.legit
+  shell_interpreters:
+    - sh
+    - bash
+    - zsh
+    - dash
+    - ksh
+    - tcsh
+    - fish
+  script_interpreters:
+    - sh
+    - bash
+    - zsh
+    - python
+    - python3
+    - perl
+    - ruby
+    - osascript
+    - node
+    - php
+  expected_listener_processes:
+    - launchd
+    - rapportd
+    - sharingd
+    - ControlCenter
+    - identityservicesd
+    - mDNSResponder
+    - sshd
+    - cupsd
+    - Spotify
+    - Google Chrome Helper
+  office_and_browser_parents:       # applications that rarely spawn shells directly
+    - Microsoft Word
+    - Microsoft Excel
+    - Microsoft PowerPoint
+    - Preview
+    - Pages
+    - Numbers
+    - Keynote
+    - Safari
+    - Mail
+    - Messages
+  security_config_paths:
+    - /etc/sudoers
+    - /etc/sudoers.d/*
+    - /etc/pam.d/*
+    - /etc/ssh/*
+    - /etc/hosts
+    - /etc/authorization
+    - /etc/periodic/*
+    - /etc/synthetic.conf
+  system_launch_dirs:
+    - /Library/LaunchDaemons/
+    - /Library/LaunchAgents/

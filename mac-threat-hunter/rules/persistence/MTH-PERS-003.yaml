@@ -1,0 +1,30 @@
+id: MTH-PERS-003
+name: Launch item outside the allowlisted vendors
+version: 1
+type: pattern
+source: persistence
+description: >-
+  A LaunchAgent or LaunchDaemon outside Apple's system directories has a label that is not on
+  the fleet's allowlist of expected launchd label prefixes.
+rationale: >-
+  Inventorying launch items that are not explicitly expected makes unknown persistence easy to
+  review. This is an inventory lead, not a malicious-behaviour detection.
+severity: low
+confidence: low
+title: "Unlisted launch item: {label}"
+requires: [label]
+conditions:
+  all:
+    - {field: kind, op: in, value: [launch_agent, launch_daemon]}
+    - {field: path, op: startswith_any, value: ["/Library/", "/Users/"]}
+  none:
+    - {field: label, op: startswith_any, value: "$allowlist:persistence_label_prefixes"}
+evidence_fields: [kind, path, label, owner, mode, program_path, program_exists, run_at_load, keep_alive, program_codesign_status, program_codesign_team_id]
+false_positives:
+  - Any third-party software not yet added to the allowlist (VPN clients, backup tools, drivers).
+investigation:
+  - Identify the owning application and whether it is approved.
+  - Check the program's signature and team identifier.
+  - Add verified vendors to configs/allowlists.yaml once reviewed.
+references:
+  - https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html

@@ -1,0 +1,20 @@
+id: MTH-BASE-001
+name: New persistence artifact since baseline
+version: 1
+type: baseline
+source: persistence
+description: A persistence artifact is present now that was not present in the baseline.
+rationale: >-
+  New launch items, startup files and hooks are how persistence appears. Changes must still be
+  matched to legitimate installs and updates.
+severity: medium
+confidence: medium
+title: "New persistence artifact: {key}"
+baseline: {category: persistence, change: added}
+evidence_fields: [kind, label, program_path, owner, mode, sha256]
+false_positives:
+  - Software installed or updated after the baseline was created.
+investigation:
+  - Identify the install event that created the artifact and the software that owns it.
+  - Review the artifact's program, hash and signature.
+references: []

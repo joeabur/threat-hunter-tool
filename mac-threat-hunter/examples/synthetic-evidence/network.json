@@ -1,0 +1,93 @@
+{
+  "collected_at": "2026-03-10T14:30:00.000000Z",
+  "records": [
+    {
+      "local_address": "192.168.1.20",
+      "local_port": 49711,
+      "pid": 400,
+      "process_association": "lsof",
+      "process_name": "Safari",
+      "proto": "tcp",
+      "remote_address": "203.0.113.10",
+      "remote_host": "www.example.test",
+      "remote_port": 443,
+      "state": "ESTABLISHED",
+      "user": "alice"
+    },
+    {
+      "local_address": "*",
+      "local_port": 49152,
+      "pid": 1,
+      "process_association": "lsof",
+      "process_name": "rapportd",
+      "proto": "tcp",
+      "remote_address": null,
+      "remote_port": null,
+      "state": "LISTEN",
+      "user": "alice"
+    },
+    {
+      "local_address": "*",
+      "local_port": 7000,
+      "pid": 1,
+      "process_association": "lsof",
+      "process_name": "ControlCenter",
+      "proto": "tcp",
+      "remote_address": null,
+      "remote_port": null,
+      "state": "LISTEN",
+      "user": "alice"
+    },
+    {
+      "local_address": "127.0.0.1",
+      "local_port": 631,
+      "pid": 1,
+      "process_association": "lsof",
+      "process_name": "cupsd",
+      "proto": "tcp",
+      "remote_address": null,
+      "remote_port": null,
+      "state": "LISTEN",
+      "user": "root"
+    },
+    {
+      "local_address": "192.168.1.20",
+      "local_port": 49822,
+      "pid": 503,
+      "process_association": "lsof",
+      "process_name": ".updater",
+      "proto": "tcp",
+      "remote_address": "198.51.100.23",
+      "remote_port": 443,
+      "state": "ESTABLISHED",
+      "user": "alice"
+    },
+    {
+      "local_address": "192.168.1.20",
+      "local_port": 49830,
+      "pid": 502,
+      "process_association": "lsof",
+      "process_name": "curl",
+      "proto": "tcp",
+      "remote_address": "198.51.100.23",
+      "remote_host": "c2.malicious.example.test",
+      "remote_port": 80,
+      "state": "ESTABLISHED",
+      "user": "alice"
+    },
+    {
+      "local_address": "0.0.0.0",
+      "local_port": 8000,
+      "pid": 504,
+      "process_association": "lsof",
+      "process_name": "python3",
+      "proto": "tcp",
+      "remote_address": null,
+      "remote_port": null,
+      "state": "LISTEN",
+      "user": "alice"
+    }
+  ],
+  "schema_version": 1,
+  "source": "network"
+}

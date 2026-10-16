@@ -1,0 +1,22 @@
+id: MTH-IOC-004
+name: Observed file matches an analyst-supplied indicator
+version: 1
+type: ioc
+source: file
+description: A watched file's SHA-256 or exact path equals a supplied indicator.
+rationale: >-
+  File hashes and paths from threat reports identify known artifacts when found on a host.
+severity: high
+confidence: medium
+title: "File matches IOC {indicator}"
+ioc:
+  matches:
+    - {type: sha256, fields: [sha256]}
+    - {type: path, fields: [path]}
+evidence_fields: [path, kind, owner, mode, size, mtime, sha256, is_executable]
+false_positives:
+  - Path indicators for generic locations that legitimate software also uses.
+investigation:
+  - Preserve a copy and hash it; do not execute it.
+  - Find the process, launch item or download that created it.
+references: []

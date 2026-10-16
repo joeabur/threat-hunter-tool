@@ -1,0 +1,31 @@
+id: MTH-EXEC-004
+name: Unsigned or ad-hoc signed executable outside trusted locations
+version: 1
+type: pattern
+source: process
+description: >-
+  A running executable has no code signature, or only an ad-hoc signature, and is not located
+  under a trusted installation prefix.
+rationale: >-
+  Production macOS software is normally signed with a Developer ID or by Apple. Unsigned or
+  ad-hoc binaries outside trusted prefixes deserve a look, although they are common for
+  locally built tools.
+severity: low
+confidence: low
+title: "{codesign_status} executable: {name}"
+requires: [codesign_status, path]
+conditions:
+  all:
+    - {field: codesign_status, op: in, value: [unsigned, adhoc]}
+  none:
+    - {field: path, op: path_under, value: "$allowlist:trusted_exec_prefixes"}
+evidence_fields: [pid, ppid, name, path, user, cmdline, sha256, codesign_status, parent_name]
+false_positives:
+  - Locally compiled developer tools, which are commonly ad-hoc signed on Apple Silicon.
+  - Scripts and open-source utilities installed outside a package manager.
+investigation:
+  - Determine who built or installed the binary and from where it was obtained.
+  - Review quarantine attributes, download history and the file hash.
+  - Combine with other findings (writable path, network, persistence) before escalating.
+references:
+  - https://developer.apple.com/documentation/security/code_signing_services
