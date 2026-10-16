@@ -1,0 +1,14 @@
+title = "mac-threat-hunter gitleaks config"
+
+[extend]
+useDefault = true
+
+# These files intentionally contain FAKE secrets: they exercise the redaction code and
+# demonstrate redacted command lines in the synthetic evidence.
+[allowlist]
+description = "Deliberately fake secrets used for redaction tests and synthetic evidence"
+paths = [
+  '''examples/synthetic-evidence/.*''',
+  '''scripts/generate_synthetic_evidence\.py''',
+  '''tests/unit/test_utils\.py''',
+]

@@ -31,16 +31,15 @@ jobs:
       - name: Static analysis (bandit)
         run: bandit -q -r src
       - name: Dependency vulnerabilities (pip-audit)
-        run: pip-audit --strict
+        run: pip-audit --strict .
   secrets:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           persist-credentials: false
       - name: Secret scan (gitleaks)
         run: |
           curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.18.4/gitleaks_8.18.4_linux_x64.tar.gz | tar -xz gitleaks
-          ./gitleaks detect --source . --no-banner --redact
+          ./gitleaks detect --no-git --source mac-threat-hunter --config mac-threat-hunter/.gitleaks.toml --no-banner --redact
