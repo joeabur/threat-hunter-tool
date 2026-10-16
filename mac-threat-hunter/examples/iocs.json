@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "name": "synthetic-demo-iocs",
+  "synthetic": true,
+  "description": "Fabricated indicators for the bundled demo. Documentation IP ranges and .example.test domains only.",
+  "indicators": [
+    {
+      "type": "sha256",
+      "value": "e35e17e932059ca07b1436091b5ca79569134f0e3ff10f83d9bc0a74a032accf",
+      "description": "Synthetic dropper hash (SHA-256 of a harmless string)",
+      "severity": "high",
+      "source": "synthetic demo",
+      "references": ["https://example.test/reports/synthetic-updater"]
+    },
+    {
+      "type": "path",
+      "value": "/private/tmp/.updater",
+      "description": "Synthetic dropper location",
+      "severity": "high",
+      "source": "synthetic demo"
+    },
+    {
+      "type": "process_name",
+      "value": ".updater",
+      "description": "Synthetic dropper process name (exact, case-sensitive)",
+      "severity": "medium",
+      "source": "synthetic demo"
+    },
+    {
+      "type": "ip",
+      "value": "198.51.100.23",
+      "description": "Synthetic C2 address (RFC 5737 TEST-NET-2)",
+      "severity": "high",
+      "source": "synthetic demo"
+    },
+    {
+      "type": "domain",
+      "value": "c2.malicious.example.test",
+      "description": "Synthetic C2 domain; subdomains match only because include_subdomains is true",
+      "severity": "high",
+      "include_subdomains": true,
+      "source": "synthetic demo"
+    },
+    {
+      "type": "sha256",
+      "value": "d4cdb2ba13638f6ad06625a30623c010cb9c96b3b84984dd709defaaff162175",
+      "description": "Decoy indicator that matches nothing in the demo evidence",
+      "severity": "low",
+      "source": "synthetic demo"
+    },
+    {
+      "type": "ip",
+      "value": "203.0.113.99",
+      "description": "Decoy indicator that matches nothing in the demo evidence",
+      "severity": "low",
+      "source": "synthetic demo"
+    }
+  ]
+}

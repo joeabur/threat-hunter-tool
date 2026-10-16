@@ -1,0 +1,32 @@
+id: MTH-SCRIPT-005
+name: launchctl loading a job from a writable location
+version: 1
+type: pattern
+source: [process, log, persistence]
+description: >-
+  A command uses launchctl to load, bootstrap or submit a launchd job from a temporary or
+  shared writable directory.
+rationale: >-
+  launchctl registers launchd jobs, which is how Launch Agent and Launch Daemon persistence
+  is activated. Jobs defined in writable temporary locations are unusual for managed software.
+severity: medium
+confidence: medium
+title: "launchctl loading job from writable path"
+requires: [search_text]
+conditions:
+  all:
+    - {field: search_text, op: regex, value: 'launchctl\s+(?:load|bootstrap|submit|enable)\b.{0,200}(?:/tmp/|/private/tmp/|/var/tmp/|/private/var/tmp/|/Users/Shared/)'}
+evidence_fields: [name, process, path, pid, user, search_text, parent_name]
+attack:
+  techniques: [T1543.001, T1543.004]
+  justification: >-
+    launchctl load/bootstrap registers launchd jobs, the mechanism behind Launch Agent and
+    Launch Daemon persistence; the rule cannot tell which of the two is being created.
+false_positives:
+  - Test harnesses and developers experimenting with launchd jobs.
+investigation:
+  - Locate and copy (do not run) the referenced plist and the program it launches.
+  - Check whether the job persists across reboot and which account it runs as.
+references:
+  - https://attack.mitre.org/techniques/T1543/001/
+  - https://attack.mitre.org/techniques/T1543/004/

@@ -1,0 +1,31 @@
+id: MTH-PERS-005
+name: Launch item in a system directory with unexpected permissions
+version: 1
+type: pattern
+source: persistence
+description: >-
+  A launchd property list under /Library is group- or world-writable, or is not owned by root.
+rationale: >-
+  Plists in system launch directories execute with elevated rights. If unprivileged users can
+  modify them, they can be abused to run code with those rights.
+severity: medium
+confidence: medium
+title: "Unexpected permissions on launch item: {path}"
+requires: [path]
+conditions:
+  all:
+    - {field: kind, op: in, value: [launch_agent, launch_daemon]}
+    - {field: path, op: startswith, value: "/Library/"}
+    - any:
+        - {field: world_writable, op: equals, value: true}
+        - {field: group_writable, op: equals, value: true}
+        - {field: owner, op: not_equals, value: root}
+evidence_fields: [kind, path, label, owner, group, mode, program_path, mtime, sha256]
+false_positives:
+  - Mis-installed third-party software that sets permissive modes.
+  - Admin-group-writable directories on some managed Macs.
+investigation:
+  - Compare owner/mode with sibling plists from the same vendor.
+  - Check when permissions or contents changed, and by whom if audit data exists.
+references:
+  - https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html

@@ -1,0 +1,37 @@
+id: MTH-EXEC-003
+name: Document or browser application spawning a shell or scripting host
+version: 1
+type: pattern
+source: process
+description: >-
+  A productivity or browsing application (Office, Preview, Safari, Mail, ...) is the direct
+  parent of a shell, osascript or Python process.
+rationale: >-
+  These applications rarely start command interpreters directly. Malicious documents and
+  exploited viewers commonly do, so the parent-child relationship is a useful hunting lead.
+severity: high
+confidence: medium
+title: "{parent_name} spawned {name}"
+requires: [parent_name]
+conditions:
+  all:
+    - {field: parent_name, op: in, value: "$allowlist:office_and_browser_parents"}
+    - any:
+        - {field: name, op: in, value: "$allowlist:shell_interpreters"}
+        - {field: name, op: in, value: [osascript, python, python3, perl, ruby]}
+evidence_fields: [pid, ppid, name, path, user, cmdline, parent_name, parent_path, ancestors]
+attack:
+  techniques: [T1204, T1059]
+  justification: >-
+    A user-opened document or application launching an interpreter matches User Execution
+    leading to Command and Scripting Interpreter use; the rule observes the relationship,
+    not the document's content.
+false_positives:
+  - Office macros and add-ins used by IT automation or finance workflows.
+  - Browser extensions or helper apps that legitimately invoke osascript or shells.
+investigation:
+  - Identify the document or page the user opened around the process start time.
+  - Review the child's full command line and its descendants, and any network activity.
+  - Confirm whether macros or helper tools are expected for this user.
+references:
+  - https://attack.mitre.org/techniques/T1204/

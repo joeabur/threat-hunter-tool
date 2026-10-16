@@ -1,0 +1,24 @@
+id: MTH-CONF-002
+name: Application firewall or FileVault reported off
+version: 1
+type: pattern
+source: system
+description: >-
+  Collected security configuration reports the application firewall or FileVault as off.
+rationale: >-
+  These are hardening controls, not indicators of malicious activity. They are reported so
+  analysts can interpret other findings with the host's actual protection level in mind.
+severity: informational
+confidence: high
+title: "Hardening control reported off"
+conditions:
+  any:
+    - {field: security_firewall, op: equals, value: "off"}
+    - {field: security_filevault, op: equals, value: "off"}
+evidence_fields: [security_firewall, security_filevault, os_version, hostname]
+false_positives:
+  - Many fleets rely on network-level controls and do not enable the application firewall.
+investigation:
+  - Compare with the organisation's hardening standard.
+references:
+  - https://support.apple.com/guide/mac-help/protect-your-mac-from-malware-mh40596/mac

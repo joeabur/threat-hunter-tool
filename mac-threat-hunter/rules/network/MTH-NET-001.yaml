@@ -1,0 +1,30 @@
+id: MTH-NET-001
+name: Listening service not on the expected-process allowlist
+version: 1
+type: pattern
+source: network
+description: >-
+  A process listens on a non-loopback address and is not on the allowlist of expected
+  listening processes.
+rationale: >-
+  Unexpected network listeners expand a host's attack surface and are used for bind shells,
+  proxies or staging servers. Compare listeners with the baseline for stronger evidence.
+severity: low
+confidence: low
+title: "Unexpected listener: {process_name} on port {local_port}"
+requires: [process_name]
+conditions:
+  all:
+    - {field: is_listener, op: equals, value: true}
+    - {field: local_is_loopback, op: equals, value: false}
+  none:
+    - {field: process_name, op: in, value: "$allowlist:expected_listener_processes"}
+evidence_fields: [proto, state, local_address, local_port, pid, process_name, process_path, user, process_association]
+false_positives:
+  - Developer servers, file-sharing, AirPlay and local discovery services.
+  - Any application not yet on the allowlist for this fleet.
+investigation:
+  - Identify the process, its path, signature and owner, and whether the user started it.
+  - Check the host firewall state and whether the port is reachable from other hosts.
+  - Compare with the baseline listener inventory.
+references: []

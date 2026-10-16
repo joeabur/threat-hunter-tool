@@ -1,0 +1,19 @@
+id: MTH-BASE-004
+name: Watched file modified since baseline
+version: 1
+type: baseline
+source: file
+description: A watched file's hash, owner, mode or size differs from the baseline.
+rationale: >-
+  Changes to security-relevant configuration and watched executables should be explainable by
+  an approved change.
+severity: medium
+confidence: medium
+title: "Watched file modified: {key}"
+baseline: {category: files, change: modified}
+evidence_fields: [kind, owner, mode, size, sha256, is_executable]
+false_positives:
+  - OS and application updates, or approved configuration changes.
+investigation:
+  - Compare the before and after attributes and the change record for this host.
+references: []

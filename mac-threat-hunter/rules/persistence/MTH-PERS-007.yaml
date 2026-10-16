@@ -1,0 +1,29 @@
+id: MTH-PERS-007
+name: Login or logout hook configured
+version: 1
+type: pattern
+source: persistence
+description: >-
+  The loginwindow preferences define a LoginHook or LogoutHook script.
+rationale: >-
+  Login hooks are deprecated and rarely used by modern software; a configured hook runs a
+  script as root at login or logout and is therefore worth reviewing.
+severity: medium
+confidence: medium
+title: "Login/logout hook configured: {path}"
+conditions:
+  all:
+    - {field: kind, op: equals, value: login_hook}
+evidence_fields: [kind, path, label, program_path, program_exists, owner, mode, mtime, sha256]
+attack:
+  techniques: [T1037.002]
+  justification: >-
+    A LoginHook/LogoutHook entry in loginwindow preferences is the Login Hook technique
+    itself; the rule reports its presence, not that it is malicious.
+false_positives:
+  - Legacy enterprise management tooling that still uses login hooks.
+investigation:
+  - Read the referenced script (do not run it) and check who configured the hook.
+  - Compare against fleet management configuration for an approved hook.
+references:
+  - https://attack.mitre.org/techniques/T1037/002/

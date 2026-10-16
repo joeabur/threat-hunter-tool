@@ -1,0 +1,113 @@
+{
+  "collection": {
+    "finished_at": "2026-03-10T14:30:00.000000Z",
+    "local_utc_offset": "+00:00",
+    "ran_as_root": false,
+    "started_at": "2026-03-10T14:29:00.000000Z"
+  },
+  "collectors": [
+    {
+      "collector": "system",
+      "errors": [],
+      "notes": [],
+      "privilege_note": null,
+      "record_count": 1,
+      "status": "ok"
+    },
+    {
+      "collector": "processes",
+      "errors": [],
+      "notes": [],
+      "privilege_note": null,
+      "record_count": 8,
+      "status": "ok"
+    },
+    {
+      "collector": "network",
+      "errors": [],
+      "notes": [],
+      "privilege_note": null,
+      "record_count": 4,
+      "status": "ok"
+    },
+    {
+      "collector": "persistence",
+      "errors": [],
+      "notes": [],
+      "privilege_note": null,
+      "record_count": 3,
+      "status": "ok"
+    },
+    {
+      "collector": "files",
+      "errors": [],
+      "notes": [],
+      "privilege_note": null,
+      "record_count": 4,
+      "status": "ok"
+    },
+    {
+      "collector": "logs",
+      "errors": [],
+      "notes": [],
+      "privilege_note": null,
+      "record_count": 2,
+      "status": "ok"
+    }
+  ],
+  "files": [
+    {
+      "name": "files.json",
+      "sha256": "3f0a436145354239d5b16603845899c2e8fed12716af0539da9a4ee813b01ef6",
+      "size": 1507,
+      "source": "file"
+    },
+    {
+      "name": "network.json",
+      "sha256": "6f97075d194a4ba5530cd16c78af1f41df9caaf012633e64f7747da606cd1aa0",
+      "size": 1313,
+      "source": "network"
+    },
+    {
+      "name": "persistence.json",
+      "sha256": "0db57ea65623edfcc1674f20b1a1dcd8349dbcb10cb13dfa7088828978cddca3",
+      "size": 2069,
+      "source": "persistence"
+    },
+    {
+      "name": "processes.json",
+      "sha256": "005bfbb063274098000dad91414407f3f95491ff8ffe3d345b2bfe72fcd5a8ae",
+      "size": 2954,
+      "source": "process"
+    },
+    {
+      "name": "system.json",
+      "sha256": "d99cc666e0c82c10290c02cd3b432fedabe0e432e07eb5a43affa7394fad5327",
+      "size": 1064,
+      "source": "system"
+    },
+    {
+      "name": "unified_log.ndjson",
+      "sha256": "11e8ec1257711ee98e62675097be7546c226b374d8ca57751cf834941b0a4bf3",
+      "size": 517,
+      "source": "log"
+    }
+  ],
+  "host": {
+    "arch": "arm64",
+    "hostname": "synthetic-mac.example.test",
+    "os": {
+      "build": "23F79",
+      "product_name": "macOS",
+      "version": "14.5"
+    }
+  },
+  "notes": [
+    "SYNTHETIC EVIDENCE: fabricated for demonstration; contains no real host data."
+  ],
+  "profile": "full",
+  "schema_version": 1,
+  "synthetic": true,
+  "tool": "mac-threat-hunter",
+  "tool_version": "0.1.0"
+}

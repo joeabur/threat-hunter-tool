@@ -1,0 +1,38 @@
+id: MTH-LOG-001
+name: Repeated failed SSH authentication from one source
+version: 1
+type: pattern
+source: log
+description: >-
+  A single source address produced at least the configured number of failed sshd
+  authentication events within the configured window in the supplied unified log records.
+rationale: >-
+  Bursts of failures from one address are consistent with password guessing against a
+  reachable SSH service. The rule reports the burst, not whether any attempt succeeded.
+severity: medium
+confidence: low
+title: "{event_count} failed SSH logins from {group_value}"
+requires: [src_ip]
+conditions:
+  all:
+    - {field: process, op: equals, value: sshd}
+    - {field: auth_result, op: equals, value: failed}
+threshold:
+  count: 5
+  window_seconds: 300
+  group_by: src_ip
+evidence_fields: [process, auth_user, src_ip, message]
+attack:
+  techniques: [T1110.001]
+  justification: >-
+    Repeated failed password authentications from one source match Brute Force: Password
+    Guessing in form, though they may also come from misconfigured clients or scanners.
+false_positives:
+  - Vulnerability scanners and monitoring probes run by your own organisation.
+  - A user or automation with a stale saved password retrying.
+investigation:
+  - Check whether the source address is internal, a known scanner, or externally reachable.
+  - Look for accepted logins from the same source after the failures in the same log window.
+  - Review sshd exposure and whether password authentication is enabled.
+references:
+  - https://attack.mitre.org/techniques/T1110/001/

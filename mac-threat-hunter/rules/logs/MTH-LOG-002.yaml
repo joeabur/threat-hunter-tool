@@ -1,0 +1,30 @@
+id: MTH-LOG-002
+name: Repeated failed sudo authentication for one account
+version: 1
+type: pattern
+source: log
+description: >-
+  An account produced at least the configured number of failed sudo authentication events
+  within the configured window.
+rationale: >-
+  Several incorrect password attempts at sudo can indicate someone guessing an administrator
+  password at an unlocked session, though mistyped passwords are the usual cause.
+severity: low
+confidence: low
+title: "{event_count} failed sudo attempts for {group_value}"
+requires: [auth_user]
+conditions:
+  all:
+    - {field: process, op: equals, value: sudo}
+    - {field: auth_result, op: equals, value: failed}
+threshold:
+  count: 3
+  window_seconds: 600
+  group_by: auth_user
+evidence_fields: [process, auth_user, message]
+false_positives:
+  - Ordinary typing mistakes, or password changes not yet propagated to the keychain.
+investigation:
+  - Confirm with the user whether they were running sudo at that time.
+  - Review surrounding log records for the commands attempted.
+references: []

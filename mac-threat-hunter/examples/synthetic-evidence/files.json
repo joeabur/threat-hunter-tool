@@ -1,0 +1,93 @@
+{
+  "collected_at": "2026-03-10T14:30:00.000000Z",
+  "records": [
+    {
+      "group": "wheel",
+      "is_executable": false,
+      "kind": "config_file",
+      "mode": "0440",
+      "mtime": "2025-10-01T08:00:00.000000Z",
+      "owner": "root",
+      "path": "/etc/sudoers",
+      "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+      "size": 1024
+    },
+    {
+      "group": "wheel",
+      "is_executable": false,
+      "kind": "config_file",
+      "mode": "0644",
+      "mtime": "2026-03-10T14:04:00.000000Z",
+      "owner": "root",
+      "path": "/etc/hosts",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "size": 1024
+    },
+    {
+      "group": "wheel",
+      "is_executable": false,
+      "kind": "config_file",
+      "mode": "0644",
+      "mtime": "2025-10-01T08:00:00.000000Z",
+      "owner": "root",
+      "path": "/etc/ssh/sshd_config",
+      "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+      "size": 1024
+    },
+    {
+      "group": "staff",
+      "has_exec_bit": true,
+      "has_shebang": false,
+      "is_executable": true,
+      "is_macho": true,
+      "kind": "watched_file",
+      "mode": "0755",
+      "mtime": "2026-01-29T12:00:00.000000Z",
+      "owner": "alice",
+      "path": "/Users/alice/Downloads/tool-installer",
+      "sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+      "size": 52000
+    },
+    {
+      "group": "wheel",
+      "is_executable": false,
+      "kind": "config_file",
+      "mode": "0666",
+      "mtime": "2026-03-10T14:04:30.000000Z",
+      "owner": "root",
+      "path": "/etc/sudoers.d/90-lab",
+      "sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+      "size": 1024
+    },
+    {
+      "group": "wheel",
+      "has_exec_bit": true,
+      "has_shebang": false,
+      "is_executable": true,
+      "is_macho": true,
+      "kind": "watched_file",
+      "mode": "0755",
+      "mtime": "2026-03-10T14:01:00.000000Z",
+      "owner": "alice",
+      "path": "/private/tmp/.updater",
+      "sha256": "e35e17e932059ca07b1436091b5ca79569134f0e3ff10f83d9bc0a74a032accf",
+      "size": 48213
+    },
+    {
+      "group": "staff",
+      "has_exec_bit": true,
+      "has_shebang": true,
+      "is_executable": true,
+      "is_macho": false,
+      "kind": "watched_file",
+      "mode": "0755",
+      "mtime": "2026-03-07T10:00:00.000000Z",
+      "owner": "alice",
+      "path": "/Users/Shared/payload.sh",
+      "sha256": "a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+      "size": 311
+    }
+  ],
+  "schema_version": 1,
+  "source": "file"
+}

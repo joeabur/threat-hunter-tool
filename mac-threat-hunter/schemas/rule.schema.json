@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.test/mac-threat-hunter/rule.schema.json",
+  "title": "mac-threat-hunter detection rule",
+  "description": "Structural schema for rule files. The loader applies additional semantic checks (known allowlist names, regex safety, ATT&CK catalogue membership) that JSON Schema cannot express.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "version", "source", "description", "rationale", "severity", "confidence", "false_positives", "investigation"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^MTH-[A-Z]{2,8}-[0-9]{3}$"},
+    "name": {"type": "string", "minLength": 4},
+    "version": {"type": "integer", "minimum": 1},
+    "type": {"enum": ["pattern", "ioc", "baseline"], "default": "pattern"},
+    "source": {
+      "oneOf": [
+        {"$ref": "#/$defs/source"},
+        {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}}
+      ]
+    },
+    "description": {"type": "string", "minLength": 8},
+    "rationale": {"type": "string", "minLength": 8},
+    "severity": {"enum": ["informational", "low", "medium", "high", "critical"]},
+    "confidence": {"enum": ["low", "medium", "high"]},
+    "title": {"type": "string"},
+    "enabled": {"type": "boolean"},
+    "attack": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "techniques": {"type": "array", "items": {"type": "string", "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$"}},
+        "justification": {"type": "string", "minLength": 20}
+      }
+    },
+    "conditions": {"$ref": "#/$defs/group"},
+    "threshold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "window_seconds", "group_by"],
+      "properties": {
+        "count": {"type": "integer", "minimum": 2},
+        "window_seconds": {"type": "integer", "minimum": 1},
+        "group_by": {"type": "string", "pattern": "^[a-z0-9_.]+$"}
+      }
+    },
+    "requires": {"$ref": "#/$defs/fieldList"},
+    "context_fields": {"$ref": "#/$defs/fieldList"},
+    "evidence_fields": {"$ref": "#/$defs/fieldList"},
+    "ioc": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["matches"],
+      "properties": {
+        "matches": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "fields"],
+            "properties": {
+              "type": {"enum": ["sha256", "process_name", "path", "ip", "domain"]},
+              "fields": {"$ref": "#/$defs/fieldList"},
+              "text": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "change"],
+      "properties": {
+        "category": {"enum": ["persistence", "files", "listeners", "config"]},
+        "change": {"enum": ["added", "removed", "modified"]},
+        "filters": {"$ref": "#/$defs/group"}
+      }
+    },
+    "false_positives": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "investigation": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "references": {"type": "array", "items": {"type": "string"}}
+  },
+  "allOf": [
+    {"if": {"properties": {"type": {"const": "ioc"}}, "required": ["type"]}, "then": {"required": ["ioc"], "not": {"required": ["conditions"]}}},
+    {"if": {"properties": {"type": {"const": "baseline"}}, "required": ["type"]}, "then": {"required": ["baseline"], "not": {"required": ["conditions"]}}},
+    {"if": {"not": {"required": ["type"]}}, "then": {"required": ["conditions"]}},
+    {"if": {"properties": {"type": {"const": "pattern"}}, "required": ["type"]}, "then": {"required": ["conditions"]}}
+  ],
+  "$defs": {
+    "source": {"enum": ["system", "process", "persistence", "network", "file", "log"]},
+    "fieldList": {"type": "array", "items": {"type": "string", "pattern": "^[a-z0-9_.]+$"}},
+    "group": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "all": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}},
+        "any": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}},
+        "none": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}}
+      }
+    },
+    "node": {"oneOf": [{"$ref": "#/$defs/condition"}, {"$ref": "#/$defs/group"}]},
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "op", "value"],
+      "properties": {
+        "field": {"type": "string", "pattern": "^[a-z0-9_.]+$"},
+        "op": {"enum": ["equals", "not_equals", "iequals", "in", "not_in", "startswith", "endswith", "contains", "icontains", "startswith_any", "endswith_any", "contains_any", "regex", "iregex", "exists", "gt", "gte", "lt", "lte", "path_under", "glob"]},
+        "value": {}
+      }
+    }
+  }
+}

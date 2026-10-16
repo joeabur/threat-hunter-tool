@@ -1,0 +1,104 @@
+# macOS Threat Hunter default configuration. Every key is optional; unknown keys are rejected.
+schema_version: 1
+
+limits:
+  max_evidence_file_mb: 64          # per evidence file read by hunt/baseline
+  max_records_per_source: 200000    # records beyond this are ignored and reported
+  max_findings_per_rule: 200        # findings beyond this are dropped and reported
+  max_regex_input_chars: 4096       # text is truncated to this length before regex matching
+  max_rules: 500
+  max_rule_file_kb: 128
+  max_ioc_indicators: 100000
+  max_log_output_mb: 64             # cap on `log show` output during collection
+  subprocess_timeout_seconds: 20
+
+collection:
+  profiles:
+    basic: [system, processes, network, persistence]
+    persistence: [system, persistence, files]
+    logs: [system, logs]
+    full: [system, processes, network, persistence, files, logs]
+  include_cmdline: true             # false drops command lines from process telemetry
+  hash_max_mb: 64                   # files larger than this are not hashed
+  hash_skip_prefixes:               # sealed system locations are not hashed (speed)
+    - /System/
+    - /usr/lib/
+    - /usr/libexec/
+    - /usr/bin/
+    - /usr/sbin/
+    - /bin/
+    - /sbin/
+    - /Library/Apple/
+  codesign_max_lookups: 150         # codesign -dv lookups per collection
+  persistence_dirs:
+    system:
+      - /Library/LaunchAgents
+      - /Library/LaunchDaemons
+      - /System/Library/LaunchAgents
+      - /System/Library/LaunchDaemons
+      - /Library/StartupItems
+    per_user:                       # expanded for every readable home under /Users
+      - Library/LaunchAgents
+  shell_startup_files:
+    system: [/etc/profile, /etc/zshenv, /etc/zprofile, /etc/zshrc, /etc/bashrc]
+    per_user: [.zshenv, .zprofile, .zshrc, .zlogin, .bash_profile, .bashrc, .profile]
+  login_hook_plist: /var/root/Library/Preferences/com.apple.loginwindow.plist
+  watch_directories:                # shallow scan for executables
+    - /private/tmp
+    - /private/var/tmp
+    - /Users/Shared
+    - ~/Library/LaunchAgents
+    - ~/Downloads
+  watch_max_files_per_dir: 500
+  config_files:                     # security-relevant files whose metadata + hash are recorded
+    - /etc/sudoers
+    - /etc/hosts
+    - /etc/ssh/sshd_config
+    - /etc/ssh/ssh_config
+    - /etc/pam.d/sudo
+    - /etc/pam.d/sshd
+    - /etc/authorization
+    - /etc/synthetic.conf
+  config_dirs:
+    - /etc/sudoers.d
+    - /etc/periodic/daily
+    - /etc/ssh/sshd_config.d
+  logs:
+    default_window: 1h
+    max_window: 7d
+    default_predicate: >-
+      (process == "sshd" OR process == "sudo" OR process == "authd" OR process == "su"
+      OR process == "login" OR process == "osascript" OR process == "sh" OR process == "bash"
+      OR process == "zsh" OR process == "curl")
+
+redaction:
+  enabled: true
+  extra_patterns: []                # additional regexes; a capture group 1 is kept
+  replacement: "[REDACTED]"
+
+# Paths where unsigned/unknown executables are unusual. Entries are glob patterns matched
+# against the whole path or any parent directory.
+writable_locations:
+  - /tmp
+  - /private/tmp
+  - /var/tmp
+  - /private/var/tmp
+  - /Users/Shared
+  - /private/var/folders
+  - /Volumes/*/tmp
+  - /Users/*/Downloads
+  - /Users/*/Library/Caches
+  - /Users/*/.Trash
+
+# Optional per-rule tuning, e.g. raise a threshold or disable a noisy rule.
+rule_overrides: {}
+#  MTH-LOG-001: { threshold: { count: 10, window_seconds: 600 } }
+#  MTH-EXEC-003: { enabled: false }
+
+# Controlled suppressions. Every entry needs a reason. Suppressed findings stay in the
+# results (marked suppressed) so they are never silently lost.
+suppressions: []
+#  - rule_id: MTH-NET-004
+#    reason: "Approved developer tool listens on 8000 on this lab host"
+#    match: { process_name: python3 }
+#    expires: "2027-01-01"

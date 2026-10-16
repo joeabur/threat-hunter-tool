@@ -1,0 +1,27 @@
+id: MTH-IOC-001
+name: Process matches an analyst-supplied indicator
+version: 1
+type: ioc
+source: process
+description: >-
+  A process's executable SHA-256, exact name or exact path equals an indicator from the
+  supplied IOC file.
+rationale: >-
+  Indicator lists capture artifacts already linked to known activity. An exact match is a
+  strong lead but depends on the quality and context of the indicator.
+severity: high
+confidence: medium
+title: "Process matches IOC {indicator}: {name}"
+ioc:
+  matches:
+    - {type: sha256, fields: [sha256]}
+    - {type: process_name, fields: [name]}
+    - {type: path, fields: [path]}
+evidence_fields: [pid, ppid, name, path, user, cmdline, sha256, parent_name]
+false_positives:
+  - Reused or overly generic indicators (common process names, shared hashes).
+  - Stale indicators for software that has since been cleaned or legitimately reused the name.
+investigation:
+  - Read the indicator's description and source, and confirm it applies to this context.
+  - Pivot to the process's network connections, persistence and ancestry.
+references: []

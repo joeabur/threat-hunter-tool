@@ -1,0 +1,31 @@
+id: MTH-FILE-002
+name: Security-relevant configuration file with unexpected permissions
+version: 1
+type: pattern
+source: file
+description: >-
+  A watched security-relevant configuration file (sudoers, PAM, SSH, hosts, periodic scripts)
+  is world- or group-writable, or is not owned by root.
+rationale: >-
+  These files control privilege escalation, authentication and name resolution. Write access
+  for unprivileged users lets them change security behaviour.
+severity: medium
+confidence: medium
+title: "Unexpected permissions on {path}"
+requires: [path]
+conditions:
+  all:
+    - {field: kind, op: equals, value: config_file}
+    - any:
+        - {field: world_writable, op: equals, value: true}
+        - {field: group_writable, op: equals, value: true}
+        - {field: owner, op: not_equals, value: root}
+evidence_fields: [path, kind, owner, group, mode, mtime, size, sha256]
+false_positives:
+  - Deliberate admin-group access on lab hosts.
+  - Files created by configuration management with a service account owner.
+investigation:
+  - Compare mode and owner with a known-good Mac of the same macOS version.
+  - Review file contents (copy first) and modification time against change records.
+references:
+  - https://attack.mitre.org/techniques/T1222/002/

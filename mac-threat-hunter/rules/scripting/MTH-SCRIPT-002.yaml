@@ -1,0 +1,30 @@
+id: MTH-SCRIPT-002
+name: Base64-decoded content piped into a shell
+version: 1
+type: pattern
+source: [process, log, persistence]
+description: >-
+  A command line, log message or startup entry decodes base64 data and pipes it into a shell.
+rationale: >-
+  Encoding a payload as base64 and decoding it into a shell hides the command from casual
+  review and from simple string matching.
+severity: high
+confidence: medium
+title: "Base64 decode piped to shell in {source}"
+requires: [search_text]
+conditions:
+  all:
+    - {field: search_text, op: regex, value: 'base64\s+(?:-[dD]|--decode)\b.{0,100}\|\s*(?:sudo\s+)?(?:ba|z)?sh\b'}
+evidence_fields: [name, process, path, pid, user, search_text, parent_name, kind]
+attack:
+  techniques: [T1140, T1027, T1059.004]
+  justification: >-
+    Decoding an obfuscated payload (Deobfuscate/Decode, Obfuscated Files or Information) and
+    executing it with a Unix shell is what the pattern describes.
+false_positives:
+  - Deployment scripts that unpack base64-embedded configuration or installers.
+investigation:
+  - Decode the payload in an isolated environment without executing it.
+  - Identify the originating process, user and any follow-on network connections.
+references:
+  - https://attack.mitre.org/techniques/T1140/

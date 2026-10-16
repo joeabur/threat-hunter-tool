@@ -1,0 +1,41 @@
+id: MTH-PERS-001
+name: Launch item runs an executable from a writable location
+version: 1
+type: pattern
+source: persistence
+description: >-
+  A LaunchAgent or LaunchDaemon property list points at a program located in a user-writable
+  directory such as /tmp or /Users/Shared.
+rationale: >-
+  Launch items run automatically at login or boot. Legitimate vendors install their helpers
+  under /Applications, /Library or /usr/local. A launch item that runs a binary from a
+  writable temporary location is a classic persistence pattern.
+severity: high
+confidence: medium
+title: "Launch item runs from writable path: {label}"
+requires: [program_path]
+context_fields: [program_exists, program_sha256, program_codesign_status]
+conditions:
+  all:
+    - {field: kind, op: in, value: [launch_agent, launch_daemon]}
+    - {field: program_path, op: path_under, value: "$setting:writable_locations"}
+  none:
+    - {field: program_path, op: path_under, value: "$allowlist:writable_location_exceptions"}
+evidence_fields: [kind, path, label, owner, mode, program_path, program_arguments, program_exists, program_sha256, program_codesign_status, run_at_load, keep_alive, sha256]
+attack:
+  techniques: [T1543.001, T1543.004]
+  justification: >-
+    A launchd property list that starts a program automatically is the persistence mechanism
+    described by Launch Agent and Launch Daemon; which one applies depends on the plist's
+    directory, shown in the evidence.
+false_positives:
+  - Per-user helper agents installed by software that runs from Downloads or temporary directories.
+  - Developer test jobs.
+investigation:
+  - Copy the plist and the referenced program for analysis; do not run either.
+  - Compare the plist and program hashes with IOCs and the baseline.
+  - Establish who created the plist (file times, owner, install logs) and what it launches.
+references:
+  - https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html
+  - https://attack.mitre.org/techniques/T1543/001/
+  - https://attack.mitre.org/techniques/T1543/004/

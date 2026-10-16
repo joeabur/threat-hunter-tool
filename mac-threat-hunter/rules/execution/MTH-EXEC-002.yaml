@@ -1,0 +1,36 @@
+id: MTH-EXEC-002
+name: Script interpreter running a script from a writable location
+version: 1
+type: pattern
+source: process
+description: >-
+  A script interpreter (shell, Python, Perl, Ruby, Node, osascript, ...) was launched with a
+  script file located in a user-writable directory.
+rationale: >-
+  Staged scripts dropped into temporary or shared directories are a common way to run
+  attacker-controlled logic through trusted interpreters, which themselves look benign.
+severity: medium
+confidence: medium
+title: "{name} running script from writable path: {script_path}"
+requires: [script_path]
+conditions:
+  all:
+    - {field: name, op: in, value: "$allowlist:script_interpreters"}
+    - {field: script_path, op: path_under, value: "$setting:writable_locations"}
+  none:
+    - {field: script_path, op: path_under, value: "$allowlist:writable_location_exceptions"}
+evidence_fields: [pid, ppid, name, path, user, cmdline, script_path, parent_name]
+attack:
+  techniques: [T1059]
+  justification: >-
+    The rule looks for a command or scripting interpreter executing a script file, which is
+    the behaviour ATT&CK T1059 describes; it does not identify which interpreter technique.
+false_positives:
+  - Developers running scripts from Downloads or scratch directories.
+  - Automation tools that unpack helper scripts into temporary directories before running them.
+investigation:
+  - Read the script (copy it first; do not run it) and compare its hash to IOCs.
+  - Identify what launched the interpreter and what the script did (child processes, network).
+  - Establish whether the user or an installer created the script, using file timestamps.
+references:
+  - https://attack.mitre.org/techniques/T1059/

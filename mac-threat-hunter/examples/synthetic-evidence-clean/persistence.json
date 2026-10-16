@@ -1,0 +1,60 @@
+{
+  "collected_at": "2026-03-10T14:30:00.000000Z",
+  "records": [
+    {
+      "group": "wheel",
+      "keep_alive": false,
+      "kind": "launch_daemon",
+      "label": "com.vendor.legit.helper",
+      "mode": "0644",
+      "mtime": "2026-02-01T10:00:00.000000Z",
+      "owner": "root",
+      "path": "/Library/LaunchDaemons/com.vendor.legit.plist",
+      "program_codesign": {
+        "identifier": "com.vendor.legit.helper",
+        "status": "signed",
+        "team_id": "SYNTH12345"
+      },
+      "program_exists": true,
+      "program_path": "/Library/PrivilegedHelperTools/com.vendor.legit.helper",
+      "program_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "run_at_load": true,
+      "scope": "system",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "group": "wheel",
+      "keep_alive": false,
+      "kind": "launch_agent",
+      "label": "com.microsoft.update.agent",
+      "mode": "0644",
+      "mtime": "2026-02-01T10:00:00.000000Z",
+      "owner": "root",
+      "path": "/Library/LaunchAgents/com.microsoft.update.agent.plist",
+      "program_codesign": {
+        "identifier": "com.microsoft.update",
+        "status": "signed",
+        "team_id": "UBF8T346G9"
+      },
+      "program_exists": true,
+      "program_path": "/Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/Microsoft Update Assistant",
+      "program_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "run_at_load": true,
+      "scope": "system",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    {
+      "group": "staff",
+      "kind": "shell_startup",
+      "lines_of_interest": [],
+      "mode": "0644",
+      "mtime": "2026-01-15T09:00:00.000000Z",
+      "owner": "alice",
+      "path": "/Users/alice/.zshrc",
+      "scope": "user",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+    }
+  ],
+  "schema_version": 1,
+  "source": "persistence"
+}

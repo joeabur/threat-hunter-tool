@@ -1,0 +1,2 @@
+{"category": "", "eventMessage": "Server listening on 0.0.0.0 port 22.", "messageType": "Default", "process": "sshd", "processID": 700, "processImagePath": "/usr/sbin/sshd", "subsystem": "", "timestamp": "2026-03-10 13:00:00.000000+0000"}
+{"category": "", "eventMessage": "alice : TTY=ttys001 ; PWD=/Users/alice ; USER=root ; COMMAND=/usr/bin/whoami", "messageType": "Default", "process": "sudo", "processID": 700, "processImagePath": "/usr/bin/sudo", "subsystem": "", "timestamp": "2026-03-10 13:05:00.000000+0000"}

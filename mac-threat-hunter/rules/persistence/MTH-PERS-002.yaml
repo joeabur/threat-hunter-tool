@@ -1,0 +1,30 @@
+id: MTH-PERS-002
+name: Launch item references a missing executable
+version: 1
+type: pattern
+source: persistence
+description: >-
+  A LaunchAgent or LaunchDaemon property list names a program that did not exist when evidence
+  was collected.
+rationale: >-
+  Orphaned launch items point at software that was removed, or at a payload that was deleted
+  after installing persistence. Either case is worth confirming.
+severity: medium
+confidence: medium
+title: "Launch item references missing executable: {label}"
+requires: [program_exists]
+conditions:
+  all:
+    - {field: kind, op: in, value: [launch_agent, launch_daemon]}
+    - {field: program_exists, op: equals, value: false}
+evidence_fields: [kind, path, label, owner, mode, program_path, program_arguments, program_exists, run_at_load, sha256]
+false_positives:
+  - Leftover plists from uninstalled software.
+  - On-demand jobs whose binary is created at runtime.
+  - Programs on volumes that were not mounted during collection.
+investigation:
+  - Check uninstall history and package receipts for the label.
+  - Look for the referenced path in logs, Trash and other volumes.
+  - Compare against the baseline to see when the plist appeared.
+references:
+  - https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html
