@@ -171,5 +171,5 @@ def atomic_write_text(path: Path, text: str) -> None:
     if path.is_symlink():
         raise UnsafePathError(f"refusing to write through a symlink: {path}")
     tmp = path.with_name(path.name + ".tmp")
-    tmp.write_text(text, encoding="utf-8")
+    tmp.write_bytes(text.encode("utf-8"))  # bytes: no newline translation, so hashes match on Windows
     os.replace(tmp, path)
