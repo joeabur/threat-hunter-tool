@@ -8,3 +8,7 @@ updates:
     directory: /mac-threat-hunter
     schedule:
       interval: weekly
+  - package-ecosystem: pip
+    directory: /linux-threat-hunter
+    schedule:
+      interval: weekly
